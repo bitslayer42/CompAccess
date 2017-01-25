@@ -1,0 +1,17 @@
+body {
+
+  font-family: sans-serif;
+  text-align:center;
+}
+.outerdiv {
+  width: 400px;
+   margin: 0 auto;
+
+  text-align:left;
+}
+.section {
+  width: 400px;
+   margin: 0 auto;
+   border: 1px solid black;
+  text-align:left;
+}
