@@ -20,12 +20,9 @@ class GetForm extends React.Component {
         }
       })
       .then(res => {
-        console.log(res);
-
         const nodes = res.data; 
-
+        console.log(nodes);
         // Update state to trigger a re-render.
-        // Clear any errors, and turn off the loading indiciator.
         this.setState({
           nodes,
           loading: false,
@@ -33,7 +30,6 @@ class GetForm extends React.Component {
         });
       })
       .catch(err => {
-        // Something went wrong. Save the error in state and re-render.
         this.setState({
           loading: false,
           error: err
@@ -53,38 +49,67 @@ class GetForm extends React.Component {
     );
   }
 
-  drawdots(n) {
-    var dots = "";
-    for(var i=1;i<n;i++){
-      dots = dots.concat(" * ");
+  renderSection(curr){
+    if(curr.Type==="FORM"){
+      return <h1 key={curr.ID}>{curr.Descrip}</h1>;
+    }else if(curr.Type==="SECTION"){
+      return <h2 key={curr.ID}>{curr.Descrip}</h2>;
+    }else if(curr.Type==="NODE"){
+      return (
+        <label>
+        <input type="checkbox" key={curr.ID}/>
+        {curr.Descrip}
+        </label>
+       )
+    }else{
+      //the remaining types are html form types, which have a code of REQUEST or RESPONSE
+      //RESPONSES are only used in Admin screen
+      if(curr.Code==="REQUEST"){
+        if(curr.Type==="INPUT"){
+          return (
+            <label>
+            <input type="text" key={curr.ID}/>
+            {curr.Descrip}
+            </label>
+          )
+        }else if(curr.Type==="RADIO"){
+          return (
+            <label>
+            <input type="radio" key={curr.ID}/>
+            {curr.Descrip}
+            </label>
+
+          )
+        }
+      }
     }
-    return dots; 
   }
   
-  renderform() {
+  renderForm(key) { //This renders the recursive divs that make up the form
     if(this.state.error) {
       return this.renderError();
     }
-    return (
-      <div>
-        {this.state.nodes.map(post =>
-          (
-        
-            <div key={post.ID}>{this.drawdots(post.depth)}{post.Descrip}</div>
-
-          )
-        )}
-      </div>
-    );
+    let curr = this.state.nodes[key];
+                                        
+    if(this.state.nodes.length>key+1){
+      return(
+        <div className={curr.Type}>
+          {this.renderSection(curr)}
+          {this.renderForm(key+1)}
+        </div>
+      )
+    }else{  //final node
+          return <div>{this.renderSection(curr)}</div>;
+    }
   }
 
+  
   render() {
     return (
       <div className="outerdiv">
-        <h1>ITForm</h1>
-        {this.state.loading ?
+          {this.state.loading ?
           this.renderLoading()
-          : this.renderform()}
+          : this.renderForm(0)}
       </div>
     );
   }

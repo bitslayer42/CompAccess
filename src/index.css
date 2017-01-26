@@ -4,14 +4,15 @@ body {
   text-align:center;
 }
 .outerdiv {
-  width: 400px;
+  width: 500px;
    margin: 0 auto;
 
   text-align:left;
 }
-.section {
-  width: 400px;
-   margin: 0 auto;
+div.SECTION {
+
+   padding: 3px;
    border: 1px solid black;
   text-align:left;
+  font-weight:bold;
 }
