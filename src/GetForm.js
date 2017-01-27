@@ -2,6 +2,63 @@ import React from 'react';
 import axios from 'axios'; //ajax library
 import LibPath from './LibPath';
 
+class Element extends React.Component {   //An element can be any row returned from stored proc
+  render() {
+      let curr = this.props.curr;
+        if(curr.Type==="FORM"){
+          return <h1 key={curr.ID}>{curr.Descrip}</h1>;
+        }else if(curr.Type==="SECTION"){
+          return <h2 key={curr.ID}>{curr.Descrip}</h2>;
+        }else if(curr.Type==="NODE"){
+          return (
+            <label>
+            <input type="checkbox" key={curr.ID}/>
+            {curr.Descrip}
+            </label>
+           )
+        }else{
+          //the remaining types are html form types, which have a code of REQUEST or RESPONSE
+          //RESPONSES are only used in Admin screen
+          //if(curr.Code==="REQUEST"){
+          if(curr.Type==="INPUT"){
+            return (
+              <label>
+              <input type="text" key={curr.ID}/>
+              {curr.Descrip}
+              </label>
+            )
+          }else if(curr.Type==="RADIO"||curr.Type==="OPTION"){
+            return (
+              <label>
+              <input type="radio" key={curr.ID} name="ption"/>
+              {curr.Descrip}
+              </label>
+
+            )
+            //}
+          }else{
+            return <div>{curr.Descrip}</div>
+          }
+        }
+  }
+}
+class Node extends React.Component {   //Rows hold one element
+  render() {
+    return(<div className="SECTION"> <Element curr={this.props.curr}/> </div>)
+  } 
+}
+class TheForm extends React.Component {
+  render() {
+    return ( 
+      <div>
+        {  this.props.nodes.map((node, ix)=>{
+          return <Node key={ix} curr={node}/>;
+        })}
+      </div>
+    );
+  }
+}
+  
 class GetForm extends React.Component {
   constructor(props) {
     super(props);
@@ -21,7 +78,7 @@ class GetForm extends React.Component {
       })
       .then(res => {
         const nodes = res.data; 
-        console.log(nodes);
+        
         // Update state to trigger a re-render.
         this.setState({
           nodes,
@@ -49,67 +106,12 @@ class GetForm extends React.Component {
     );
   }
 
-  renderSection(curr){
-    if(curr.Type==="FORM"){
-      return <h1 key={curr.ID}>{curr.Descrip}</h1>;
-    }else if(curr.Type==="SECTION"){
-      return <h2 key={curr.ID}>{curr.Descrip}</h2>;
-    }else if(curr.Type==="NODE"){
-      return (
-        <label>
-        <input type="checkbox" key={curr.ID}/>
-        {curr.Descrip}
-        </label>
-       )
-    }else{
-      //the remaining types are html form types, which have a code of REQUEST or RESPONSE
-      //RESPONSES are only used in Admin screen
-      if(curr.Code==="REQUEST"){
-        if(curr.Type==="INPUT"){
-          return (
-            <label>
-            <input type="text" key={curr.ID}/>
-            {curr.Descrip}
-            </label>
-          )
-        }else if(curr.Type==="RADIO"){
-          return (
-            <label>
-            <input type="radio" key={curr.ID}/>
-            {curr.Descrip}
-            </label>
-
-          )
-        }
-      }
-    }
-  }
-  
-  renderForm(key) { //This renders the recursive divs that make up the form
-    if(this.state.error) {
-      return this.renderError();
-    }
-    let curr = this.state.nodes[key];
-                                        
-    if(this.state.nodes.length>key+1){
-      return(
-        <div className={curr.Type}>
-          {this.renderSection(curr)}
-          {this.renderForm(key+1)}
-        </div>
-      )
-    }else{  //final node
-          return <div>{this.renderSection(curr)}</div>;
-    }
-  }
-
-  
-  render() {
+  render()  {
     return (
       <div className="outerdiv">
           {this.state.loading ?
           this.renderLoading()
-          : this.renderForm(0)}
+          : <TheForm nodes={this.state.nodes}/>}
       </div>
     );
   }
