@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios'; //ajax library
 import LibPath from './LibPath';
+import Element from './Element';
 
 class GetForm extends React.Component {
   constructor(props) {
@@ -81,58 +82,5 @@ class GetForm extends React.Component {
   }
 }
 
-class Element extends React.Component {   //An element can be any row returned from stored proc
-  render() {               //debugger;
-    return (
-      <div>
-      {this.props.tree.map((curr,i) => {
-        if(curr.Type==="FORM"){
-          return (
-            <div className="formclass" key={curr.ID}>
-              <h1>{curr.Descrip}</h1>
-              <Element tree={curr.children}/>
-            </div>
-          )
-        }else if(curr.Type==="SECTION"){
-          return (
-            <div className="sectionclass" key={curr.ID}>
-              <h2>{curr.Descrip}</h2>
-              <Element tree={curr.children}/>
-            </div>
-          )
-        }else if(curr.Type==="NODE"){
-          return (
-            <label key={curr.ID}>
-            <input type="checkbox"/>
-            {curr.Descrip}
-            </label>
-           )
-        }else{
-          //the remaining types are html form types, which have a code of REQUEST or RESPONSE
-          //RESPONSES are only used in Admin screen
-          //if(curr.Code==="REQUEST"){
-          if(curr.Type==="INPUT"){
-            return (
-              <label key={curr.ID}>
-              <input type="text"/>
-              {curr.Descrip}
-              </label>
-            )
-          }else if(curr.Type==="RADIO"||curr.Type==="OPTION"){
-            return (
-              <label key={curr.ID}>
-              <input type="radio" name="ption"/>
-              {curr.Descrip}
-              </label>
 
-            ) 
-          }else{
-            return <div key={curr.ID}>{curr.Descrip}</div>
-          }
-        }
-      })}
-      </div>
-    )
-  }
-}
 export default GetForm;
