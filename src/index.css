@@ -9,7 +9,14 @@ body {
 
   text-align:left;
 }
-div.SECTION {
+div.formclass {
+
+  padding: 3px;
+  border: 1px solid #CCC;
+  text-align:left;
+  font-weight:bold;
+}
+div.sectionclass {
 
   padding: 3px;
   border: 1px solid #CCC;

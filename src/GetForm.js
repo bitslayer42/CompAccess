@@ -2,63 +2,6 @@ import React from 'react';
 import axios from 'axios'; //ajax library
 import LibPath from './LibPath';
 
-class Element extends React.Component {   //An element can be any row returned from stored proc
-  render() {
-      let curr = this.props.curr;
-        if(curr.Type==="FORM"){
-          return <h1 key={curr.ID}>{curr.Descrip}</h1>;
-        }else if(curr.Type==="SECTION"){
-          return <h2 key={curr.ID}>{curr.Descrip}</h2>;
-        }else if(curr.Type==="NODE"){
-          return (
-            <label>
-            <input type="checkbox" key={curr.ID}/>
-            {curr.Descrip}
-            </label>
-           )
-        }else{
-          //the remaining types are html form types, which have a code of REQUEST or RESPONSE
-          //RESPONSES are only used in Admin screen
-          //if(curr.Code==="REQUEST"){
-          if(curr.Type==="INPUT"){
-            return (
-              <label>
-              <input type="text" key={curr.ID}/>
-              {curr.Descrip}
-              </label>
-            )
-          }else if(curr.Type==="RADIO"||curr.Type==="OPTION"){
-            return (
-              <label>
-              <input type="radio" key={curr.ID} name="ption"/>
-              {curr.Descrip}
-              </label>
-
-            )
-            //}
-          }else{
-            return <div>{curr.Descrip}</div>
-          }
-        }
-  }
-}
-class Node extends React.Component {   //Rows hold one element
-  render() {
-    return(<div className="SECTION"> <Element curr={this.props.curr}/> </div>)
-  } 
-}
-class TheForm extends React.Component {
-  render() {
-    return ( 
-      <div>
-        {  this.props.nodes.map((node, ix)=>{
-          return <Node key={ix} curr={node}/>;
-        })}
-      </div>
-    );
-  }
-}
-  
 class GetForm extends React.Component {
   constructor(props) {
     super(props);
@@ -98,22 +41,98 @@ class GetForm extends React.Component {
     return <div>Loading...</div>;
   }
 
-  renderError() {
+  renderError() { 
     return (
       <div>
         Uh oh: {this.state.error.message}
       </div>
     );
   }
-
+  
+  makeTree() { 
+    let nodes = this.state.nodes;
+    let rootID = nodes[0].ID;
+    var map = {}, node, atree = [];
+    for (var i = 0; i < nodes.length; i += 1) {
+        node = nodes[i];
+        node.children = [];
+        map[node.ID] = i; // use map to look-up the parents:stackoverflow.com/questions/18017869/
+        if (node.ID !== rootID) {
+            nodes[map[node.ParentID]].children.push(node);
+        } else {
+            atree.push(node);
+        }
+    }
+    console.log(atree);
+    return (
+      <Element tree={atree}/>
+    )
+    
+  }
+  
   render()  {
     return (
       <div className="outerdiv">
           {this.state.loading ?
           this.renderLoading()
-          : <TheForm nodes={this.state.nodes}/>}
+          : this.makeTree()}
       </div>
     );
+  }
+}
+
+class Element extends React.Component {   //An element can be any row returned from stored proc
+  render() {               //debugger;
+    return (
+      <div>
+      {this.props.tree.map((curr,i) => {
+        if(curr.Type==="FORM"){
+          return (
+            <div className="formclass" key={curr.ID}>
+              <h1>{curr.Descrip}</h1>
+              <Element tree={curr.children}/>
+            </div>
+          )
+        }else if(curr.Type==="SECTION"){
+          return (
+            <div className="sectionclass" key={curr.ID}>
+              <h2>{curr.Descrip}</h2>
+              <Element tree={curr.children}/>
+            </div>
+          )
+        }else if(curr.Type==="NODE"){
+          return (
+            <label key={curr.ID}>
+            <input type="checkbox"/>
+            {curr.Descrip}
+            </label>
+           )
+        }else{
+          //the remaining types are html form types, which have a code of REQUEST or RESPONSE
+          //RESPONSES are only used in Admin screen
+          //if(curr.Code==="REQUEST"){
+          if(curr.Type==="INPUT"){
+            return (
+              <label key={curr.ID}>
+              <input type="text"/>
+              {curr.Descrip}
+              </label>
+            )
+          }else if(curr.Type==="RADIO"||curr.Type==="OPTION"){
+            return (
+              <label key={curr.ID}>
+              <input type="radio" name="ption"/>
+              {curr.Descrip}
+              </label>
+
+            ) 
+          }else{
+            return <div key={curr.ID}>{curr.Descrip}</div>
+          }
+        }
+      })}
+      </div>
+    )
   }
 }
 export default GetForm;
