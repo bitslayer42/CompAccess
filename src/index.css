@@ -9,18 +9,23 @@ body {
 
   text-align:left;
 }
+div {
+  border-radius: 5px;
+}
 div.formclass {
-
+  background-color: #a4becc;
+  color: white;
   padding: 3px;
-  border: 1px solid #CCC;
+  border: 1px solid #3b5969;
   text-align:left;
   font-weight:bold;
 }
 div.sectionclass {
-
+  background-color: #f0f4f7;
+  color: black;
   padding: 3px;
   margin-bottom: 3px;
-  border: 1px solid #CCC;
+  border: 1px solid #3b5969;
   text-align:left;
   font-weight:bold;
 }
@@ -28,7 +33,7 @@ div.nodeclass {
 
   padding: 3px;
   margin-bottom: 3px;
-  border: 1px solid #CCC;
+  border: 1px solid #3b5969;
   text-align:left;
   font-weight:bold;
 }

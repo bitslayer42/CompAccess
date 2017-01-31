@@ -68,7 +68,7 @@ class GetForm extends React.Component {
             atree.push(node);
         }
     }
-    console.log(atree);
+    //console.log(atree);
     return (
       <Element tree={atree} submitForm={(i) => this.handleClick(i)}/>
     )
