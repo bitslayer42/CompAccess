@@ -38,6 +38,10 @@ class GetForm extends React.Component {
       }); 
   }
 
+  handleClick(i) {
+    i?console.log(i):console.log("clique");
+  } 
+  
   renderLoading() {
     return <div>Loading...</div>;
   }
@@ -66,7 +70,7 @@ class GetForm extends React.Component {
     }
     console.log(atree);
     return (
-      <Element tree={atree}/>
+      <Element tree={atree} submitForm={(i) => this.handleClick(i)}/>
     )
     
   }

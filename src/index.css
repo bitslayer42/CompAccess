@@ -4,7 +4,7 @@ body {
   text-align:center;
 }
 .outerdiv {
-  width: 500px;
+  width: 700px;
   margin: 0 auto;
 
   text-align:left;
@@ -19,7 +19,34 @@ div.formclass {
 div.sectionclass {
 
   padding: 3px;
+  margin-bottom: 3px;
   border: 1px solid #CCC;
   text-align:left;
   font-weight:bold;
 }
+div.nodeclass {
+
+  padding: 3px;
+  margin-bottom: 3px;
+  border: 1px solid #CCC;
+  text-align:left;
+  font-weight:bold;
+}
+div.textclass {
+  font-style:italic;
+  font-size:0.8em;
+  text-align:center;
+}
+label {
+	font-size: 16px;
+	width:280px;
+	margin-right:5px;
+	display:inline-block;
+	padding-top:3px;
+	text-align:right;
+}
+button.submit {
+  display: block;
+  margin: 0 auto; 
+}
+
