@@ -1,57 +1,70 @@
 import React from 'react';
 class Element extends React.Component {   //An element can be any row returned from stored proc
-  render() {               
-    return (
+  render() {
+    return ( 
       <div>
-      {this.props.tree.map((curr) => {
-        if(curr.Type==="FORM"){
-          return (
-            <div className="formclass" key={curr.ID}>
-              <h1>{curr.Descrip}</h1>
-              <Element tree={curr.children}/>
-              <button className="submit" onClick={() => this.props.submitForm()}>Submit</button>
-            </div>
-          )
-        }else if(curr.Type==="SECTION"){
-          return (
-            <div className="sectionclass" key={curr.ID}>
-              <h2>{curr.Descrip}:</h2>
-              <Element tree={curr.children}/>
-            </div>
-          )
-        }else if(curr.Type==="NODE"){
-          return <ElementNode curr={curr} key={curr.ID}/> 
-          
-        }else if(curr.Type==="TEXT"){
-          return (
-            <div className="textclass" key={curr.ID}>
-              <div>{curr.Descrip}</div>
-            </div>
-          )
-        //the remaining types are html form types, which have a code of REQUEST or RESPONSE
-        //RESPONSES are only used in Admin screen
-        //
-        }else if(curr.Type==="INPUT"){
-          return <ElementInput curr={curr} key={curr.ID}/> 
-          
-        }else if(curr.Type==="RADIO"){
-          return <ElementRadio curr={curr} key={curr.ID}/> 
-          
-        }else if(curr.Type==="SELECT"){
-          return <ElementSelect curr={curr} key={curr.ID}/>
-          
-        }else{
-          return <div key={curr.ID}>TODO:{curr.Descrip}:</div>
-          
-        }
-        
-      })}
+      {
+        this.props.tree.map((curr) => {
+          if(curr.Type==="FORM"){
+            return <ElementForm curr={curr} key={curr.ID} view={this.props.view} header={this.props.header} submitForm={()=>this.props.submitForm()}/> 
+          }else if(curr.Type==="SECTION"){
+            return <ElementSection curr={curr} key={curr.ID} view={this.props.view}/>
+          }else if(curr.Type==="NODE"){
+            return <ElementNode curr={curr} key={curr.ID} view={this.props.view}/> 
+          }else if(curr.Type==="TEXT"){
+            return <ElementText curr={curr} key={curr.ID} view={this.props.view}/> 
+          //the remaining types are html form types, which have a Code of REQUEST or RESPONSE
+          //RESPONSES are only used in Admin screen
+          }else if(curr.Type==="INPUT"){
+            return <ElementInput curr={curr} key={curr.ID} view={this.props.view}/> 
+          }else if(curr.Type==="RADIO"){
+            return <ElementRadio curr={curr} key={curr.ID} view={this.props.view}/> 
+          }else if(curr.Type==="SELECT"){
+            return <ElementSelect curr={curr} key={curr.ID} view={this.props.view}/>
+          }else{
+            return <div key={curr.ID}>TODO:{curr.Descrip}:</div>
+          }
+        })
+      }
       </div>
     )
   }
 }
 
-//if(curr.Code==="REQUEST"){
+function Edit(props) {
+  return(
+    props.view === "EDIT" ? <div className="editclass">Add {props.type}</div> : null
+  )
+}
+function ElementForm(props) {  
+  return (
+    <div className="formclass" key={props.curr.ID}>
+      <h1>{props.curr.Descrip}</h1>
+      <i>Entered by:</i> {props.header.SupvName}<br/>
+      <Element tree={props.curr.children} view={props.view}/>
+      <button className="submit" onClick={() => props.submitForm()}>Submit</button>
+      <Edit view={props.view} type="Form"/> 
+      <div style={{height:"200px"}}/>
+    </div>
+  )
+}
+function ElementSection(props) {  
+  return (
+    <div className="sectionclass" key={props.curr.ID}>
+      <h2>{props.curr.Descrip}</h2>
+      <Element tree={props.curr.children} view={props.view}/>
+      <Edit view={props.view} type="Section"/> 
+    </div>
+  )
+}
+function ElementText(props) {  
+  return (
+    <div className="textclass" key={props.curr.ID}>
+      <div>{props.curr.Descrip}</div>
+      <Edit view={props.view} type="Text"/> 
+    </div>
+  )
+}
 
 class ElementNode extends React.Component { 
   constructor(props) {
@@ -74,10 +87,10 @@ class ElementNode extends React.Component {
      <input type="checkbox" onClick={this.onClick}/>
         {
           this.state.childVisible
-            ? <Element tree={curr.children}/>
+            ? <Element tree={curr.children} view={this.props.view}/>
             : null
         }      
-      
+      <Edit view={this.props.view} type="Node"/>       
       </div>
     )
   }
@@ -86,14 +99,31 @@ class ElementNode extends React.Component {
 class ElementInput extends React.Component { 
   render() { 
     let curr = this.props.curr;
-    return (
-    <div key={curr.ID}>
-      <label>
-      {curr.Descrip}:              
-      </label>
-      <input type="text" size="50" id={curr.ID}/>
-    </div>
-    ) 
+    let view = this.props.view; 
+    if(view === "SUPV" && curr.Code === "RESPONSE"){
+      return null;
+    }else if(view === "IS" && curr.Code === "RESPONSE"){
+       return (
+        <div key={curr.ID} className="responseclass">
+          <label>
+          {curr.Descrip}:              
+          </label>
+          <input type="text" size="50" id={curr.ID} defaultValue={curr.ItemValue}/>
+          <Edit view={this.props.view} type="Response"/> 
+          
+        </div>
+      )      
+    }else{
+      return (
+        <div key={curr.ID}>
+          <label>
+          {curr.Descrip}:              
+          </label>
+          <input type="text" size="50" id={curr.ID} defaultValue={curr.ItemValue}/>
+          <Edit view={this.props.view} type="Request"/> 
+        </div>
+      ) 
+    }
   }
 }
 
@@ -104,13 +134,15 @@ class ElementRadio extends React.Component {
       <div>
       {curr.children.map((chld,ix) => { //these should be OPTIONS
         return( 
-        <div key={chld.ID}>
+          <div key={chld.ID}>
           <label>{ix!==0?"":curr.Descrip+":"}</label>
-          <input type="radio" name={curr.ID} value={chld.Code} id={chld.ID}/>
+          <input type="radio" name={curr.ID} defaultChecked={chld.Descrip===curr.ItemValue?"checked":""} value={chld.Descrip} id={chld.ID}/>
           {chld.Descrip}
+          <Edit view={this.props.view} type="Option"/>  
           </div>
         )
       })}
+      <Edit view={this.props.view} type="Radio"/>       
       </div>      
       ) 
   }
@@ -124,13 +156,15 @@ class ElementSelect extends React.Component {
         <label>
         {curr.Descrip}:
         </label>
-        <select id={curr.ID}>
+        <select id={curr.ID} defaultValue={curr.ItemValue}>
         {curr.children.map((chld) => { //these should be OPTIONS
           return( 
-            <option key={chld.ID} value={chld.Code}>{chld.Descrip}</option>
+            <option key={chld.ID} value={chld.Descrip}>{chld.Descrip}</option>
           )
         })}
         </select>
+        <Edit view={this.props.view} type="Option"/> 
+        <Edit view={this.props.view} type="Select"/> 
       </div>
     )
   }

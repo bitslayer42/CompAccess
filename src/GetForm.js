@@ -4,38 +4,48 @@ import LibPath from './LibPath';
 import Element from './Element';
 
 class GetForm extends React.Component {
-  constructor(props) {
+  constructor(props) { 
     super(props);
-
+                                                        
     this.state = {
       nodes: [],
+      header: {},
       loading: true,
-      error: null
+      error: null,
+      view: props.formtype //Can be "SUPV", "IS", or "EDIT"
     };
   }
 
-  componentDidMount() {
-      axios.get(LibPath + 'FormJSON.cfm', {
-        params: {
-          FORMCODE: 'CCPIT'
-        }
-      })
-      .then(res => {
-        const nodes = res.data; 
-        
-        // Update state to trigger a re-render.
-        this.setState({
-          nodes,
-          loading: false,
-          error: null
-        });
-      })
-      .catch(err => {
-        this.setState({
-          loading: false,
-          error: err
-        });
-      }); 
+  componentDidMount() { 
+    axios.get(LibPath + 'FormJSON.cfm', {
+      params: {
+        FormID: 4,
+        ReqID: 5
+      }
+    })
+    .then(res => {
+      const nodes = res.data.body; 
+      const header = {};
+      header.RequestID = res.data.RequestID;
+      header.FormID = res.data.FormID;
+      header.SupvID = res.data.SupvID;
+      header.SupvName = res.data.SupvName;
+      header.EnteredDate = res.data.EnteredDate;
+      
+      // Update state to trigger a re-render.
+      this.setState({
+        nodes,
+        header,
+        loading: false,
+        error: null
+      });
+    })
+    .catch(err => {
+      this.setState({
+        loading: false,
+        error: err
+      });
+    }); 
   }
 
   handleClick(i) {
@@ -68,9 +78,9 @@ class GetForm extends React.Component {
             atree.push(node);
         }
     }
-    //console.log(atree);
+                                                                          console.log(atree);
     return (
-      <Element tree={atree} submitForm={(i) => this.handleClick(i)}/>
+      <Element tree={atree} view={this.state.view} header={this.state.header} submitForm={(i) => this.handleClick(i)}/>
     )
     
   }
