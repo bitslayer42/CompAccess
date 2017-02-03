@@ -127,7 +127,7 @@ GO
 PublishForm 4
 GO
 
-GetForm 4
+GetForm 4, 5
 go
 -------------------------------------------------------------------
 ALTER PROC InsRequest(@FormID VARCHAR(20), @SupvID VARCHAR(20), @SupvName VARCHAR(100), @EnteredDate DATETIME, @Items XML) AS

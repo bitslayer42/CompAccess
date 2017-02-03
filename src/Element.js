@@ -1,4 +1,6 @@
 import React from 'react';
+import moment from 'moment'; //date library
+
 class Element extends React.Component {   //An element can be any row returned from stored proc
   render() {
     return ( 
@@ -13,16 +15,11 @@ class Element extends React.Component {   //An element can be any row returned f
             return <ElementNode curr={curr} key={curr.ID} view={this.props.view}/> 
           }else if(curr.Type==="TEXT"){
             return <ElementText curr={curr} key={curr.ID} view={this.props.view}/> 
-          //the remaining types are html form types, which have a Code of REQUEST or RESPONSE
-          //RESPONSES are only used in Admin screen
-          }else if(curr.Type==="INPUT"){
-            return <ElementInput curr={curr} key={curr.ID} view={this.props.view}/> 
-          }else if(curr.Type==="RADIO"){
-            return <ElementRadio curr={curr} key={curr.ID} view={this.props.view}/> 
-          }else if(curr.Type==="SELECT"){
-            return <ElementSelect curr={curr} key={curr.ID} view={this.props.view}/>
+          }else if(curr.Type==="INPUT"||curr.Type==="RADIO"||curr.Type==="SELECT"){
+            //html form types
+            return <ElementIsResponse curr={curr} key={curr.ID} view={this.props.view}/> 
           }else{
-            return <div key={curr.ID}>TODO:{curr.Descrip}:</div>
+            return <div>No</div>
           }
         })
       }
@@ -36,11 +33,12 @@ function Edit(props) {
     props.view === "EDIT" ? <div className="editclass">Add {props.type}</div> : null
   )
 }
-function ElementForm(props) {  
+function ElementForm(props) {
+  let formatdate = moment(props.header.EnteredDate).format("MMMM Do YYYY, h:mm a");
   return (
     <div className="formclass" key={props.curr.ID}>
       <h1>{props.curr.Descrip}</h1>
-      <i>Entered by:</i> {props.header.SupvName}<br/>
+      <p><i>Entered by:</i> {props.header.SupvName} {formatdate}</p>
       <Element tree={props.curr.children} view={props.view}/>
       <button className="submit" onClick={() => props.submitForm()}>Submit</button>
       <Edit view={props.view} type="Form"/> 
@@ -93,6 +91,47 @@ class ElementNode extends React.Component {
       <Edit view={this.props.view} type="Node"/>       
       </div>
     )
+  }
+}
+
+//Check for a Code of REQUEST or RESPONSE (or null if used outside a Node)
+//RESPONSES are only used in Admin screen
+class ElementIsResponse extends React.Component { 
+  render() { 
+    let curr = this.props.curr;
+    let view = this.props.view; 
+    if(view === "SUPV" && curr.Code === "RESPONSE"){
+      return null;
+    }else if(view === "IS" && curr.Code === "RESPONSE"){
+      return (
+        <div key={curr.ID} className="responseclass">
+          <ElementHtml curr={curr} key={curr.ID} view={view}/> 
+        </div>
+      )      
+    }else{
+      return (
+        <div key={curr.ID}>
+          <ElementHtml curr={curr} key={curr.ID} view={view}/> 
+        </div>
+      ) 
+    }
+  }
+}
+
+class ElementHtml extends React.Component {
+  render() { 
+    let curr = this.props.curr;
+    let view = this.props.view; 
+    if(curr.Type==="INPUT"){
+      return <ElementInput curr={curr} key={curr.ID} view={view}/> 
+    }else if(curr.Type==="RADIO"){
+      return <ElementRadio curr={curr} key={curr.ID} view={view}/> 
+    }else if(curr.Type==="SELECT"){
+      return <ElementSelect curr={curr} key={curr.ID} view={view}/>
+
+    }else{
+      return <div key={curr.ID}>TODO:{curr.Descrip}:</div>
+    }
   }
 }
 
