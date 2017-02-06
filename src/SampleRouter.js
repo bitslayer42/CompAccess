@@ -46,4 +46,30 @@ Browser history:
   
 <Router history={browserHistory}>     <- requires server config
 hashHistory                           <- ugly urls example.com/#/some/path?_k=ckuvup
+  //--------------------------------------------------------------- 
+    //--------------------------------------------------------------- 
+      //--------------------------------------------------------------- 
+      
+      
+    if(this.state.reqview==="ADMIN" && this.state.userType==="ADMIN"){
+      return <Admin/>
+    }else if(this.state.reqview==="IS" && this.state.userType==="SUPV"){
+      return <GetForm view="IS"/>
+    }else if(this.state.reqview==="SUPV" && this.state.userType==="SUPV"){
+      return <GetForm view="SUPV"/>
+    }else{
+      return <div>You must be a supervisor or in the IS department to use the Computer Access Form.</div>
+    }
+    
+    
+    hashHistory.push('/ADMIN');
+    
+-----------------------------------------------------------------  
+router.push({
+  pathname: `/infusions/library/${id}`,
+  query: { drug }
+})
 
+And then to access your object in /infusuons/library/${id} page:
+
+this.props.location.query.drug

@@ -3,24 +3,29 @@ import axios from 'axios'; //ajax library
 import LibPath from './LibPath';
 import Element from './Element';
 
-class GetForm extends React.Component {
+export default class GetForm extends React.Component {
   constructor(props) { 
     super(props);
-                                                        
+    let view = "SUPV",formID = null,reqID = null;
+    if(props.view){view = props.view}
+    if(props.formID){formID = props.formID}
+    if(props.reqID){formID = props.reqID}    
     this.state = {
+      view: view, //Can be "SUPV", "IS", or "EDIT"
+      formID: formID,
+      reqID: reqID,
       nodes: [],
       header: {},
       loading: true,
       error: null,
-      view: props.formtype //Can be "SUPV", "IS", or "EDIT"
     };
   }
 
-  componentDidMount() { 
+  componentDidMount() {
     axios.get(LibPath + 'FormJSON.cfm', {
       params: {
-        FormID: 4,
-        ReqID: 5
+        FormID: this.state.formID,
+        reqID: this.state.reqID,
       }
     })
     .then(res => {
@@ -78,7 +83,7 @@ class GetForm extends React.Component {
             atree.push(node);
         }
     }
-                                                                          console.log(atree);
+                                                                          //console.log(atree);
     return (
       <Element tree={atree} view={this.state.view} header={this.state.header} submitForm={(i) => this.handleClick(i)}/>
     )
@@ -97,4 +102,4 @@ class GetForm extends React.Component {
 }
 
 
-export default GetForm;
+//export default GetForm;

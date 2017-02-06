@@ -1,13 +1,14 @@
 import React from 'react';
+//import { Link } from 'react-router'
 import moment from 'moment'; //date library
 
-class Element extends React.Component {   //An element can be any row returned from stored proc
+export default class Element extends React.Component {   //An element can be any row returned from stored proc
   render() {
     return ( 
       <div>
       {
         this.props.tree.map((curr) => {
-          if(curr.Type==="FORM"){
+          if      (curr.Type==="FORM"){
             return <ElementForm curr={curr} key={curr.ID} view={this.props.view} header={this.props.header} submitForm={()=>this.props.submitForm()}/> 
           }else if(curr.Type==="SECTION"){
             return <ElementSection curr={curr} key={curr.ID} view={this.props.view}/>
@@ -37,12 +38,14 @@ function ElementForm(props) {
   let formatdate = moment(props.header.EnteredDate).format("MMMM Do YYYY, h:mm a");
   return (
     <div className="formclass" key={props.curr.ID}>
-      <h1>{props.curr.Descrip}</h1>
-      <p><i>Entered by:</i> {props.header.SupvName} {formatdate}</p>
-      <Element tree={props.curr.children} view={props.view}/>
-      <button className="submit" onClick={() => props.submitForm()}>Submit</button>
-      <Edit view={props.view} type="Form"/> 
-      <div style={{height:"200px"}}/>
+      <form>
+        <h1>{props.curr.Descrip}</h1>
+        {props.header.SupvName && <p><i>Entered by:</i> {props.header.SupvName} {formatdate}</p>}
+        <Element tree={props.curr.children} view={props.view}/>
+        <button className="submit" onClick={() => props.submitForm()}>Submit</button>
+        <Edit view={props.view} type="Form"/> 
+        <div style={{height:"200px"}}/>
+      </form>
     </div>
   )
 }
@@ -209,4 +212,3 @@ class ElementSelect extends React.Component {
   }
 }
 
-export default Element;

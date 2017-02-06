@@ -31,7 +31,7 @@ ON inr2.ID = req.FieldID
 ORDER BY inr2.lft
 GO
 ---------------------------------------------------------------------------------------------------------------
-ALTER PROC InsNode (@ToRightOf INT, @Code VARCHAR(10), @Type VARCHAR(10), @Descrip VARCHAR(100)) AS
+ALTER PROC InsNode (@ToRightOf INT, @Code VARCHAR(10) = NULL, @Type VARCHAR(10), @Descrip VARCHAR(100)) AS
 -- Adds a sibling after @ToRightOf
 -- InsNode 13, 'RESPONSE', 'INPUT', 'Email Password'
 BEGIN
@@ -49,7 +49,7 @@ BEGIN
 END
 GO
 ---------------------------------------------------------------------------------------------------------------
-ALTER PROC AddChild (@IntoCategory INT, @Code VARCHAR(10), @Type VARCHAR(10), @Descrip VARCHAR(100)) AS
+ALTER PROC AddChild (@IntoCategory INT, @Code VARCHAR(10) = NULL, @Type VARCHAR(10), @Descrip VARCHAR(100)) AS
 -- Adds first child to category
 -- AddChild 6, 'REQUEST', 'INPUT', 'questionsquestionquestions'
 BEGIN
