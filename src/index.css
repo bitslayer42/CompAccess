@@ -34,7 +34,6 @@ div.sectionclass  h2{
   line-height: 0.3em;
 }
 div.nodeclass {
-
   padding: 3px;
   margin-bottom: 3px;
   border: 1px solid #3b5969;
@@ -51,11 +50,16 @@ div.editclass {
   font-size:0.8em;
   text-align:center;
 }
+.editclass {
+  color: green;
+  font-size:0.8em;
+  text-decoration: underline;
+  cursor:pointer;
+}
 div.responseclass{
   background-color:#fa391e;
   border-radius: 0;
   padding: 3px 0 6px 0;
-
 }
 label {
 	font-size: 16px;
@@ -69,4 +73,11 @@ button.submit {
   display: block;
   margin: 0 auto; 
 }
+td{
+  border:1px solid grey;
 
+}
+tr.reqsrow:hover{
+  background-color:#DDD;
+  cursor:pointer;
+}

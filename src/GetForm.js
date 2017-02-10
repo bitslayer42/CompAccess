@@ -4,23 +4,19 @@ import LibPath from './LibPath';
 import Element from './Element';
 
 export default class GetForm extends React.Component {
-  constructor(props) { 
+  constructor(props) { //debugger;
     super(props);
-    let view = "SUPV",formID = null,reqID = null;
-    if(props.view){view = props.view}
-    if(props.formID){formID = props.formID}
-    if(props.reqID){formID = props.reqID}    
     this.state = {
-      view: view, //Can be "SUPV", "IS", or "EDIT"
-      formID: formID,
-      reqID: reqID,
+      view: props.params.view, //Can be "SUPV", "ADMIN", or "EDIT"
+      formID: props.params.formID,
+      reqID: props.params.reqID,
       nodes: [],
       header: {},
       loading: true,
       error: null,
     };
   }
-
+ 
   componentDidMount() {
     axios.get(LibPath + 'FormJSON.cfm', {
       params: {
@@ -32,8 +28,6 @@ export default class GetForm extends React.Component {
       const nodes = res.data.body; 
       const header = {};
       header.RequestID = res.data.RequestID;
-      header.FormID = res.data.FormID;
-      header.SupvID = res.data.SupvID;
       header.SupvName = res.data.SupvName;
       header.EnteredDate = res.data.EnteredDate;
       
@@ -83,7 +77,7 @@ export default class GetForm extends React.Component {
             atree.push(node);
         }
     }
-                                                                          //console.log(atree);
+                                                                          console.log(atree);
     return (
       <Element tree={atree} view={this.state.view} header={this.state.header} submitForm={(i) => this.handleClick(i)}/>
     )

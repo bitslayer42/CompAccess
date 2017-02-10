@@ -1,7 +1,15 @@
 ALTER PROC GetForm (@FormID INT, @RequestID INT = NULL) AS 
 --Based on Nested Set Model here: http://mikehillyer.com/articles/managing-hierarchical-data-in-mysql/
+-- If called with formid=0, the form will be looked up from requestid
 -- GetForm 4
--- GetForm 4, 5
+-- GetForm 0, 9
+IF @FormID = 0 
+BEGIN
+	SELECT @FormID = RequestItems.FieldID
+	FROM RequestItems INNER JOIN Forms ON RequestItems.FieldID = Forms.ID
+	WHERE Forms.Type = 'FORM'
+END
+SELECT * FROM Requests WHERE RequestID = @RequestID
 SELECT inr2.ID, inr2.Code, inr2.depth, inr2.Type, inr2.Descrip, ParentID, ItemValue FROM (
 	SELECT inr.ID, inr.Code, inr.depth, inr.Type, inr.Descrip, inr.lft, (SELECT TOP 1 ID 
 			   FROM Forms parent 
@@ -130,11 +138,11 @@ GO
 GetForm 4, 5
 go
 -------------------------------------------------------------------
-ALTER PROC InsRequest(@FormID VARCHAR(20), @SupvID VARCHAR(20), @SupvName VARCHAR(100), @EnteredDate DATETIME, @Items XML) AS
+ALTER PROC [dbo].[InsRequest](@SupvName VARCHAR(100), @Items XML) AS
 BEGIN
 	DECLARE @RequestID INT
-	INSERT INTO Requests (FormID, SupvID, SupvName, EnteredDate)
-	VALUES(@FormID, @SupvID , @SupvName, @EnteredDate)
+	INSERT INTO Requests (SupvName, EnteredDate, Completed)
+	VALUES(@SupvName, GETDATE(), 0)
 
 	SET @RequestID = @@IDENTITY
 
@@ -143,11 +151,30 @@ BEGIN
         tab.col.value( 'Field[1]', 'int' ) AS FieldID,
         tab.col.value( 'Value[1]', 'varchar(max)' ) AS ItemValue
     FROM @Items.nodes('reqrows/row') tab(col)
+
+
+	DECLARE @xml xml
+	SELECT @xml = (
+		SELECT --CASE WHEN Forms.Type = 'FORM' THEN 'Form' ELSE Descrip END AS Col, 
+		RequestItems.ItemValue ItemValue 
+		FROM Requests req
+		INNER JOIN RequestItems
+		ON req.RequestID = RequestItems.RequestID
+		INNER JOIN Forms
+		ON RequestItems.FieldID = Forms.ID
+		WHERE Completed = 0
+		AND HeaderRecord = 1
+		AND req.RequestID = @RequestID
+		FOR XML PATH)
+	
+	UPDATE Requests SET HeaderXML = @xml
+	WHERE RequestID = @RequestID
+
+	SELECT @RequestID AS RequestID
 END
-GO
 
 -------------------------------------------------------------------
-exec InsRequest @FormID = 'CCPIT', @SupvID = '1027126', @SupvName = 'J. Supv Wilson', @EnteredDate = '2017-02-01', @Items = N'
+exec InsRequest @SupvName = 'J. Supv Wilson', @Items = N'
 <reqrows>
 	<row>
 		<Field>9</Field>

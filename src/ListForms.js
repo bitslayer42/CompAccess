@@ -49,8 +49,6 @@ export default class ListForms extends React.Component {
       return (
         <li key={form.ID}>
             <Link to={`/SUPV/${form.ID}`}>{form.Descrip}</Link><br/>
-            <Link to={`/ADMIN/${form.ID}`}>Admin</Link><br/>
-            <Link to={`/EDIT/${form.ID}`}>Edit</Link>
         </li> 
       )
     });
@@ -61,6 +59,7 @@ export default class ListForms extends React.Component {
           {listItems}
         </ul>
         <div>
+             <Link to={`/ADMIN`}>Admin</Link><br/>      
         </div>
       </div>
     )

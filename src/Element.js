@@ -1,6 +1,7 @@
 import React from 'react';
 //import { Link } from 'react-router'
 import moment from 'moment'; //date library
+import LibPath from './LibPath';
 
 export default class Element extends React.Component {   //An element can be any row returned from stored proc
   render() {
@@ -17,7 +18,7 @@ export default class Element extends React.Component {   //An element can be any
           }else if(curr.Type==="TEXT"){
             return <ElementText curr={curr} key={curr.ID} view={this.props.view}/> 
           }else if(curr.Type==="INPUT"||curr.Type==="RADIO"||curr.Type==="SELECT"){
-            //html form types
+            //html form types, first check if it is a RESPONSE
             return <ElementIsResponse curr={curr} key={curr.ID} view={this.props.view}/> 
           }else{
             return <div>No</div>
@@ -31,24 +32,32 @@ export default class Element extends React.Component {   //An element can be any
 
 function Edit(props) {
   return(
-    props.view === "EDIT" ? <div className="editclass">Add {props.type}</div> : null
+    props.view === "EDIT" && <div className="editclass">Add things for {props.type}</div>
   )
 }
+
 function ElementForm(props) {
-  let formatdate = moment(props.header.EnteredDate).format("MMMM Do YYYY, h:mm a");
+  let formatdate = moment(props.header.EnteredDate).format("MMMM Do YYYY, h:mm a"); //if no date in header, is NOW
   return (
     <div className="formclass" key={props.curr.ID}>
-      <form>
-        <h1>{props.curr.Descrip}</h1>
-        {props.header.SupvName && <p><i>Entered by:</i> {props.header.SupvName} {formatdate}</p>}
+      <form method="post" action={LibPath + 'SupvPost.cfm'}>
+        <h1>Computer Access Authorization E-Form</h1>
+        <h2>{props.curr.Descrip}</h2>
+        {props.header.SupvName && <p><i>Entered by:</i> {props.header.SupvName}</p>} 
+        {formatdate}
+        <input type="hidden" name={props.curr.ID} id={props.curr.ID} defaultValue={props.curr.Descrip}/>
+        <input type="hidden" name="DateEntered"   id={props.curr.ID} defaultValue={formatdate}/>
+        <input type="hidden" name="SupvName"      id={props.curr.ID} defaultValue={props.header.SupvName}/>
         <Element tree={props.curr.children} view={props.view}/>
-        <button className="submit" onClick={() => props.submitForm()}>Submit</button>
+          {props.view === "SUPV" && <Signature SupvName={props.header.SupvName}/>}
+        
         <Edit view={props.view} type="Form"/> 
         <div style={{height:"200px"}}/>
       </form>
     </div>
   )
 }
+
 function ElementSection(props) {  
   return (
     <div className="sectionclass" key={props.curr.ID}>
@@ -71,7 +80,7 @@ class ElementNode extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      childVisible: false 
+      childVisible: props.curr.ItemValue==="on"?true:false 
     };
     this.onClick = this.onClick.bind(this); //React components using ES6 classes don't autobind "this"
   }
@@ -85,7 +94,8 @@ class ElementNode extends React.Component {
       <label >
        {curr.Descrip}:
       </label>
-     <input type="checkbox" onClick={this.onClick}/>
+
+      <input type="checkbox" name={curr.ID} onClick={this.onClick} defaultChecked={this.state.childVisible}/>
         {
           this.state.childVisible
             ? <Element tree={curr.children} view={this.props.view}/>
@@ -105,7 +115,7 @@ class ElementIsResponse extends React.Component {
     let view = this.props.view; 
     if(view === "SUPV" && curr.Code === "RESPONSE"){
       return null;
-    }else if(view === "IS" && curr.Code === "RESPONSE"){
+    }else if(curr.Code === "RESPONSE"){
       return (
         <div key={curr.ID} className="responseclass">
           <ElementHtml curr={curr} key={curr.ID} view={view}/> 
@@ -150,7 +160,7 @@ class ElementInput extends React.Component {
           <label>
           {curr.Descrip}:              
           </label>
-          <input type="text" size="50" id={curr.ID} defaultValue={curr.ItemValue}/>
+          <input type="text" size="50" name={curr.ID} id={curr.ID} defaultValue={curr.ItemValue}/>
           <Edit view={this.props.view} type="Response"/> 
           
         </div>
@@ -161,7 +171,7 @@ class ElementInput extends React.Component {
           <label>
           {curr.Descrip}:              
           </label>
-          <input type="text" size="50" id={curr.ID} defaultValue={curr.ItemValue}/>
+          <input type="text" size="50" name={curr.ID} id={curr.ID} defaultValue={curr.ItemValue}/>
           <Edit view={this.props.view} type="Request"/> 
         </div>
       ) 
@@ -198,12 +208,13 @@ class ElementSelect extends React.Component {
         <label>
         {curr.Descrip}:
         </label>
-        <select id={curr.ID} defaultValue={curr.ItemValue}>
-        {curr.children.map((chld) => { //these should be OPTIONS
-          return( 
-            <option key={chld.ID} value={chld.Descrip}>{chld.Descrip}</option>
-          )
-        })}
+        <select id={curr.ID} name={curr.ID} defaultValue={curr.ItemValue}>
+          <option key={0} value="">(Choose One)</option>
+          {curr.children.map((chld) => { //these should be OPTIONS
+            return( 
+              <option key={chld.ID} value={chld.Descrip}>{chld.Descrip}</option>
+            )
+          })}
         </select>
         <Edit view={this.props.view} type="Option"/> 
         <Edit view={this.props.view} type="Select"/> 
@@ -211,4 +222,29 @@ class ElementSelect extends React.Component {
     )
   }
 }
+
+function Signature(props) {  
+  return (
+    <div className="sectionclass" key="Sig">
+      <h2>AUTHORIZATION INFORMATION</h2>
+      <label>
+      *Supervisor Authorization Signature:
+      </label>
+     
+      <input type="text" name="SupvSig" size="50"/>
+
+      <p>      
+      (Typing your name above implies you are authorizing the above computer access form.
+      We will verify your signature with the employee id you are currently logged in with.) 
+      </p>
+      <p>
+      You are logged in as {props.SupvName}
+      </p>
+      <p>
+      <button className="submit" onClick={() => props.submitForm()}>Submit</button>
+      </p>
+    </div>
+  )
+}
+
 

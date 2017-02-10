@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<p id="demo"></p>
+<style>
+td{
+  border:1px solid grey;
+  width:200px;
+}
+</style>
+
+<script>
+
+var text = "<o><row><Col>Form</Col><ItemValue>CarePartners IT Access Form</ItemValue></row><row><Col>Employee Name</Col><ItemValue>Jonny Newstaff</ItemValue></row><row><Col>Reason</Col><ItemValue>New Employee</ItemValue></row><row><Col>Date Access is Needed</Col><ItemValue>2/10/2017</ItemValue></row></o>";
+
+var parser = new DOMParser();
+var xmlDoc = parser.parseFromString(text,"text/xml");
+var resultsStr = "<table><tr>";
+
+var header= xmlDoc.getElementsByTagName("Col");
+for (var i = 0; i < header.length; i++) {
+    resultsStr += "<td>" + header[i].childNodes[0].nodeValue + "</td>";
+}
+resultsStr += "</tr><tr>";
+
+var row= xmlDoc.getElementsByTagName("ItemValue");
+for (var i = 0; i < row.length; i++) {
+    resultsStr += "<td>" + row[i].childNodes[0].nodeValue + "</td>";
+}
+resultsStr += "</tr></table>";
+
+document.getElementById("demo").innerHTML = resultsStr;
+
+</script>
+
+</body>
+</html>

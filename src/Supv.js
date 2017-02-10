@@ -1,16 +1,16 @@
 import React from 'react';
-//import { hashHistory } from 'react-router'
 import axios from 'axios'; //ajax library
 import LibPath from './LibPath';
-import Supv from './Supv';
-import Admin from './Admin';
+import { Link } from 'react-router'
+import { hashHistory } from 'react-router';
 
-class CheckAdmin extends React.Component {
-//checks if logged in user is SUPV, ADMIN, or neither
+export default class Supv extends React.Component {
+//Lists Forms
   constructor(props) { 
     super(props);
+
     this.state = {
-      userType: null,
+      FormList: null,
       loading: true,
       error: null
     };
@@ -19,16 +19,16 @@ class CheckAdmin extends React.Component {
   componentDidMount() { 
     axios.get(LibPath + 'DBGet.cfm', {
       params: {
-        Proc: "IsAdminOrSupv",
+        Proc: "ListForms",
         cachebuster: Math.random()
       }
     })
     .then(res => {
-      const userType = res.data[0]; 
+      const FormList = res.data; 
       
       // Update state to trigger a re-render.
       this.setState({
-        userType,
+        FormList,
         loading: false,
         error: null
       });
@@ -46,12 +46,24 @@ class CheckAdmin extends React.Component {
   }
 
   renderNextStep() {
-    if(this.state.userType==="ADMIN"){
-        return <Admin />
-    }else if(this.state.userType==="SUPV"){
-      return <Supv />
+    if(this.state.FormList.length===1){
+      hashHistory.push(`/SUPV/${this.state.FormList[0].ID}`);
     }else{
-      return <div>Sorry, you are not authorized.</div>
+      var listItems = this.state.FormList.map(function(form){
+        return (
+          <li key={form.ID}>
+              <Link to={`/SUPV/${form.ID}`}>{form.Descrip}</Link><br/>
+          </li> 
+        )
+      });
+      return (
+        <div>
+          <h3> Form List </h3>
+          <ul>
+            {listItems}
+          </ul>
+        </div>
+      )
     }
   }
   
@@ -75,4 +87,3 @@ class CheckAdmin extends React.Component {
 }
 
 
-export default CheckAdmin;
