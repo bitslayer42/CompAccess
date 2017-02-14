@@ -24,8 +24,8 @@ div.formclass {
 div.sectionclass {
   background-color: #f0f4f7;
   color: black;
-  padding: 3px;
-  margin-bottom: 3px;
+  padding: 10px;
+  margin-bottom: 5px;
   border: 1px solid #3b5969;
   text-align:left;
   font-weight:bold;
@@ -34,7 +34,7 @@ div.sectionclass  h2{
   line-height: 0.3em;
 }
 div.nodeclass {
-  padding: 3px;
+  padding: 3px 0;
   margin-bottom: 3px;
   border: 1px solid #3b5969;
   text-align:left;
@@ -80,4 +80,7 @@ td{
 tr.reqsrow:hover{
   background-color:#DDD;
   cursor:pointer;
+}
+.addnew img, .addnew input {
+    vertical-align:bottom;
 }

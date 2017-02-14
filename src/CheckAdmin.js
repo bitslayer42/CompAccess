@@ -26,7 +26,6 @@ class CheckAdmin extends React.Component {
     .then(res => {
       const userType = res.data[0]; 
       
-      // Update state to trigger a re-render.
       this.setState({
         userType,
         loading: false,

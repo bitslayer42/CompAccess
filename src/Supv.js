@@ -26,7 +26,6 @@ export default class Supv extends React.Component {
     .then(res => {
       const FormList = res.data; 
       
-      // Update state to trigger a re-render.
       this.setState({
         FormList,
         loading: false,

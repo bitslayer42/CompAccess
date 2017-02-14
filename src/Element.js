@@ -49,7 +49,7 @@ function ElementForm(props) {
         <input type="hidden" name="DateEntered"   id={props.curr.ID} defaultValue={formatdate}/>
         <input type="hidden" name="SupvName"      id={props.curr.ID} defaultValue={props.header.SupvName}/>
         <Element tree={props.curr.children} view={props.view}/>
-          {props.view === "SUPV" && <Signature SupvName={props.header.SupvName}/>}
+          {props.view === "SUPV" && <Signature SupvName={props.header.SupvName} submitForm={() => props.submitForm()}/>}
         
         <Edit view={props.view} type="Form"/> 
         <div style={{height:"200px"}}/>
@@ -82,9 +82,9 @@ class ElementNode extends React.Component {
     this.state = {
       childVisible: props.curr.ItemValue==="on"?true:false 
     };
-    this.onClick = this.onClick.bind(this); //React components using ES6 classes don't autobind "this"
+    //this.onClick = this.onClick.bind(this); //React components using ES6 classes don't autobind "this". You can add a "bind" or use arrow funcs
   }
-  onClick() {
+  onClick=()=>{
     this.setState({childVisible: !this.state.childVisible});
   }
   render() { 
@@ -223,28 +223,33 @@ class ElementSelect extends React.Component {
   }
 }
 
-function Signature(props) {  
-  return (
-    <div className="sectionclass" key="Sig">
-      <h2>AUTHORIZATION INFORMATION</h2>
-      <label>
-      *Supervisor Authorization Signature:
-      </label>
-     
-      <input type="text" name="SupvSig" size="50"/>
+class Signature extends React.Component {  
+  submitxForm(e){
+    console.log(e);
+  }
+  render() {
+    return (
+      <div className="sectionclass" key="Sig">
+        <h2>AUTHORIZATION INFORMATION</h2>
+        <label>
+        *Supervisor Authorization Signature:
+        </label>
+       
+        <input type="text" name="SupvSig" size="50"/>
 
-      <p>      
-      (Typing your name above implies you are authorizing the above computer access form.
-      We will verify your signature with the employee id you are currently logged in with.) 
-      </p>
-      <p>
-      You are logged in as {props.SupvName}
-      </p>
-      <p>
-      <button className="submit" onClick={() => props.submitForm()}>Submit</button>
-      </p>
-    </div>
-  )
+        <p><i>      
+        (Typing your name above implies you are authorizing the above computer access form.
+        We will verify your signature with the employee id you are currently logged in with.) 
+        </i></p>
+        <p>
+        You are logged in as <span style={{"color":"#fb7560"}}>{this.props.SupvName}</span>
+        </p>
+        <p>
+        <button className="submit" onClick={() => this.submitxForm(this)}>Submit</button>
+        </p>
+      </div>
+    )
+  }
 }
 
 

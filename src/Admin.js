@@ -21,7 +21,6 @@ export default class Admin extends React.Component {
     .then(res => {
       const adminData = res.data; 
       
-      // Update state to trigger a re-render.
       this.setState({
         adminData,
         loading: false,
@@ -30,7 +29,7 @@ export default class Admin extends React.Component {
     })
     .catch(err => {
       this.setState({
-        loading: false,
+        loading: false, 
         error: err
       });
     }); 
@@ -48,27 +47,55 @@ export default class Admin extends React.Component {
     let returnArr = [];
     let values = xmlDoc.getElementsByTagName("ItemValue");
     for (let i = 0; i < values.length; i++) {
-        returnArr.push(<td key={i}>{values[i].childNodes[0].nodeValue}</td>);
+        values[i].childNodes[0] && returnArr.push(<td key={i}>{values[i].childNodes[0].nodeValue}</td>);
     }
     return returnArr;
   }
   
   handleFormRowClick(id){
-    //console.log(id);
     hashHistory.push(`/ADMIN/0/${id}`);
   }
   
   handleNewFormClick(){
     console.log("handleNewFormClick");
+    axios.get(LibPath + 'DBUpdate.cfm', {
+      params: {
+        Proc: "AddChild",
+        ID: this.state.adminData.root,
+        Type: "FORM",
+        Code: "",
+        Descrip: "New7Form",
+        cachebuster: Math.random()
+      }
+    })
+    .then(res => { //debugger;
+      const adminData = this.state.adminData; 
+      const newForm = {};
+       newForm.ID = res.data[0]; 
+       newForm.Descrip = "New7Form"
+      adminData.forms.push(newForm);
+      
+      this.setState({
+        adminData,
+        loading: false,
+        error: null
+      });
+    })
+    .catch(err => {
+      this.setState({
+        loading: false,
+        error: err
+      });
+    });
   }
   
   handleNewAdminClick(){
     console.log("handleNewAdminClick");
   }
   
-  renderNextStep() {
+  renderNextStep() {                                                          console.log(this.state.adminData);
     var self = this; //so nested funcs can see the parent object
-    let listRequests = <div>No unresolved requests.</div>
+    let listRequests = <tr><td>No unresolved requests.</td></tr>
     if(this.state.adminData.requests[0]) { 
       listRequests = this.state.adminData.requests.map(function(req){
         return (
@@ -89,7 +116,9 @@ export default class Admin extends React.Component {
       return <li key={adm.AdminID}><Link to={`/useradmin/${adm.AdminID}`}>{adm.Name}</Link></li>;
     });
     return (
-      <div>
+      <div className="formclass" >
+        <h1>Computer Access Forms-Admin</h1>
+        <div className="sectionclass" >
         <h3> Unresolved Queue </h3>
         <table>
           <tbody>
@@ -97,24 +126,37 @@ export default class Admin extends React.Component {
             {listRequests}
           </tbody>
         </table>
+        </div>
+        
+        <div className="sectionclass" >
         <h3> Edit Forms </h3>
         <ul>
           {listFormsEDIT}
         </ul>
         <ul>
-          <li className="editclass" onClick={() => self.handleNewFormClick()}>Add New Form</li>
+          <li className="editclass" onClick={() => self.handleNewFormClick()}>
+            {/*<input style="display:none" type="text" value={this.state.newFormName} onChange={this.handleChange} />*/}
+            Add New Form
+          </li>
         </ul>
+        </div>
+        
+        <div className="sectionclass" >
         <h3> Edit Administrators </h3>
         <ul>
           {listAdmins}
         </ul>
         <ul>
           <li className="editclass" onClick={() => self.handleNewAdminClick()}>Add New Administrator</li>
-        </ul>        
+        </ul> 
+        </div>
+        
+        <div className="sectionclass" >        
         <h3> Enter a Request </h3>
         <ul>
           {listFormsSUPV}
-        </ul>        
+        </ul>
+        </div>
       </div>
     )
   }

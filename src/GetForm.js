@@ -10,7 +10,7 @@ export default class GetForm extends React.Component {
       view: props.params.view, //Can be "SUPV", "ADMIN", or "EDIT"
       formID: props.params.formID,
       reqID: props.params.reqID,
-      nodes: [],
+      nodes: [], //the tree
       header: {},
       loading: true,
       error: null,
@@ -31,7 +31,6 @@ export default class GetForm extends React.Component {
       header.SupvName = res.data.SupvName;
       header.EnteredDate = res.data.EnteredDate;
       
-      // Update state to trigger a re-render.
       this.setState({
         nodes,
         header,
@@ -48,6 +47,7 @@ export default class GetForm extends React.Component {
   }
 
   handleClick(i) {
+    i.preventDefault();
     i?console.log(i):console.log("clique");
   } 
   

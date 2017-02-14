@@ -44,6 +44,8 @@ ALTER PROC InsNode (@ToRightOf INT, @Code VARCHAR(10) = NULL, @Type VARCHAR(10),
 -- InsNode 13, 'RESPONSE', 'INPUT', 'Email Password'
 BEGIN
 	BEGIN TRANSACTION
+		DECLARE @FormID INT
+		
 		DECLARE @myRight int
 		SELECT @myRight = rgt FROM Forms
 		WHERE ID = @ToRightOf;
@@ -52,8 +54,10 @@ BEGIN
 		UPDATE Forms SET lft = lft + 2 WHERE lft > @myRight;
 
 		INSERT INTO Forms(Type,Code,Descrip,lft,rgt) VALUES(@Type, @Code, @Descrip, @myRight + 1, @myRight + 2);
+		SET @FormID = @@IDENTITY
+
+		SELECT @FormID AS FormID
 	COMMIT TRANSACTION
-	RETURN 0
 END
 GO
 ---------------------------------------------------------------------------------------------------------------
@@ -62,6 +66,7 @@ ALTER PROC AddChild (@IntoCategory INT, @Code VARCHAR(10) = NULL, @Type VARCHAR(
 -- AddChild 6, 'REQUEST', 'INPUT', 'questionsquestionquestions'
 BEGIN
 	BEGIN TRANSACTION
+		DECLARE @FormID INT
 		DECLARE @myLeft int
 		SELECT @myLeft = lft FROM Forms
 		WHERE ID = @IntoCategory;
@@ -70,13 +75,16 @@ BEGIN
 		UPDATE Forms SET lft = lft + 2 WHERE lft > @myLeft;
 
 		INSERT INTO Forms(Type,Code,Descrip,lft,rgt) VALUES(@Type, @Code, @Descrip, @myLeft + 1, @myLeft + 2);
+		SET @FormID = @@IDENTITY
+
+		SELECT @FormID AS FormID
 	COMMIT TRANSACTION
 END
 GO
 ---------------------------------------------------------------------------------------------------------------
 ALTER PROC DelNode (@ID INT) AS
 -- Delete Node and all it's children (Yikes!)
--- DelNode 31
+-- DelNode 63
 BEGIN
 	BEGIN TRANSACTION
 		DECLARE @myLeft INT, @myRight INT, @myWidth INT
@@ -135,8 +143,10 @@ GO
 PublishForm 4
 GO
 
-GetForm 4, 5
+GetForm 4, 9
 go
+
+
 -------------------------------------------------------------------
 ALTER PROC [dbo].[InsRequest](@SupvName VARCHAR(100), @Items XML) AS
 BEGIN
