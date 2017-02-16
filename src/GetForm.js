@@ -10,7 +10,7 @@ export default class GetForm extends React.Component {
       view: props.params.view, //Can be "SUPV", "ADMIN", or "EDIT"
       formID: props.params.formID,
       reqID: props.params.reqID,
-      nodes: [], //the tree
+      nodes: [], //the tree 'flat'
       header: {},
       loading: true,
       error: null,
@@ -77,7 +77,7 @@ export default class GetForm extends React.Component {
             atree.push(node);
         }
     }
-                                                                          console.log(atree);
+                                                                          console.log(nodes); console.log(atree);
     return (
       <Element tree={atree} view={this.state.view} header={this.state.header} submitForm={(i) => this.handleClick(i)}/>
     )

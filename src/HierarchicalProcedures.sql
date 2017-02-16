@@ -56,7 +56,7 @@ BEGIN
 		INSERT INTO Forms(Type,Code,Descrip,lft,rgt) VALUES(@Type, @Code, @Descrip, @myRight + 1, @myRight + 2);
 		SET @FormID = @@IDENTITY
 
-		SELECT @FormID AS FormID
+		SELECT @FormID AS FormID, @Type AS Type, @Code AS Code, @Descrip AS Descrip
 	COMMIT TRANSACTION
 END
 GO
@@ -77,7 +77,7 @@ BEGIN
 		INSERT INTO Forms(Type,Code,Descrip,lft,rgt) VALUES(@Type, @Code, @Descrip, @myLeft + 1, @myLeft + 2);
 		SET @FormID = @@IDENTITY
 
-		SELECT @FormID AS FormID
+		SELECT @FormID AS FormID, @Type AS Type, @Code AS Code, @Descrip AS Descrip
 	COMMIT TRANSACTION
 END
 GO

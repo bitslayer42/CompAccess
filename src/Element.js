@@ -82,7 +82,8 @@ class ElementNode extends React.Component {
     this.state = {
       childVisible: props.curr.ItemValue==="on"?true:false 
     };
-    //this.onClick = this.onClick.bind(this); //React components using ES6 classes don't autobind "this". You can add a "bind" or use arrow funcs
+    //this.onClick = this.onClick.bind(this); //React components using ES6 classes don't autobind "this". You can add a "bind" or use arrow funcs 
+    //https://facebook.github.io/react/docs/handling-events.html The latter is called "property initializer syntax" Warning: this is *experimental* syntax.
   }
   onClick=()=>{
     this.setState({childVisible: !this.state.childVisible});

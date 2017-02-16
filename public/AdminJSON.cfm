@@ -3,7 +3,8 @@
 <cfstoredproc procedure="AdminScreen" datasource="ITForms">
   <cfprocresult resultset="1" name="requests">
   <cfprocresult resultset="2" name="forms">
-  <cfprocresult resultset="3" name="admins">
+  <cfprocresult resultset="3" name="root">
+  <cfprocresult resultset="4" name="admins">
 </cfstoredproc>
 
 <cfset loopctr = 1>
@@ -32,6 +33,7 @@
   <cfset loopctr = loopctr + 1>
   </cfoutput>
   ], 
+  "root": <cfoutput>#root.ID#,</cfoutput>
   <cfset loopctr = 1>
   "admins": [ 
   <cfoutput query="admins">

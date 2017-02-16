@@ -4,15 +4,15 @@ import ReactDOM from 'react-dom';
 import GetForm from './GetForm';
 import CheckAdmin from './CheckAdmin';
 import UserAdmin from './UserAdmin';
-import AddNew2 from './AddNew'
-
+//import AddNewTest from './AddNew';    <Route path="/AddNewTest" component={AddNewTest} />   
+//import Test from './test';    <Route path="/Test" component={Test} />  
 import './index.css';
 
 ReactDOM.render(
   <Router history={hashHistory}>
     <Route path="/" component={CheckAdmin} />
-      <Route path="/AddNew" component={AddNew2} />{/**/}
-      
+   
+
     <Route path="/useradmin/:user" component={UserAdmin} />   
       
     <Route path="/:view/:formID" component={GetForm}>    

@@ -1,6 +1,7 @@
 import React from 'react';
 import axios from 'axios'; //ajax library
 import LibPath from './LibPath';
+import AddNew from './AddNew';
 import { Link } from 'react-router';
 import { hashHistory } from 'react-router';
 
@@ -14,6 +15,7 @@ export default class Admin extends React.Component {
       loading: true,
       error: null
     };
+    this.getAddedForm = this.getAddedForm.bind(this);
   }
 
   componentDidMount() { 
@@ -56,37 +58,21 @@ export default class Admin extends React.Component {
     hashHistory.push(`/ADMIN/0/${id}`);
   }
   
-  handleNewFormClick(){
-    console.log("handleNewFormClick");
-    axios.get(LibPath + 'DBUpdate.cfm', {
-      params: {
-        Proc: "AddChild",
-        ID: this.state.adminData.root,
-        Type: "FORM",
-        Code: "",
-        Descrip: "New7Form",
-        cachebuster: Math.random()
-      }
-    })
-    .then(res => { //debugger;
-      const adminData = this.state.adminData; 
-      const newForm = {};
-       newForm.ID = res.data[0]; 
-       newForm.Descrip = "New7Form"
-      adminData.forms.push(newForm);
-      
-      this.setState({
-        adminData,
-        loading: false,
-        error: null
-      });
-    })
-    .catch(err => {
-      this.setState({
-        loading: false,
-        error: err
-      });
-    });
+  getAddedForm(obj){
+    let newForm = {
+      "Descrip":obj.Descrip,
+      "ID":obj.FormID
+    }
+    let newAdminData = {
+      "admins": this.state.adminData.admins,
+      "forms": this.state.adminData.forms.concat(newForm),
+      "requests": this.state.adminData.requests,
+      "root": this.state.adminData.root
+    }
+    this.setState({
+      adminData: newAdminData
+    });    
+    console.log(this.state.adminData);
   }
   
   handleNewAdminClick(){
@@ -129,20 +115,26 @@ export default class Admin extends React.Component {
         </div>
         
         <div className="sectionclass" >
+        <h3> Search Forms </h3>
+        <ul>
+          <input/><button>Search</button>
+        </ul>
+        </div>
+        
+        <div className="sectionclass" >
         <h3> Edit Forms </h3>
         <ul>
           {listFormsEDIT}
         </ul>
         <ul>
-          <li className="editclass" onClick={() => self.handleNewFormClick()}>
-            {/*<input style="display:none" type="text" value={this.state.newFormName} onChange={this.handleChange} />*/}
-            Add New Form
+          <li className="editclass">
+            <AddNew typeToAdd="UNPUB" procToCall="AddChild" code="" parNode={this.state.adminData.root} getAddedObj={this.getAddedForm} />
           </li>
         </ul>
         </div>
         
         <div className="sectionclass" >
-        <h3> Edit Administrators </h3>
+        <h3> Administrators </h3>
         <ul>
           {listAdmins}
         </ul>
