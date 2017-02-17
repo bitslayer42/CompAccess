@@ -4,7 +4,7 @@ import LibPath from './LibPath';
 import Element from './Element';
 
 export default class GetForm extends React.Component {
-  constructor(props) { //debugger;
+  constructor(props) { 
     super(props);
     this.state = {
       view: props.params.view, //Can be "SUPV", "ADMIN", or "EDIT"
@@ -77,7 +77,7 @@ export default class GetForm extends React.Component {
             atree.push(node);
         }
     }
-                                                                          console.log(nodes); console.log(atree);
+                                                                          console.log("nodes",nodes); console.log("atree",atree);
     return (
       <Element tree={atree} view={this.state.view} header={this.state.header} submitForm={(i) => this.handleClick(i)}/>
     )

@@ -83,4 +83,5 @@ tr.reqsrow:hover{
 }
 .addnew img, .addnew input {
     vertical-align:bottom;
+    padding-left:3px;
 }

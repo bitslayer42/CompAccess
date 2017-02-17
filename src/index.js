@@ -4,14 +4,14 @@ import ReactDOM from 'react-dom';
 import GetForm from './GetForm';
 import CheckAdmin from './CheckAdmin';
 import UserAdmin from './UserAdmin';
-//import AddNewTest from './AddNew';    <Route path="/AddNewTest" component={AddNewTest} />   
+//import DeleteNodeTest from './DeleteNode';   <Route path="/DeleteNodeTest" component={DeleteNodeTest} />       
 //import Test from './test';    <Route path="/Test" component={Test} />  
 import './index.css';
 
 ReactDOM.render(
   <Router history={hashHistory}>
     <Route path="/" component={CheckAdmin} />
-   
+
 
     <Route path="/useradmin/:user" component={UserAdmin} />   
       

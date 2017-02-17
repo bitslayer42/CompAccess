@@ -28,6 +28,7 @@
   <cfoutput query="forms">
   { "ID": #ID#
   , "Descrip": "#Descrip#"
+  , "Type": "#Type#"
   }
   <cfif loopctr NEQ forms.RecordCount>,</cfif>
   <cfset loopctr = loopctr + 1>

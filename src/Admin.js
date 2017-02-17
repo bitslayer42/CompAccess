@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios'; //ajax library
 import LibPath from './LibPath';
 import AddNew from './AddNew';
+import DeleteNode from './DeleteNode';
 import { Link } from 'react-router';
 import { hashHistory } from 'react-router';
 
@@ -15,7 +16,8 @@ export default class Admin extends React.Component {
       loading: true,
       error: null
     };
-    this.getAddedForm = this.getAddedForm.bind(this);
+    this.handleAddedForm = this.handleAddedForm.bind(this);
+    this.handleDeletedForm = this.handleDeletedForm.bind(this);
   }
 
   componentDidMount() { 
@@ -34,7 +36,8 @@ export default class Admin extends React.Component {
         loading: false, 
         error: err
       });
-    }); 
+    });
+  
   }
   
   renderLoading() {
@@ -58,10 +61,11 @@ export default class Admin extends React.Component {
     hashHistory.push(`/ADMIN/0/${id}`);
   }
   
-  getAddedForm(obj){
+  handleAddedForm(obj){
     let newForm = {
       "Descrip":obj.Descrip,
-      "ID":obj.FormID
+      "ID":obj.FormID,
+      "Type":"UNPUB"
     }
     let newAdminData = {
       "admins": this.state.adminData.admins,
@@ -72,16 +76,30 @@ export default class Admin extends React.Component {
     this.setState({
       adminData: newAdminData
     });    
-    console.log(this.state.adminData);
   }
   
   handleNewAdminClick(){
     console.log("handleNewAdminClick");
   }
+
+  handleDeletedForm(deletedIndex){
+    console.log("handleDelete",deletedIndex);
+    let newFormList = this.state.adminData.forms;
+    newFormList.splice(deletedIndex,1);
+    let newAdminData = {
+      "admins": this.state.adminData.admins,
+      "forms": newFormList,
+      "requests": this.state.adminData.requests,
+      "root": this.state.adminData.root
+    }
+    this.setState({
+      adminData: newAdminData
+    }); 
+  }
   
-  renderNextStep() {                                                          console.log(this.state.adminData);
+  renderNextStep() {      console.log("adminData",this.state.adminData);                                                      
     var self = this; //so nested funcs can see the parent object
-    let listRequests = <tr><td>No unresolved requests.</td></tr>
+    let listRequests = <tr><td colSpan="4">No unresolved requests.</td></tr>
     if(this.state.adminData.requests[0]) { 
       listRequests = this.state.adminData.requests.map(function(req){
         return (
@@ -92,8 +110,13 @@ export default class Admin extends React.Component {
         )
       });
     }
-    let listFormsEDIT = this.state.adminData.forms.map(function(form){
-      return <li key={form.ID}><Link to={`/EDIT/${form.ID}`}>{form.Descrip}</Link></li>;
+    let listFormsEDIT = this.state.adminData.forms.map(function(form,ix){
+      return (
+        <li key={form.ID}>
+          <Link to={`/EDIT/${form.ID}`}>{form.Descrip}</Link>
+          <DeleteNode id={form.ID} handleDelete={self.handleDeletedForm} index={ix}/>
+        </li>
+      )
     });
     let listFormsSUPV = this.state.adminData.forms.map(function(form){
       return <li key={form.ID}><Link to={`/SUPV/${form.ID}`}>{form.Descrip}</Link></li>;
@@ -128,7 +151,7 @@ export default class Admin extends React.Component {
         </ul>
         <ul>
           <li className="editclass">
-            <AddNew typeToAdd="UNPUB" procToCall="AddChild" code="" parNode={this.state.adminData.root} getAddedObj={this.getAddedForm} />
+            <AddNew typeToAdd="UNPUB" procToCall="AddChild" code="" parNode={this.state.adminData.root} handleAddedObj={this.handleAddedForm} />
           </li>
         </ul>
         </div>

@@ -38,7 +38,7 @@ export default class AddNew extends React.Component {
       const newNode = res.data; 
        newNode.ItemValue = null;
        newNode.children = []; 
-      this.props.getAddedObj(newNode);
+      this.props.handleAddedObj(newNode);
     })
     .catch(err => {
       this.setState({

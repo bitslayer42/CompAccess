@@ -9,7 +9,7 @@ export default class Element extends React.Component {   //An element can be any
       <div>
       {
         this.props.tree.map((curr) => {
-          if      (curr.Type==="FORM"){
+          if      (curr.Type==="FORM"||curr.Type==="UNPUB"){
             return <ElementForm curr={curr} key={curr.ID} view={this.props.view} header={this.props.header} submitForm={()=>this.props.submitForm()}/> 
           }else if(curr.Type==="SECTION"){
             return <ElementSection curr={curr} key={curr.ID} view={this.props.view}/>
@@ -21,7 +21,7 @@ export default class Element extends React.Component {   //An element can be any
             //html form types, first check if it is a RESPONSE
             return <ElementIsResponse curr={curr} key={curr.ID} view={this.props.view}/> 
           }else{
-            return <div>No</div>
+            return <div>Unknown Element</div>
           }
         })
       }
@@ -43,6 +43,7 @@ function ElementForm(props) {
       <form method="post" action={LibPath + 'SupvPost.cfm'}>
         <h1>Computer Access Authorization E-Form</h1>
         <h2>{props.curr.Descrip}</h2>
+          {props.curr.Type==="UNPUB" && <div style={{color:"black"}}>Unpublished Form</div>}
         {props.header.SupvName && <p><i>Entered by:</i> {props.header.SupvName}</p>} 
         {formatdate}
         <input type="hidden" name={props.curr.ID} id={props.curr.ID} defaultValue={props.curr.Descrip}/>
