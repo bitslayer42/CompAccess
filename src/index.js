@@ -5,7 +5,7 @@ import GetForm from './GetForm';
 import CheckAdmin from './CheckAdmin';
 import UserAdmin from './UserAdmin';
 //import DeleteNodeTest from './DeleteNode';   <Route path="/DeleteNodeTest" component={DeleteNodeTest} />       
-//import Test from './test';    <Route path="/Test" component={Test} />  
+//import TogglePublishTest from './TogglePublish';    <Route path="/TogglePublish" component={TogglePublishTest} />  
 import './index.css';
 
 ReactDOM.render(

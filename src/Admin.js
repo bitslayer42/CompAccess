@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios'; //ajax library
 import LibPath from './LibPath';
 import AddNew from './AddNew';
+import TogglePublish from './TogglePublish';
 import DeleteNode from './DeleteNode';
 import { Link } from 'react-router';
 import { hashHistory } from 'react-router';
@@ -18,6 +19,7 @@ export default class Admin extends React.Component {
     };
     this.handleAddedForm = this.handleAddedForm.bind(this);
     this.handleDeletedForm = this.handleDeletedForm.bind(this);
+    this.handleTogglePublish = this.handleTogglePublish.bind(this);
   }
 
   componentDidMount() { 
@@ -60,7 +62,7 @@ export default class Admin extends React.Component {
   handleFormRowClick(id){
     hashHistory.push(`/ADMIN/0/${id}`);
   }
-  
+
   handleAddedForm(obj){
     let newForm = {
       "Descrip":obj.Descrip,
@@ -77,13 +79,27 @@ export default class Admin extends React.Component {
       adminData: newAdminData
     });    
   }
-  
+  handleTogglePublish(toggledIndex){
+    console.log("handleTogglePublish");
+    let newFormList = this.state.adminData.forms;
+    newFormList[toggledIndex].Type=newFormList[toggledIndex].Type==="FORM"?"UNPUB":"FORM";
+    let newAdminData = {
+      "admins": this.state.adminData.admins,
+      "forms": newFormList,
+      "requests": this.state.adminData.requests,
+      "root": this.state.adminData.root
+    }
+    this.setState({
+      adminData: newAdminData
+    });     
+  }
+    
   handleNewAdminClick(){
     console.log("handleNewAdminClick");
   }
 
   handleDeletedForm(deletedIndex){
-    console.log("handleDelete",deletedIndex);
+    //console.log("handleDelete",deletedIndex);
     let newFormList = this.state.adminData.forms;
     newFormList.splice(deletedIndex,1);
     let newAdminData = {
@@ -113,6 +129,7 @@ export default class Admin extends React.Component {
     let listFormsEDIT = this.state.adminData.forms.map(function(form,ix){
       return (
         <li key={form.ID}>
+          <TogglePublish id={form.ID} published={form.Type==="FORM" ? true : false} handleTogglePublish={self.handleTogglePublish} index={ix} />
           <Link to={`/EDIT/${form.ID}`}>{form.Descrip}</Link>
           <DeleteNode id={form.ID} handleDelete={self.handleDeletedForm} index={ix}/>
         </li>
@@ -150,7 +167,7 @@ export default class Admin extends React.Component {
           {listFormsEDIT}
         </ul>
         <ul>
-          <li className="editclass">
+          <li >
             <AddNew typeToAdd="UNPUB" procToCall="AddChild" code="" parNode={this.state.adminData.root} handleAddedObj={this.handleAddedForm} />
           </li>
         </ul>

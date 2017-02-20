@@ -53,10 +53,10 @@ export default class AddNew extends React.Component {
   }  
 
   render()  {
-    let convertUnpub = this.props.typeToAdd==="UNPUB"?"FORM":this.props.typeToAdd;
-    let typeToAdd = convertUnpub.replace(/(.)(.*)/g, function(match, p1, p2){return p1+p2.toLowerCase()});
-    let placehold = typeToAdd + " Name";
-    let clickName = "Add " + typeToAdd;
+    let convertUnpubLabel = this.props.typeToAdd==="UNPUB"?"FORM":this.props.typeToAdd;
+    let typeToAddLabel = convertUnpubLabel.replace(/(.)(.*)/g, function(match, p1, p2){return p1+p2.toLowerCase()});
+    let placehold = typeToAddLabel + " Name";
+    let clickName = "Add " + typeToAddLabel;
     return (
       <div className="addnew">
         {
