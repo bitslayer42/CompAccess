@@ -3,7 +3,7 @@ import addbutton from './images/plus.png';
 import axios from 'axios'; //ajax library
 import LibPath from './LibPath';
 
-//USAGE:   // <AddNew typeToAdd="FORM" procToCall="AddChild" code="" parNode={this.state.adminData.root} getAddedObj={this.getAddedObj} />
+//USAGE:   // <AddNew typeToAdd="FORM" procToCall="AddChild" code="" parNodeID={this.state.adminData.root} handleAddedObj={this.handleAddedObj} />
 
 export default class AddNew extends React.Component {
   constructor(props) { 
@@ -27,17 +27,17 @@ export default class AddNew extends React.Component {
     axios.get(LibPath + 'DBUpdate.cfm', {
       params: {
         Proc: this.props.procToCall,
-        ID: this.props.parNode,
+        FormID: this.props.parNodeID,
         Type: this.props.typeToAdd,
         Code: this.props.code,
         Descrip: this.state.promptBoxText,
         cachebuster: Math.random()
       }
     })
-    .then(res => { 
+    .then(res => {   //returns new node: "FormID","Type","Code","Descrip","ParentID"
       const newNode = res.data; 
        newNode.ItemValue = null;
-       newNode.children = []; 
+       //newNode.children = []; 
       this.props.handleAddedObj(newNode);
     })
     .catch(err => {
@@ -79,15 +79,16 @@ export default class AddNew extends React.Component {
 
 // class AddNewTest extends React.Component {
   
-  // getAddedObj=(obj)=>{
+  // handleAddedObj=(obj)=>{
     // console.log(obj);
   // }
   
   // render()  {
     // return (
-  // <AddNew typeToAdd="FORM" procToCall="AddChild" code="" parNode="14" getAddedObj={this.getAddedObj}/>
+  // <AddNew typeToAdd="FORM" procToCall="AddChild" code="" parNodeID="14" handleAddedObj={this.handleAddedObj}/>
     // )
   // }
 // } 
  
-
+//
+//

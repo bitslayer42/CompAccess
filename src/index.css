@@ -10,14 +10,15 @@ body {
   text-align:left;
 }
 div {
-  border-radius: 5px;
+  border-radius: 4px;
 
 }
 div.formclass {
   background-color: #a4becc;
   color: white;
   padding: 3px;
-  border: 1px solid #3b5969;
+  margin-bottom: 1px;
+  border: 2px solid #3b5969;
   text-align:left;
   font-weight:bold;
 }
@@ -60,6 +61,8 @@ div.editclass {
   color: green;
   font-size:0.6em;
   border:1px solid grey;
+  width:90px;
+
 }
 div.responseclass{
   background-color:#fa391e;
@@ -68,7 +71,7 @@ div.responseclass{
 }
 label {
 	font-size: 16px;
-	width:280px;
+	width:43%;
 	margin-right:5px;
 	display:inline-block;
 	padding-top:3px;
@@ -78,7 +81,7 @@ button.submit {
   display: block;
   margin: 0 auto; 
 }
-td{
+tr.reqsrow td{
   border:1px solid grey;
 
 }
@@ -89,4 +92,7 @@ tr.reqsrow:hover{
 .addnew img, .addnew input {
     vertical-align:bottom;
     padding-left:3px;
+}
+.inputclass{
+  width:55%; 
 }

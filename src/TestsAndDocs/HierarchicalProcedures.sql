@@ -10,7 +10,7 @@ BEGIN
 	WHERE Forms.Type = 'FORM'
 END
 SELECT * FROM Requests WHERE RequestID = @RequestID
-SELECT inr2.ID, inr2.Code, inr2.depth, inr2.Type, inr2.Descrip, ParentID, ItemValue FROM (
+SELECT inr2.ID AS FormID, inr2.Code, inr2.depth, inr2.Type, inr2.Descrip, ParentID, ItemValue FROM (
 	SELECT inr.ID, inr.Code, inr.depth, inr.Type, inr.Descrip, inr.lft, (SELECT TOP 1 ID 
 			   FROM Forms parent 
 			   WHERE parent.lft < inr.lft AND parent.rgt > inr.rgt    
@@ -39,7 +39,30 @@ ON inr2.ID = req.FieldID
 ORDER BY inr2.lft
 GO
 ---------------------------------------------------------------------------------------------------------------
-ALTER PROC InsNode (@ToRightOf INT, @Code VARCHAR(10) = NULL, @Type VARCHAR(10), @Descrip VARCHAR(100)) AS
+ALTER PROC [dbo].[AddChild] (@IntoCategory INT, @Code VARCHAR(10) = NULL, @Type VARCHAR(10), @Descrip VARCHAR(100)) AS
+-- Adds first child to category
+-- AddChild 129, '', 'SECTION', 'OneSizeFitsAll?'
+BEGIN
+	BEGIN TRANSACTION
+		DECLARE @FormID INT
+		DECLARE @myLeft int
+		SELECT @myLeft = lft FROM Forms
+		WHERE ID = @IntoCategory;
+
+		UPDATE Forms SET rgt = rgt + 2 WHERE rgt > @myLeft;
+		UPDATE Forms SET lft = lft + 2 WHERE lft > @myLeft;
+
+		INSERT INTO Forms(Type,Code,Descrip,lft,rgt) VALUES(@Type, @Code, @Descrip, @myLeft + 1, @myLeft + 2);
+		SET @FormID = @@IDENTITY
+
+		SELECT @FormID AS FormID, @Type AS Type, @Code AS Code, @Descrip AS Descrip, dbo.GetParent(@FormID) AS ParentID
+	COMMIT TRANSACTION
+END
+
+GO
+---------------------------------------------------------------------------------------------------------------
+
+ALTER PROC [dbo].[InsNode] (@ToRightOf INT, @Code VARCHAR(10) = NULL, @Type VARCHAR(10), @Descrip VARCHAR(100)) AS
 -- Adds a sibling after @ToRightOf
 -- InsNode 13, 'RESPONSE', 'INPUT', 'Email Password'
 BEGIN
@@ -56,41 +79,20 @@ BEGIN
 		INSERT INTO Forms(Type,Code,Descrip,lft,rgt) VALUES(@Type, @Code, @Descrip, @myRight + 1, @myRight + 2);
 		SET @FormID = @@IDENTITY
 
-		SELECT @FormID AS FormID, @Type AS Type, @Code AS Code, @Descrip AS Descrip, dbo.GetParent(@FormID) AS ParID
+		SELECT @FormID AS FormID, @Type AS Type, @Code AS Code, @Descrip AS Descrip, dbo.GetParent(@FormID) AS ParentID
 	COMMIT TRANSACTION
 END
 GO
 ---------------------------------------------------------------------------------------------------------------
-ALTER PROC AddChild (@IntoCategory INT, @Code VARCHAR(10) = NULL, @Type VARCHAR(10), @Descrip VARCHAR(100)) AS
--- Adds first child to category
--- AddChild 6, 'REQUEST', 'INPUT', 'questionsquestionquestions'
-BEGIN
-	BEGIN TRANSACTION
-		DECLARE @FormID INT
-		DECLARE @myLeft int
-		SELECT @myLeft = lft FROM Forms
-		WHERE ID = @IntoCategory;
-
-		UPDATE Forms SET rgt = rgt + 2 WHERE rgt > @myLeft;
-		UPDATE Forms SET lft = lft + 2 WHERE lft > @myLeft;
-
-		INSERT INTO Forms(Type,Code,Descrip,lft,rgt) VALUES(@Type, @Code, @Descrip, @myLeft + 1, @myLeft + 2);
-		SET @FormID = @@IDENTITY
-
-		SELECT @FormID AS FormID, @Type AS Type, @Code AS Code, @Descrip AS Descrip
-	COMMIT TRANSACTION
-END
-GO
----------------------------------------------------------------------------------------------------------------
-ALTER PROC DelNode (@ID INT) AS
+ALTER PROC DelNode (@FormID INT) AS
 -- Delete Node and all it's children (Yikes!)
--- DelNode 63
+-- DelNode 119
 BEGIN
 	BEGIN TRANSACTION
 		DECLARE @myLeft INT, @myRight INT, @myWidth INT
 		SELECT @myLeft = lft, @myRight = rgt, @myWidth = rgt - lft + 1
 		FROM Forms
-		WHERE ID = @ID
+		WHERE ID = @FormID
 
 		DELETE FROM Forms WHERE lft BETWEEN @myLeft AND @myRight;
 
@@ -100,7 +102,7 @@ BEGIN
 END
 GO
 ---------------------------------------------------------------------------------------------------------------
-ALTER PROC PublishForm (@ID INT) AS
+ALTER PROC PublishForm (@FormID INT) AS
 -- Toggles form from Type FORM to UNPUB
 -- PublishForm 4
 BEGIN
@@ -111,40 +113,12 @@ BEGIN
 		SELECT 'FORM' AS opt UNION SELECT 'UNPUB'
 	) AS opts
 	WHERE opt <> Type
-	AND ID = @ID
+	AND ID = @FormID
 END
 GO
----------------------------------------------------------------------------------------------------------------
-	DECLARE	@return_value int
-
-	EXEC	@return_value = AddChild
-			@IntoCategory = 47,
-			@Code = N'',
-			@Type = N'OPTION',
-			@Descrip = N'(Choose One)'
-
-	SELECT	'Return Value' = @return_value
-GO
----------------------------------------------------------------------------------------------------------------
-	DECLARE	@return_value int
-
-	EXEC	@return_value = InsNode
-			@ToRightOf = 56,
-			@Code = N'',
-			@Type = N'TEXT',
-			@Descrip = N'(Note: Includes email distribution groups, Meditech and Cerner as applicable.)'
-
-	SELECT	'Return Value' = @return_value
-GO
 
 
 
----------------------------------------------------------------------------------------------------------------
-PublishForm 4
-GO
-
-GetForm 4, 9
-go
 
 
 -------------------------------------------------------------------
@@ -183,34 +157,29 @@ BEGIN
 	SELECT @RequestID AS RequestID
 END
 
--------------------------------------------------------------------
-exec InsRequest @SupvName = 'J. Supv Wilson', @Items = N'
-<reqrows>
-	<row>
-		<Field>9</Field>
-		<Value>J. Staffy Wilson</Value>
-	</row>
-	<row>
-		<Field>35</Field>
-		<Value>1027126</Value>
-	</row>
-	<row>
-		<Field>37</Field>
-		<Value>2017-03-01</Value>
-	</row>
-	<row>
-		<Field>36</Field>
-		<Value>Johannes Staffy Wilson</Value>
-	</row>
-	<row>
-		<Field>19</Field>
-		<Value>External Temp Agency Staff</Value>
-	</row>
-</reqrows>
-	
-'
-
 GO
+-------------------------------------------------------------------
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER PROC [dbo].[AdminScreen] AS
+	SELECT * FROM Requests
+	WHERE Completed = 0
+
+	SELECT ID AS FormID, Descrip, Type FROM Forms
+	WHERE Type IN('FORM','UNPUB')
+	ORDER BY Type
+
+	SELECT ID AS FormID, Descrip FROM Forms
+	WHERE Type = 'ROOT'
+
+	SELECT AdminID, Name FROM Admins
+GO
+
+
 -------------------------------------------------------------------
 ALTER PROC IsAdminOrSupv(@UserID VARCHAR(15)) AS
 --returns 'SUPV','ADMIN', or null
@@ -247,4 +216,53 @@ SELECT @RetType AS Results
 GO
 -------------------------------------------------------------------
 
+---------------------------------------------------------------------------------------------------------------
 
+-------------------------------------------------------------------
+exec InsRequest @SupvName = 'J. Supv Wilson', @Items = N'
+<reqrows>
+	<row>
+		<Field>9</Field>
+		<Value>J. Staffy Wilson</Value>
+	</row>
+	<row>
+		<Field>35</Field>
+		<Value>1027126</Value>
+	</row>
+	<row>
+		<Field>37</Field>
+		<Value>2017-03-01</Value>
+	</row>
+	<row>
+		<Field>36</Field>
+		<Value>Johannes Staffy Wilson</Value>
+	</row>
+	<row>
+		<Field>19</Field>
+		<Value>External Temp Agency Staff</Value>
+	</row>
+</reqrows>
+	
+'
+
+GO
+
+---------------------------------------------------------------------------------------------------------------
+PublishForm 4
+GO
+---------------------------------------------------------
+
+
+GetForm 129
+go
+DelNode 175
+go
+DelNode 176
+go
+DelNode 177
+go
+DelNode 173
+go
+DelNode 174
+go
+DelNode 169

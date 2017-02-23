@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios'; //ajax library
 import LibPath from './LibPath';
 
-//USAGE:   // <TogglePublish id={form.ID} published={true} handleTogglePublish={this.handleTogglePublish} index={ix} />
+//USAGE:   // <TogglePublish FormID={form.FormID} published={true} handleTogglePublish={this.handleTogglePublish} index={ix} />
 
 export default class TogglePublish extends React.Component {
  
@@ -11,7 +11,7 @@ export default class TogglePublish extends React.Component {
     axios.get(LibPath + 'DBUpdate.cfm', {
       params: {
         Proc: "PublishForm",
-        ID: this.props.id,
+        FormID: this.props.FormID,
         cachebuster: Math.random()
       }
     })
@@ -28,10 +28,10 @@ export default class TogglePublish extends React.Component {
 
   render()  {
     return (
-        <span className="pubclass">
+        <div className="pubclass">
           <input type="checkbox" onChange={() => this.onChange()} checked={this.props.published} /> 
           {this.props.published ? " Published " : "Unpublished"}
-        </span>
+        </div>
     )
   }
 };
@@ -44,7 +44,7 @@ export default class TogglePublish extends React.Component {
   
   // render()  {
     // return (
-      // <TogglePublish id="117" published="true" handleTogglePublish={this.handleTogglePublish} index="1" />
+      // <TogglePublish FormID="117" published="true" handleTogglePublish={this.handleTogglePublish} index="1" />
     // )
   // }
 // } 

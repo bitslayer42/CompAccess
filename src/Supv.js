@@ -46,12 +46,12 @@ export default class Supv extends React.Component {
 
   renderNextStep() {
     if(this.state.FormList.length===1){
-      hashHistory.push(`/SUPV/${this.state.FormList[0].ID}`);
+      hashHistory.push(`/SUPV/${this.state.FormList[0].FormID}`);
     }else{
       var listItems = this.state.FormList.map(function(form){
         return (
-          <li key={form.ID}>
-              <Link to={`/SUPV/${form.ID}`}>{form.Descrip}</Link><br/>
+          <li key={form.FormID}>
+              <Link to={`/SUPV/${form.FormID}`}>{form.Descrip}</Link><br/>
           </li> 
         )
       });

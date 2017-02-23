@@ -15,6 +15,7 @@ export default class GetForm extends React.Component {
       loading: true,
       error: null,
     };
+    this.editCB = this.editCB.bind(this);
   }
  
   componentDidMount() {
@@ -38,7 +39,7 @@ export default class GetForm extends React.Component {
         error: null
       });
     })
-    .catch(err => {
+    .catch(err => { 
       this.setState({
         loading: false,
         error: err
@@ -46,9 +47,14 @@ export default class GetForm extends React.Component {
     }); 
   }
 
-  handleClick(i) {
-    i.preventDefault();
-    i?console.log(i):console.log("clique");
+  editCB(nodeid,newnode) { //debugger;
+    let theNodes = JSON.parse(JSON.stringify(this.state.nodes));
+      console.log("theNodes,nodeid,newnode",theNodes,nodeid,newnode);    
+    theNodes.splice(nodeid+1,0,newnode);
+      console.log("theNodesaftersplic",theNodes);    
+    this.setState({
+      nodes: theNodes
+    });    
   } 
   
   renderLoading() {
@@ -63,23 +69,24 @@ export default class GetForm extends React.Component {
     );
   }
   
-  makeTree() { 
-    let nodes = this.state.nodes;
-    let rootID = nodes[0].ID;
+  makeTree() {     //debugger;
+    let nodes = JSON.parse(JSON.stringify(this.state.nodes));
+    let rootID = nodes[0].FormID;
     var map = {}, node, atree = [];
     for (var i = 0; i < nodes.length; i += 1) {
         node = nodes[i];
+        node.nodeid = i;
         node.children = [];
-        map[node.ID] = i; // use map to look-up the parents:stackoverflow.com/questions/18017869/
-        if (node.ID !== rootID) {
+        map[node.FormID] = i; // use map to look-up the parents:stackoverflow.com/questions/18017869/
+        if (node.FormID !== rootID) {
             nodes[map[node.ParentID]].children.push(node);
         } else {
-            atree.push(node);
+            atree.push(node); // first
         }
     }
-                                                                          console.log("nodes",nodes); console.log("atree",atree);
+                                                                          console.log("statenodes",this.state.nodes); console.log("localnodes",nodes);console.log("atree",atree);
     return (
-      <Element tree={atree} view={this.state.view} header={this.state.header} submitForm={(i) => this.handleClick(i)}/>
+      <Element tree={atree} view={this.state.view} header={this.state.header} editCB={this.editCB}/>
     )
     
   }

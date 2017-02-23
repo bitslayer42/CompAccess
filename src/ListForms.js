@@ -47,8 +47,8 @@ export default class ListForms extends React.Component {
   renderNextStep() {
     var listItems = this.state.FormList.map(function(form){
       return (
-        <li key={form.ID}>
-            <Link to={`/SUPV/${form.ID}`}>{form.Descrip}</Link><br/>
+        <li key={form.FormID}>
+            <Link to={`/SUPV/${form.FormID}`}>{form.Descrip}</Link><br/>
         </li> 
       )
     });

@@ -59,14 +59,14 @@ export default class Admin extends React.Component {
     return returnArr;
   }
   
-  handleFormRowClick(id){
-    hashHistory.push(`/ADMIN/0/${id}`);
+  handleFormRowClick(ReqID){
+    hashHistory.push(`/ADMIN/0/${ReqID}`);
   }
 
   handleAddedForm(obj){
     let newForm = {
       "Descrip":obj.Descrip,
-      "ID":obj.FormID,
+      "FormID":obj.FormID,
       "Type":"UNPUB"
     }
     let newAdminData = {
@@ -80,7 +80,7 @@ export default class Admin extends React.Component {
     });    
   }
   handleTogglePublish(toggledIndex){
-    console.log("handleTogglePublish");
+    //console.log("handleTogglePublish");
     let newFormList = this.state.adminData.forms;
     newFormList[toggledIndex].Type=newFormList[toggledIndex].Type==="FORM"?"UNPUB":"FORM";
     let newAdminData = {
@@ -115,7 +115,7 @@ export default class Admin extends React.Component {
   
   renderNextStep() {      console.log("adminData",this.state.adminData);                                                      
     var self = this; //so nested funcs can see the parent object
-    let listRequests = <tr><td colSpan="4">No unresolved requests.</td></tr>
+    let listRequests = <tr ><td colSpan="4">No unresolved requests.</td></tr>
     if(this.state.adminData.requests[0]) { 
       listRequests = this.state.adminData.requests.map(function(req){
         return (
@@ -128,15 +128,19 @@ export default class Admin extends React.Component {
     }
     let listFormsEDIT = this.state.adminData.forms.map(function(form,ix){
       return (
-        <li key={form.ID}>
-          <TogglePublish id={form.ID} published={form.Type==="FORM" ? true : false} handleTogglePublish={self.handleTogglePublish} index={ix} />
-          <Link to={`/EDIT/${form.ID}`}>{form.Descrip}</Link>
-          <DeleteNode id={form.ID} handleDelete={self.handleDeletedForm} index={ix}/>
-        </li>
+        <tr key={form.FormID}>
+          <td>
+          <TogglePublish FormID={form.FormID} published={form.Type==="FORM" ? true : false} handleTogglePublish={self.handleTogglePublish} index={ix} />
+          </td><td>
+          <Link to={`/EDIT/${form.FormID}`}>{form.Descrip}</Link>
+          </td><td>
+          <DeleteNode FormID={form.FormID} handleDelete={self.handleDeletedForm} index={ix}/>
+          </td>
+        </tr>
       )
     });
     let listFormsSUPV = this.state.adminData.forms.map(function(form){
-      return <li key={form.ID}><Link to={`/SUPV/${form.ID}`}>{form.Descrip}</Link></li>;
+      return <li key={form.FormID}><Link to={`/SUPV/${form.FormID}`}>{form.Descrip}</Link></li>;
     });
     let listAdmins = this.state.adminData.admins.map(function(adm){
       return <li key={adm.AdminID}><Link to={`/useradmin/${adm.AdminID}`}>{adm.Name}</Link></li>;
@@ -163,12 +167,14 @@ export default class Admin extends React.Component {
         
         <div className="sectionclass" >
         <h3> Edit Forms </h3>
-        <ul>
-          {listFormsEDIT}
-        </ul>
+        <table>
+          <tbody>
+            {listFormsEDIT}
+          </tbody>
+        </table>
         <ul>
           <li >
-            <AddNew typeToAdd="UNPUB" procToCall="AddChild" code="" parNode={this.state.adminData.root} handleAddedObj={this.handleAddedForm} />
+            <AddNew typeToAdd="UNPUB" procToCall="AddChild" code="" parNodeID={this.state.adminData.root} handleAddedObj={this.handleAddedForm} />
           </li>
         </ul>
         </div>
