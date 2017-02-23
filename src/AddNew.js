@@ -61,12 +61,12 @@ export default class AddNew extends React.Component {
       <div className="addnew">
         {
           this.state.showPrompt && 
-            <div>
+
               <form id="AddNewForm" onSubmit={this.handleSubmit}>
                 <input type="text" autoFocus value={this.state.promptBoxText} onChange={this.handleChange} placeholder={placehold} />
                 <a onClick={() => this.handleSubmit()}><img src={addbutton} alt="Add"/></a>
               </form>
-            </div>
+
         }
         {
           !this.state.showPrompt && <div><a className="editclass" onClick={() => this.addForm()}>{clickName}</a></div>
@@ -80,7 +80,7 @@ export default class AddNew extends React.Component {
 // class AddNewTest extends React.Component {
   
   // handleAddedObj=(obj)=>{
-    // console.log(obj);
+    // //console.log(obj);
   // }
   
   // render()  {

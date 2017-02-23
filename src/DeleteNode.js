@@ -3,7 +3,7 @@ import delbutton from './images/delete.png';
 import axios from 'axios'; //ajax library
 import LibPath from './LibPath';
 
-//USAGE:   // <DeleteNode FormID={form.FormID} handleDelete={this.handleDelete} index={ix}/>
+//USAGE:   // <DeleteNode DelID={form.FormID} handleDelete={this.handleDelete} index={ix}/>
 
 export default class DeleteNode extends React.Component {
  
@@ -14,7 +14,7 @@ export default class DeleteNode extends React.Component {
       axios.get(LibPath + 'DBUpdate.cfm', {
         params: {
           Proc: "DelNode",
-          FormID: this.props.FormID,
+          DelID: this.props.DelID,
           cachebuster: Math.random()
         }
       })
@@ -32,7 +32,7 @@ export default class DeleteNode extends React.Component {
 
   render()  {
     return (
-        <span className="addnew"><a onClick={() => this.onClick()}><img src={delbutton} alt="Delete" /></a></span>
+        <span className="addnew"><a onClick={this.onClick}><img src={delbutton} alt="Delete" /></a></span>
     )
   }
 };
@@ -40,12 +40,12 @@ export default class DeleteNode extends React.Component {
 // class DeleteNodeTest extends React.Component {
   
   // handleDelete(){
-    // console.log("handleDelete");
+    // //console.log("handleDelete");
   // }
   
   // render()  {
     // return (
-  // <DeleteNode FormID="107" handleDelete={this.handleDelete}/>
+  // <DeleteNode DelID="107" handleDelete={this.handleDelete}/>
     // )
   // }
 // } 

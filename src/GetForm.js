@@ -47,11 +47,25 @@ export default class GetForm extends React.Component {
     }); 
   }
 
-  editCB(nodeid,newnode) { //debugger;
+  editCB(nodeid,del,newnode) {  //debugger;
     let theNodes = JSON.parse(JSON.stringify(this.state.nodes));
-      console.log("theNodes,nodeid,newnode",theNodes,nodeid,newnode);    
-    theNodes.splice(nodeid+1,0,newnode);
-      console.log("theNodesaftersplic",theNodes);    
+      //console.log("theNodes,nodeid,del,newnode",theNodes,nodeid,del,newnode);    
+    if(del){  //deleting
+      let depthOfDel = theNodes[nodeid].depth;
+      let ix = nodeid;
+      theNodes.splice(ix,1);
+      while(theNodes[ix] && theNodes[ix].depth>depthOfDel){
+        theNodes.splice(ix,1);
+        //ix+=1;
+      }
+    }else{   //adding
+      let parix = theNodes.findIndex(x => x.FormID === newnode.ParentID);
+      newnode.depth = theNodes[parix].depth+1;
+      theNodes.splice(nodeid+1,del,newnode);
+      
+    }
+      console.log("theNodesaftersplic",theNodes); 
+      
     this.setState({
       nodes: theNodes
     });    
@@ -84,7 +98,7 @@ export default class GetForm extends React.Component {
             atree.push(node); // first
         }
     }
-                                                                          console.log("statenodes",this.state.nodes); console.log("localnodes",nodes);console.log("atree",atree);
+                                                                          //console.log("statenodes",this.state.nodes); //console.log("localnodes",nodes);//console.log("atree",atree);
     return (
       <Element tree={atree} view={this.state.view} header={this.state.header} editCB={this.editCB}/>
     )

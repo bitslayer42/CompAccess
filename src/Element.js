@@ -51,7 +51,7 @@ function ElementForm(props) {
       ?(
         <form method="post" action={LibPath + 'SupvPost.cfm'}>
           <Element tree={props.curr.children} view={props.view} />
-          <input type="hidden" name={props.curr.FormID} id={props.curr.FormID} defaultValue={props.curr.Descrip} />
+          <input type="hidden" name={props.curr.FormID} id={props.curr.FormID} defaultValue={props.curr.Descrip} /> {/*form*/}
           <input type="hidden" name="DateEntered"   id={props.curr.FormID} defaultValue={formatdate} />
           <input type="hidden" name="SupvName"      id={props.curr.FormID} defaultValue={props.header.SupvName} />    
           <Signature SupvName={props.header.SupvName} />
@@ -198,7 +198,8 @@ class ElementRadio extends React.Component {
     let curr = this.props.curr;
       return (
       <div>
-      {curr.children.map((chld,ix) => { //these should be OPTIONS
+      {curr.children[0] ?
+        curr.children.map((chld,ix) => { //these should be OPTIONS
         return( 
           <div key={chld.FormID}>
           <label>{ix!==0?"":curr.Descrip+":"}</label>
@@ -207,7 +208,16 @@ class ElementRadio extends React.Component {
           <Edit view={this.props.view} type="OPTION"/>  
           </div>
         )
-      })}
+      })//if no OPTIONS
+      :(  
+          <div>
+          <label>{curr.Descrip}</label>
+          <input type="radio" name={curr.FormID} />
+
+          <Edit view={this.props.view} type="OPTION"/>  
+          </div>
+      )
+      }
       <Edit view={this.props.view} type="RADIO"/>       
       </div>      
       ) 

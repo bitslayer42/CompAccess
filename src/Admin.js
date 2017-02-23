@@ -95,13 +95,13 @@ export default class Admin extends React.Component {
   }
     
   handleNewAdminClick(){
-    console.log("handleNewAdminClick");
+    //console.log("handleNewAdminClick");
   }
 
   handleDeletedForm(deletedIndex){
     //console.log("handleDelete",deletedIndex);
     let newFormList = this.state.adminData.forms;
-    newFormList.splice(deletedIndex,1);
+    newFormList.splice(deletedIndex,1); //remove 1 item at ix
     let newAdminData = {
       "admins": this.state.adminData.admins,
       "forms": newFormList,
@@ -113,7 +113,7 @@ export default class Admin extends React.Component {
     }); 
   }
   
-  renderNextStep() {      console.log("adminData",this.state.adminData);                                                      
+  renderNextStep() {      //console.log("adminData",this.state.adminData);                                                      
     var self = this; //so nested funcs can see the parent object
     let listRequests = <tr ><td colSpan="4">No unresolved requests.</td></tr>
     if(this.state.adminData.requests[0]) { 
@@ -134,7 +134,7 @@ export default class Admin extends React.Component {
           </td><td>
           <Link to={`/EDIT/${form.FormID}`}>{form.Descrip}</Link>
           </td><td>
-          <DeleteNode FormID={form.FormID} handleDelete={self.handleDeletedForm} index={ix}/>
+          <DeleteNode DelID={form.FormID} handleDelete={self.handleDeletedForm} index={ix}/>
           </td>
         </tr>
       )
