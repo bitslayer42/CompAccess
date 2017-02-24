@@ -1,4 +1,4 @@
-ALTER PROC GetForm (@FormID INT, @RequestID INT = NULL) AS 
+ALTER PROC [dbo].[GetForm] (@FormID INT, @RequestID INT = NULL) AS 
 --Based on Nested Set Model here: http://mikehillyer.com/articles/managing-hierarchical-data-in-mysql/
 -- If called with formid=0, the form will be looked up from requestid
 -- GetForm 4
@@ -37,7 +37,10 @@ LEFT JOIN (
 ) AS req
 ON inr2.ID = req.FieldID
 ORDER BY inr2.lft
+
 GO
+
+
 ---------------------------------------------------------------------------------------------------------------
 ALTER PROC [dbo].[AddChild] (@IntoCategory INT, @Code VARCHAR(10) = NULL, @Type VARCHAR(10), @Descrip VARCHAR(100)) AS
 -- Adds first child to category
@@ -159,11 +162,6 @@ END
 
 GO
 -------------------------------------------------------------------
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
 
 ALTER PROC [dbo].[AdminScreen] AS
 	SELECT * FROM Requests
@@ -171,14 +169,14 @@ ALTER PROC [dbo].[AdminScreen] AS
 
 	SELECT ID AS FormID, Descrip, Type FROM Forms
 	WHERE Type IN('FORM','UNPUB')
-	ORDER BY Type
+	ORDER BY Descrip
 
 	SELECT ID AS FormID, Descrip FROM Forms
 	WHERE Type = 'ROOT'
 
 	SELECT AdminID, Name FROM Admins
-GO
 
+GO
 
 -------------------------------------------------------------------
 ALTER PROC IsAdminOrSupv(@UserID VARCHAR(15)) AS

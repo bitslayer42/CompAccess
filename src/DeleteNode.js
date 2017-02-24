@@ -3,8 +3,6 @@ import delbutton from './images/delete.png';
 import axios from 'axios'; //ajax library
 import LibPath from './LibPath';
 
-//USAGE:   // <DeleteNode DelID={form.FormID} handleDelete={this.handleDelete} index={ix}/>
-
 export default class DeleteNode extends React.Component {
  
   onClick=(event)=>{
@@ -19,7 +17,7 @@ export default class DeleteNode extends React.Component {
         }
       })
       .then(() => {  
-        this.props.handleDelete(this.props.index);
+        this.props.handleRedraw();
       })
       .catch(err => {
         this.setState({
@@ -36,19 +34,7 @@ export default class DeleteNode extends React.Component {
     )
   }
 };
-
-// class DeleteNodeTest extends React.Component {
-  
-  // handleDelete(){
-    // //console.log("handleDelete");
-  // }
-  
-  // render()  {
-    // return (
-  // <DeleteNode DelID="107" handleDelete={this.handleDelete}/>
-    // )
-  // }
-// } 
+ 
 
 
  

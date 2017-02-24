@@ -17,12 +17,15 @@ export default class Admin extends React.Component {
       loading: true,
       error: null
     };
-    this.handleAddedForm = this.handleAddedForm.bind(this);
-    this.handleDeletedForm = this.handleDeletedForm.bind(this);
-    this.handleTogglePublish = this.handleTogglePublish.bind(this);
+    this.handleRedraw = this.handleRedraw.bind(this);
+    this.getFromServer = this.getFromServer.bind(this);
   }
 
   componentDidMount() { 
+    this.getFromServer();
+  }
+  
+  getFromServer(){  
     axios.get(LibPath + 'AdminJSON.cfm')
     .then(res => {
       const adminData = res.data; 
@@ -63,55 +66,16 @@ export default class Admin extends React.Component {
     hashHistory.push(`/ADMIN/0/${ReqID}`);
   }
 
-  handleAddedForm(obj){
-    let newForm = {
-      "Descrip":obj.Descrip,
-      "FormID":obj.FormID,
-      "Type":"UNPUB"
-    }
-    let newAdminData = {
-      "admins": this.state.adminData.admins,
-      "forms": this.state.adminData.forms.concat(newForm),
-      "requests": this.state.adminData.requests,
-      "root": this.state.adminData.root
-    }
-    this.setState({
-      adminData: newAdminData
-    });    
-  }
-  handleTogglePublish(toggledIndex){
-    //console.log("handleTogglePublish");
-    let newFormList = this.state.adminData.forms;
-    newFormList[toggledIndex].Type=newFormList[toggledIndex].Type==="FORM"?"UNPUB":"FORM";
-    let newAdminData = {
-      "admins": this.state.adminData.admins,
-      "forms": newFormList,
-      "requests": this.state.adminData.requests,
-      "root": this.state.adminData.root
-    }
-    this.setState({
-      adminData: newAdminData
-    });     
-  }
+  handleRedraw() { //(renamed from EditCB) 
+  // CallBack after adding or deleting node. Element is already deleted in db, 
+  // now repull tree. 
+    this.getFromServer();
+  } 
     
   handleNewAdminClick(){
     //console.log("handleNewAdminClick");
   }
 
-  handleDeletedForm(deletedIndex){
-    //console.log("handleDelete",deletedIndex);
-    let newFormList = this.state.adminData.forms;
-    newFormList.splice(deletedIndex,1); //remove 1 item at ix
-    let newAdminData = {
-      "admins": this.state.adminData.admins,
-      "forms": newFormList,
-      "requests": this.state.adminData.requests,
-      "root": this.state.adminData.root
-    }
-    this.setState({
-      adminData: newAdminData
-    }); 
-  }
   
   renderNextStep() {      //console.log("adminData",this.state.adminData);                                                      
     var self = this; //so nested funcs can see the parent object
@@ -130,11 +94,11 @@ export default class Admin extends React.Component {
       return (
         <tr key={form.FormID}>
           <td>
-          <TogglePublish FormID={form.FormID} published={form.Type==="FORM" ? true : false} handleTogglePublish={self.handleTogglePublish} index={ix} />
+          <TogglePublish FormID={form.FormID} published={form.Type==="FORM" ? true : false} handleRedraw={self.handleRedraw} />
           </td><td>
           <Link to={`/EDIT/${form.FormID}`}>{form.Descrip}</Link>
           </td><td>
-          <DeleteNode DelID={form.FormID} handleDelete={self.handleDeletedForm} index={ix}/>
+          <DeleteNode DelID={form.FormID} handleRedraw={self.handleRedraw}  />
           </td>
         </tr>
       )
@@ -174,7 +138,7 @@ export default class Admin extends React.Component {
         </table>
         <ul>
           <li >
-            <AddNew typeToAdd="UNPUB" procToCall="AddChild" code="" parNodeID={this.state.adminData.root} handleAddedObj={this.handleAddedForm} />
+            <AddNew typeToAdd="UNPUB" procToCall="AddChild" code="" parNodeID={this.state.adminData.root} handleRedraw={self.handleRedraw} />
           </li>
         </ul>
         </div>

@@ -2,8 +2,6 @@ import React from 'react';
 import axios from 'axios'; //ajax library
 import LibPath from './LibPath';
 
-//USAGE:   // <TogglePublish FormID={form.FormID} published={true} handleTogglePublish={this.handleTogglePublish} index={ix} />
-
 export default class TogglePublish extends React.Component {
  
   onChange=()=>{
@@ -16,7 +14,7 @@ export default class TogglePublish extends React.Component {
       }
     })
     .then(() => {  
-      this.props.handleTogglePublish(this.props.index);
+      this.props.handleRedraw();
     })
     .catch(err => {
       this.setState({
@@ -36,18 +34,6 @@ export default class TogglePublish extends React.Component {
   }
 };
 
-// class TogglePublishTest extends React.Component {
-  
-  // handleTogglePublish(){
-    // console.log("handleTogglePublish");
-  // }
-  
-  // render()  {
-    // return (
-      // <TogglePublish FormID="117" published="true" handleTogglePublish={this.handleTogglePublish} index="1" />
-    // )
-  // }
-// } 
 
 
  

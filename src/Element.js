@@ -10,11 +10,11 @@ export default class Element extends React.Component {   //An element can be any
       {
         this.props.tree.map((curr) => {
           if      (curr.Type==="FORM"||curr.Type==="UNPUB"){
-            return <ElementForm curr={curr} key={curr.FormID} view={this.props.view} handleEdit={this.props.handleEdit} header={this.props.header} /> 
+            return <ElementForm curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw} header={this.props.header} /> 
           }else if(curr.Type==="SECTION"){
-            return <ElementSection curr={curr} key={curr.FormID} view={this.props.view} handleEdit={this.props.handleEdit} />
+            return <ElementSection curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw} />
           }else if(curr.Type==="NODE"){
-            return <ElementNode curr={curr} key={curr.FormID} view={this.props.view} handleEdit={this.props.handleEdit} /> 
+            return <ElementNode curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw} /> 
           }else if(curr.Type==="TEXT"){
             return <ElementText curr={curr} key={curr.FormID} view={this.props.view}/> 
           }else if(curr.Type==="INPUT"||curr.Type==="RADIO"||curr.Type==="SELECT"){
@@ -59,8 +59,8 @@ function ElementForm(props) {
        )
       :(
         <div>
-        <Edit view={props.view} type="FORM" curr={props.curr} handleEdit={props.handleEdit} /> 
-        <Element tree={props.curr.children} view={props.view} handleEdit={props.handleEdit} />
+        <Edit view={props.view} type="FORM" curr={props.curr} handleRedraw={props.handleRedraw} /> 
+        <Element tree={props.curr.children} view={props.view} handleRedraw={props.handleRedraw} />
         </div>
       )
       }
@@ -73,10 +73,10 @@ function ElementSection(props) {
     <div key={props.curr.FormID}>
       <div className="sectionclass">
         <h2>{props.curr.Descrip}</h2>
-        <Element tree={props.curr.children} view={props.view} handleEdit={props.handleEdit}/>
-        <Edit view={props.view} type="SECTION" curr={props.curr} handleEdit={props.handleEdit} />  
+        <Element tree={props.curr.children} view={props.view} handleRedraw={props.handleRedraw}/>
+        <Edit view={props.view} type="SECTION" curr={props.curr} handleRedraw={props.handleRedraw} />  
       </div>
-      <Edit view={props.view} type="SECTIONAFTER" curr={props.curr} handleEdit={props.handleEdit} />  
+      <Edit view={props.view} type="SECTIONAFTER" curr={props.curr} handleRedraw={props.handleRedraw} />  
     </div>
   )
 }
@@ -112,10 +112,10 @@ class ElementNode extends React.Component {
       <input type="checkbox" name={curr.FormID} onClick={this.onClick} defaultChecked={this.state.childVisible}/>
         {
           this.state.childVisible
-            ? <Element tree={curr.children} view={this.props.view} handleEdit={this.props.handleEdit} />
+            ? <Element tree={curr.children} view={this.props.view} handleRedraw={this.props.handleRedraw} />
             : null
         }      
-      <Edit view={this.props.view} type="NODE" handleEdit={this.props.handleEdit}/>       
+      <Edit view={this.props.view} type="NODE" handleRedraw={this.props.handleRedraw}/>       
       </div>
     )
   }

@@ -15,7 +15,7 @@ export default class GetForm extends React.Component {
       loading: true,
       error: null,
     };
-    this.handleEdit = this.handleEdit.bind(this);
+    this.handleRedraw = this.handleRedraw.bind(this);
     this.getFromServer = this.getFromServer.bind(this);
   }
  
@@ -53,7 +53,7 @@ export default class GetForm extends React.Component {
     }); 
   }
 
-  handleEdit() { //(renamed from EditCB) 
+  handleRedraw() { //(renamed from EditCB) 
   // CallBack after adding or deleting node. Element is already deleted in db, 
   // now repull tree. 
     this.getFromServer();
@@ -88,7 +88,7 @@ export default class GetForm extends React.Component {
     }
                                                                           //console.log("statenodes",this.state.nodes); //console.log("localnodes",nodes);//console.log("atree",atree);
     return (
-      <Element tree={atree} view={this.state.view} header={this.state.header} handleEdit={this.handleEdit}/>
+      <Element tree={atree} view={this.state.view} header={this.state.header} handleRedraw={this.handleRedraw}/>
     )
     
   }

@@ -5,15 +5,11 @@ import DeleteNode from './DeleteNode';
 export default class Edit extends React.Component {  
   constructor(props) {
     super(props);
-    this.handleAddedObj = this.handleAddedObj.bind(this);
+    this.handleRedraw = this.handleRedraw.bind(this);
   }
 
-  handleAddedObj=(obj)=>{ //debugger;
-    this.props.handleEdit();
-  }
-
-  handleDelete=(obj)=>{ //debugger;
-    this.props.handleEdit();
+  handleRedraw=(obj)=>{ //debugger;
+    this.props.handleRedraw();
   }
   
   render() { 
@@ -23,20 +19,20 @@ export default class Edit extends React.Component {
     return ( 
         <div className="editclass" >
           {this.props.type==="FORM"
-          && <AddNew typeToAdd="SECTION" procToCall="AddChild" code="" parNodeID={this.props.curr.FormID} handleAddedObj={this.handleAddedObj} />} 
+          && <AddNew typeToAdd="SECTION" procToCall="AddChild" code="" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />} 
           
           {this.props.type==="SECTION"
           && (
             <div>
-            <DeleteNode DelID={this.props.curr.FormID} handleDelete={this.handleDelete} index={0}/>
-            <AddNew typeToAdd="INPUT" procToCall="AddChild" code="" parNodeID={this.props.curr.FormID} handleAddedObj={this.handleAddedObj} />   
-            <AddNew typeToAdd="RADIO" procToCall="AddChild" code="" parNodeID={this.props.curr.FormID} handleAddedObj={this.handleAddedObj} />   
+            <DeleteNode DelID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
+            <AddNew typeToAdd="INPUT" procToCall="AddChild" code="" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />   
+            <AddNew typeToAdd="RADIO" procToCall="AddChild" code="" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />   
             </div>
           )
 
           }
           {this.props.type==="SECTIONAFTER"
-          && <AddNew typeToAdd="SECTION" procToCall="InsNode" code="" parNodeID={this.props.curr.FormID} handleAddedObj={this.handleAddedObj} />}   
+          && <AddNew typeToAdd="SECTION" procToCall="InsNode" code="" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />}   
         </div>
       )
     }

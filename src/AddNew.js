@@ -3,7 +3,7 @@ import addbutton from './images/plus.png';
 import axios from 'axios'; //ajax library
 import LibPath from './LibPath';
 
-//USAGE:   // <AddNew typeToAdd="FORM" procToCall="AddChild" code="" parNodeID={this.state.adminData.root} handleAddedObj={this.handleAddedObj} />
+//USAGE:   // <AddNew typeToAdd="FORM" procToCall="AddChild" code="" parNodeID={this.state.adminData.root} handleRedraw={self.handleRedraw} />
 
 export default class AddNew extends React.Component {
   constructor(props) { 
@@ -34,11 +34,8 @@ export default class AddNew extends React.Component {
         cachebuster: Math.random()
       }
     })
-    .then(res => {   //returns new node: "FormID","Type","Code","Descrip","ParentID"
-      const newNode = res.data; 
-       newNode.ItemValue = null;
-       //newNode.children = []; 
-      this.props.handleAddedObj(newNode);
+    .then(res => {   
+      this.props.handleRedraw();
     })
     .catch(err => {
       this.setState({
@@ -85,7 +82,7 @@ export default class AddNew extends React.Component {
   
   // render()  {
     // return (
-  // <AddNew typeToAdd="FORM" procToCall="AddChild" code="" parNodeID="14" handleAddedObj={this.handleAddedObj}/>
+  // <AddNew typeToAdd="FORM" procToCall="AddChild" code="" parNodeID="14" handleRedraw={self.handleRedraw}/>
     // )
   // }
 // } 
