@@ -9,13 +9,11 @@ export default class Edit extends React.Component {
   }
 
   handleAddedObj=(obj)=>{ //debugger;
-    //console.log(obj);
-    this.props.editCB(this.props.curr.nodeid,false,obj);
+    this.props.handleEdit();
   }
 
   handleDelete=(obj)=>{ //debugger;
-    //console.log("handleDelete",obj);
-    this.props.editCB(this.props.curr.nodeid,true,null);
+    this.props.handleEdit();
   }
   
   render() { 
@@ -23,7 +21,7 @@ export default class Edit extends React.Component {
       return null
     }else{
     return ( 
-        <div className="editclass">
+        <div className="editclass" >
           {this.props.type==="FORM"
           && <AddNew typeToAdd="SECTION" procToCall="AddChild" code="" parNodeID={this.props.curr.FormID} handleAddedObj={this.handleAddedObj} />} 
           

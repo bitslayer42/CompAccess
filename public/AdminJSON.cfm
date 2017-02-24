@@ -26,7 +26,7 @@
   <cfset loopctr = 1>
   "forms": [ 
   <cfoutput query="forms">
-  { "ID": #ID#
+  { "FormID": #FormID#
   , "Descrip": "#Descrip#"
   , "Type": "#Type#"
   }
@@ -34,7 +34,7 @@
   <cfset loopctr = loopctr + 1>
   </cfoutput>
   ], 
-  "root": <cfoutput>#root.ID#,</cfoutput>
+  "root": <cfoutput>#root.FormID#,</cfoutput>
   <cfset loopctr = 1>
   "admins": [ 
   <cfoutput query="admins">

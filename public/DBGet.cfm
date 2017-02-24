@@ -23,7 +23,7 @@
     [
     <cfoutput query="list">
       {
-        "ID":#list.ID#,
+        "FormID":#list.ID#,
         "Descrip":"#trim(list.Descrip)#"
       }
       <cfif loopctr NEQ list.RecordCount>,</cfif>

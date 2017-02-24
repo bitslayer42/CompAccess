@@ -15,14 +15,20 @@ export default class GetForm extends React.Component {
       loading: true,
       error: null,
     };
-    this.editCB = this.editCB.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
+    this.getFromServer = this.getFromServer.bind(this);
   }
  
   componentDidMount() {
+    this.getFromServer();
+  }
+  
+  getFromServer(){
     axios.get(LibPath + 'FormJSON.cfm', {
       params: {
         FormID: this.state.formID,
         reqID: this.state.reqID,
+        cachebuster: Math.random()
       }
     })
     .then(res => {
@@ -47,28 +53,10 @@ export default class GetForm extends React.Component {
     }); 
   }
 
-  editCB(nodeid,del,newnode) {  //debugger;
-    let theNodes = JSON.parse(JSON.stringify(this.state.nodes));
-      //console.log("theNodes,nodeid,del,newnode",theNodes,nodeid,del,newnode);    
-    if(del){  //deleting
-      let depthOfDel = theNodes[nodeid].depth;
-      let ix = nodeid;
-      theNodes.splice(ix,1);
-      while(theNodes[ix] && theNodes[ix].depth>depthOfDel){
-        theNodes.splice(ix,1);
-        //ix+=1;
-      }
-    }else{   //adding
-      let parix = theNodes.findIndex(x => x.FormID === newnode.ParentID);
-      newnode.depth = theNodes[parix].depth+1;
-      theNodes.splice(nodeid+1,del,newnode);
-      
-    }
-      console.log("theNodesaftersplic",theNodes); 
-      
-    this.setState({
-      nodes: theNodes
-    });    
+  handleEdit() { //(renamed from EditCB) 
+  // CallBack after adding or deleting node. Element is already deleted in db, 
+  // now repull tree. 
+    this.getFromServer();
   } 
   
   renderLoading() {
@@ -100,7 +88,7 @@ export default class GetForm extends React.Component {
     }
                                                                           //console.log("statenodes",this.state.nodes); //console.log("localnodes",nodes);//console.log("atree",atree);
     return (
-      <Element tree={atree} view={this.state.view} header={this.state.header} editCB={this.editCB}/>
+      <Element tree={atree} view={this.state.view} header={this.state.header} handleEdit={this.handleEdit}/>
     )
     
   }
