@@ -42,7 +42,7 @@ GO
 
 
 ---------------------------------------------------------------------------------------------------------------
-ALTER PROC [dbo].[AddChild] (@IntoCategory INT, @Code VARCHAR(10) = NULL, @Type VARCHAR(10), @Descrip VARCHAR(100)) AS
+ALTER PROC [dbo].[AddChild] (@IntoCategory INT, @Code VARCHAR(10) = NULL, @Type VARCHAR(10), @Descrip VARCHAR(MAX)) AS
 -- Adds first child to category
 -- AddChild 129, '', 'SECTION', 'OneSizeFitsAll?'
 BEGIN
@@ -65,7 +65,7 @@ END
 GO
 ---------------------------------------------------------------------------------------------------------------
 
-ALTER PROC [dbo].[InsNode] (@ToRightOf INT, @Code VARCHAR(10) = NULL, @Type VARCHAR(10), @Descrip VARCHAR(100)) AS
+ALTER PROC [dbo].[InsNode] (@ToRightOf INT, @Code VARCHAR(10) = NULL, @Type VARCHAR(10), @Descrip VARCHAR(MAX)) AS
 -- Adds a sibling after @ToRightOf
 -- InsNode 13, 'RESPONSE', 'INPUT', 'Email Password'
 BEGIN
@@ -250,12 +250,12 @@ PublishForm 4
 GO
 ---------------------------------------------------------
 
-GetForm 179
+GetForm 4
 go
 GetForm 129
 
 go
-DelNode 205
+DelNode 485
 go
 DelNode 204
 go

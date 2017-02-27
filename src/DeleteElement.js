@@ -3,7 +3,7 @@ import delbutton from './images/delete.png';
 import axios from 'axios'; //ajax library
 import LibPath from './LibPath';
 
-export default class DeleteNode extends React.Component {
+export default class DeleteElement extends React.Component {
  
   onClick=(event)=>{
     event && event.preventDefault();    
@@ -29,9 +29,13 @@ export default class DeleteNode extends React.Component {
   }  
 
   render()  {
+    if(this.props.view !== "EDIT"){
+      return null
+    }else{    
     return (
         <span className="addnew"><a onClick={this.onClick}><img src={delbutton} alt="Delete" /></a></span>
     )
+    }
   }
 };
  

@@ -45,17 +45,24 @@ div.textclass {
   font-style:italic;
   font-size:0.8em;
   text-align:center;
+
 }
 div.editclass {
   color: green;
   font-size:0.8em;
   text-align:center;
 }
+.delclass{
+  top: 5px;
+  right: 5px;
+  position: absolute;
+}
 .editclass {
   color: green;
   font-size:0.8em;
   text-decoration: underline;
   cursor:pointer;
+  padding: 0 2px;
 }
 .pubclass {
   color: green;
@@ -65,7 +72,7 @@ div.editclass {
 
 }
 div.responseclass{
-  background-color:#fa391e;
+  background-color:#e39aaa;
   border-radius: 0;
   padding: 3px 0 6px 0;
 }
@@ -88,6 +95,12 @@ tr.reqsrow td{
 tr.reqsrow:hover{
   background-color:#DDD;
   cursor:pointer;
+}
+table.addnewtable{
+  
+  margin-left: auto;
+  margin-right: auto;
+  
 }
 .addnew img, .addnew input {
     vertical-align:bottom;

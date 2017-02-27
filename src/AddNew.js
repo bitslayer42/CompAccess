@@ -3,25 +3,59 @@ import addbutton from './images/plus.png';
 import axios from 'axios'; //ajax library
 import LibPath from './LibPath';
 
-//USAGE:   // <AddNew typeToAdd="FORM" procToCall="AddChild" code="" parNodeID={this.state.adminData.root} handleRedraw={self.handleRedraw} />
+//USAGE:   // <AddNew typeToAdd="FORM" procToCall={this.props.procToCall} code="" parNodeID={this.state.adminData.root} handleRedraw={self.handleRedraw} />
 
 export default class AddNew extends React.Component {
   constructor(props) { 
     super(props);
     this.state = {
       showPrompt: false,
-      promptBoxText: ''
+      showClosedList: false,
+      showOpenedList: false,
+      promptBoxText: '',
+      listToAdd: []
     };
   }  
+  componentDidMount() { 
+    if(this.props.typeToAdd===">>"){
+      this.setState({
+        listToAdd: ["NODE","INPUT","SELECT","RADIO","TEXT"],
+        showClosedList: true
+      });   
+    }
+    if(this.props.typeToAdd==="REQUEST"||this.props.typeToAdd==="RESPONSE"){
+      this.setState({
+        listToAdd: ["INPUT","SELECT","RADIO","TEXT"],
+        showClosedList: true
+      });   
+    }    
+  }    
   addForm=()=>{
     this.setState({ 
       showPrompt: true
     });
   }
+  showList=()=>{
+    this.setState({
+      showClosedList: false,
+      showOpenedList: true
+    });   
+  }
+  handleRedraw=()=>{ 
+      this.setState({ 
+        showPrompt: false,
+        showOpenedList: false,
+        showClosedList: true,
+        promptBoxText: ''
+      });  
+    this.props.handleRedraw();
+  }
+  
   handleChange=(event)=>{
     this.setState({promptBoxText: event.target.value});
   }  
   handleSubmit=(event)=>{
+    let self=this;
     event && event.preventDefault();    
 
     axios.get(LibPath + 'DBUpdate.cfm', {
@@ -34,58 +68,59 @@ export default class AddNew extends React.Component {
         cachebuster: Math.random()
       }
     })
-    .then(res => {   
-      this.props.handleRedraw();
+    .then(res => {   //debugger;
+      self.setState({ 
+        showPrompt: false,
+        showOpenedList: false,
+        showClosedList: true,
+        promptBoxText: ''
+      });
+      self.props.handleRedraw();
     })
     .catch(err => {
-      this.setState({
+      self.setState({
         loading: false,
         error: err
       });
     });
-    this.setState({ 
-      showPrompt: false,
-      promptBoxText: ''
-    });
   }  
 
   render()  {
+    var self = this; //so nested funcs can see the parent object
     let convertUnpubLabel = this.props.typeToAdd==="UNPUB"?"FORM":this.props.typeToAdd;
-    let typeToAddLabel = convertUnpubLabel.replace(/(.)(.*)/g, function(match, p1, p2){return p1+p2.toLowerCase()});
+    let typeToAddLabel = convertUnpubLabel.replace(/(.)(.*)/g, function(match, p1, p2){return p1+p2.toLowerCase()}); //converts NODE to Node
     let placehold = typeToAddLabel + " Name";
     let clickName = "Add " + typeToAddLabel;
+    let listExpanded = this.state.listToAdd.map(function(toAdd,ix){
+      return (
+        <td key={ix}>
+          <AddNew typeToAdd={toAdd} procToCall={self.props.procToCall} code="" parNodeID={self.props.parNodeID} handleRedraw={self.handleRedraw} /> 
+        </td>
+      )
+    });    
     return (
-      <div className="addnew">
+      <span className="addnew">
         {
-          this.state.showPrompt && 
-
+          this.state.showClosedList ? (
+            <span><a className="editclass" onClick={this.showList}>{clickName}</a></span>
+          )
+          : this.state.showOpenedList ? (
+            <table className="addnewtable"><tbody>
+            <tr>{listExpanded}</tr>
+            </tbody></table>
+          )
+          : this.state.showPrompt ? (
               <form id="AddNewForm" onSubmit={this.handleSubmit}>
                 <input type="text" autoFocus value={this.state.promptBoxText} onChange={this.handleChange} placeholder={placehold} />
                 <a onClick={() => this.handleSubmit()}><img src={addbutton} alt="Add"/></a>
               </form>
-
-        }
-        {
-          !this.state.showPrompt && <div><a className="editclass" onClick={() => this.addForm()}>{clickName}</a></div>
+          )
+          : <span><a className="editclass" onClick={this.addForm}>{clickName}</a></span>
         }
         
-     </div>
+     </span>
     )
   }
 };
 
-// class AddNewTest extends React.Component {
-  
-  // handleAddedObj=(obj)=>{
-    // //console.log(obj);
-  // }
-  
-  // render()  {
-    // return (
-  // <AddNew typeToAdd="FORM" procToCall="AddChild" code="" parNodeID="14" handleRedraw={self.handleRedraw}/>
-    // )
-  // }
-// } 
- 
-//
-//
+

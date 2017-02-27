@@ -5,7 +5,7 @@ import LibPath from './LibPath';
 export default class TogglePublish extends React.Component {
  
   onChange=()=>{
-    //event && event.preventDefault();    
+    event && event.preventDefault();    
     axios.get(LibPath + 'DBUpdate.cfm', {
       params: {
         Proc: "PublishForm",
