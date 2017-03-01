@@ -18,9 +18,16 @@ export default class Element extends React.Component {   //An element can be any
             return <ElementNode       curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw} /> 
           }else if(curr.Type==="TEXT"){
             return <ElementText       curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw}/> 
-          }else if(curr.Type==="INPUT"||curr.Type==="RADIO"||curr.Type==="SELECT"){
-            //html form types, first check if it is a RESPONSE
-            return <ElementIsResponse curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw} /> 
+          }else if(curr.Type==="REQUEST"){
+            return <ElementRequest    curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw}/> 
+          }else if(curr.Type==="RESPONSE"){
+            return <ElementResponse   curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw}/>
+          }else if(curr.Type==="INPUT"){
+            return <ElementInput      curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw}/> 
+          }else if(curr.Type==="RADIO"){
+            return <ElementRadio      curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw}/> 
+          }else if(curr.Type==="SELECT"){
+            return <ElementSelect     curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw}/>
           }else{
             return <div>Unknown Element</div>
           }
@@ -92,7 +99,7 @@ function ElementText(props) {
         <DeleteElement className="delclass" view={props.view} DelID={props.curr.FormID} handleRedraw={props.handleRedraw} /> 
         </div>
       </div>
-      <AddElements view={props.view} type="TEXTAFTER" curr={props.curr} handleRedraw={props.handleRedraw} /> 
+      <AddElements view={props.view} type="AFTER" curr={props.curr} handleRedraw={props.handleRedraw} /> 
     </div>
   )
 }
@@ -119,57 +126,44 @@ class ElementNode extends React.Component {
          <DeleteElement className="delclass" view={this.props.view} DelID={this.props.curr.FormID} handleRedraw={this.props.handleRedraw} /> 
         </label>
 
-        <input type="checkbox" name={curr.FormID} onClick={this.onClick} defaultChecked={this.state.childVisible}/>
-         <AddElements view={this.props.view} type="NODE" curr={this.props.curr} handleRedraw={this.props.handleRedraw}/>       
+        <input type="checkbox" name={curr.FormID} onClick={this.onClick} defaultChecked={this.state.childVisible}/>      
          {
             this.state.childVisible
               ? <Element tree={curr.children} view={this.props.view} handleRedraw={this.props.handleRedraw} />
               : null
           }      
         </div>
-        <AddElements view={this.props.view} type="NODEAFTER" curr={this.props.curr} handleRedraw={this.props.handleRedraw} /> 
+        <AddElements view={this.props.view} type="AFTER" curr={this.props.curr} handleRedraw={this.props.handleRedraw} /> 
       </div>
     )
   }
 }
 
-//Check for a Code of REQUEST or RESPONSE (or null if used outside a Node)
-//RESPONSES are only used in Admin screen
-class ElementIsResponse extends React.Component { 
+class ElementRequest extends React.Component {
   render() { 
     let curr = this.props.curr;
-    let view = this.props.view; 
-    if(view === "SUPV" && curr.Code === "RESPONSE"){
-      return null;
-    }else if(curr.Code === "RESPONSE"){
-      return (
-        <div key={curr.FormID} className="responseclass">
-          <ElementHtml curr={curr} key={curr.FormID} view={view} handleRedraw={this.props.handleRedraw}/> 
-        </div>
-      )      
-    }else{
-      return (
-        <div key={curr.FormID}>
-          <ElementHtml curr={curr} key={curr.FormID} view={view} handleRedraw={this.props.handleRedraw}/> 
-        </div>
-      ) 
-    }
+    return (
+      <div key={curr.FormID} className="requestclass">
+        <AddElements view={this.props.view} type="REQUEST" curr={curr} handleRedraw={this.props.handleRedraw} /> 
+        <Element tree={curr.children} view={this.props.view} handleRedraw={this.props.handleRedraw} />
+      </div>
+    ) 
   }
 }
 
-class ElementHtml extends React.Component {
+//RESPONSES are only used in Admin screens
+class ElementResponse extends React.Component { 
   render() { 
     let curr = this.props.curr;
-    let view = this.props.view; 
-    if(curr.Type==="INPUT"){
-      return <ElementInput curr={curr} key={curr.FormID} view={view} handleRedraw={this.props.handleRedraw}/> 
-    }else if(curr.Type==="RADIO"){
-      return <ElementRadio curr={curr} key={curr.FormID} view={view} handleRedraw={this.props.handleRedraw}/> 
-    }else if(curr.Type==="SELECT"){
-      return <ElementSelect curr={curr} key={curr.FormID} view={view} handleRedraw={this.props.handleRedraw}/>
-
+    if(this.props.view === "SUPV"){
+      return null;
     }else{
-      return <div key={curr.FormID}>TODO:{curr.Descrip}:</div>
+      return (
+        <div key={curr.FormID} className="responseclass">
+          <AddElements view={this.props.view} type="RESPONSE" curr={curr} handleRedraw={this.props.handleRedraw} /> 
+          <Element tree={curr.children} view={this.props.view} handleRedraw={this.props.handleRedraw} />
+        </div>
+      ) 
     }
   }
 }
@@ -177,36 +171,18 @@ class ElementHtml extends React.Component {
 class ElementInput extends React.Component { 
   render() { 
     let curr = this.props.curr;
-    let view = this.props.view; 
-    if(view === "SUPV" && curr.Code === "RESPONSE"){
-      return null;
-    }else if(curr.Code === "RESPONSE"){
-       return (
-        <div key={curr.FormID}>
-          <div className="responseclass">
-            <label>
-            {curr.Descrip}:
-            <DeleteElement className="delclass" view={this.props.view} DelID={this.props.curr.FormID} handleRedraw={this.props.handleRedraw} />          
-            </label>
-            <input type="text" className="inputclass" name={curr.FormID} id={curr.FormID} defaultValue={curr.ItemValue}/>
-          </div> 
-          <AddElements view={this.props.view} type="INPUTAFTER" curr={this.props.curr} handleRedraw={this.props.handleRedraw} /> 
-        </div>
-      )      
-    }else{
       return (
         <div key={curr.FormID}>
           <div>
             <label>
             {curr.Descrip}:
-            <DeleteElement className="delclass" view={this.props.view} DelID={this.props.curr.FormID} handleRedraw={this.props.handleRedraw} />            
+            <DeleteElement className="delclass" view={this.props.view} DelID={curr.FormID} handleRedraw={this.props.handleRedraw} />            
             </label>
             <input type="text" className="inputclass" name={curr.FormID} id={curr.FormID} defaultValue={curr.ItemValue}/>
           </div>
-          <AddElements view={this.props.view} type="INPUTAFTER" curr={this.props.curr} handleRedraw={this.props.handleRedraw} /> 
+          <AddElements view={this.props.view} type="AFTER" curr={curr} handleRedraw={this.props.handleRedraw} /> 
         </div>
       ) 
-    }
   }
 }
 
@@ -219,27 +195,28 @@ class ElementRadio extends React.Component {
         curr.children.map((chld,ix) => { //these should be OPTIONS
         return( 
           <div key={chld.FormID}>
-          <label>{ix!==0?"":curr.Descrip+":"}
-          <DeleteElement className="delclass" view={this.props.view} DelID={this.props.curr.FormID} handleRedraw={this.props.handleRedraw} /> 
-          </label>
-          <input type="radio" name={curr.FormID} defaultChecked={chld.Descrip===curr.ItemValue?"checked":""} value={chld.Descrip} id={chld.FormID}/>
-          {chld.Descrip}
-          <AddElements view={this.props.view} type="OPTION"/>  
+            <label>{ix!==0?"":curr.Descrip+":"}
+              <DeleteElement className="delclass" view={this.props.view} DelID={this.props.curr.FormID} handleRedraw={this.props.handleRedraw} /> 
+            </label>
+            <input type="radio" name={curr.FormID} defaultChecked={chld.Descrip===curr.ItemValue?"checked":""} value={chld.Descrip} id={chld.FormID} />
+            <DeleteElement className="delclass" view={this.props.view} DelID={chld.FormID} handleRedraw={this.props.handleRedraw} /> 
+            {chld.Descrip}
+            <AddElements view={this.props.view} type="RADIO"/>  
           </div>
         )
       })//if no OPTIONS
       :(  
           <div>
-          <label>{curr.Descrip}
-          <DeleteElement className="delclass" view={this.props.view} DelID={this.props.curr.FormID} handleRedraw={this.props.handleRedraw} /> 
-          </label>
-          <input type="radio" name={curr.FormID} />
+            <label>{curr.Descrip}
+              <DeleteElement className="delclass" view={this.props.view} DelID={this.props.curr.FormID} handleRedraw={this.props.handleRedraw} /> 
+            </label>
+            <input type="radio" name={curr.FormID} />
 
-          <AddElements view={this.props.view} type="OPTION"/>  
+            <AddElements view={this.props.view} type="RADIO"/>  
           </div>
       )
       }
-      <AddElements view={this.props.view} type="RADIO"/>       
+      <AddElements view={this.props.view} type="AFTER"/>       
       </div>      
       ) 
   }

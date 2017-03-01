@@ -8,22 +8,20 @@ BEGIN
 	SELECT @FormID = RequestItems.FieldID
 	FROM RequestItems INNER JOIN Forms ON RequestItems.FieldID = Forms.ID
 	WHERE Forms.Type = 'FORM'
-	AND RequestItems.RequestID = @RequestID
 END
 SELECT * FROM Requests WHERE RequestID = @RequestID
-SELECT inr2.ID AS FormID, inr2.depth, inr2.Type, inr2.Descrip, ParentID, ItemValue FROM (
-	SELECT inr.ID, inr.depth, inr.Type, inr.Descrip, inr.lft, (SELECT TOP 1 ID 
+SELECT inr2.ID AS FormID, inr2.Code, inr2.depth, inr2.Type, inr2.Descrip, ParentID, ItemValue FROM (
+	SELECT inr.ID, inr.Code, inr.depth, inr.Type, inr.Descrip, inr.lft, (SELECT TOP 1 ID 
 			   FROM Forms parent 
 			   WHERE parent.lft < inr.lft AND parent.rgt > inr.rgt    
 			   ORDER BY parent.rgt-inr.rgt ASC) AS ParentID
 	FROM (
-		SELECT node.ID, (COUNT(parent.ID) - 1) AS depth, 
+		SELECT node.ID, node.Code, (COUNT(parent.ID) - 1) AS depth, 
 		node.lft, node.rgt, node.Type, node.Descrip
 		FROM Forms AS node
 		INNER JOIN Forms AS parent
 		ON node.lft BETWEEN parent.lft AND parent.rgt
-		WHERE node.Deleted IS NULL
-		GROUP BY node.ID, node.lft, node.rgt, node.Type, node.Descrip
+		GROUP BY node.ID,node.Code,node.lft, node.rgt, node.Type, node.Descrip
 	) As inr
 	INNER JOIN (
 		SELECT *
@@ -44,7 +42,7 @@ GO
 
 
 ---------------------------------------------------------------------------------------------------------------
-ALTER PROC [dbo].[AddChild] (@IntoCategory INT, @Type VARCHAR(10), @Descrip VARCHAR(MAX)) AS
+ALTER PROC [dbo].[AddChild] (@IntoCategory INT, @Code VARCHAR(10) = NULL, @Type VARCHAR(10), @Descrip VARCHAR(MAX)) AS
 -- Adds first child to category
 -- AddChild 129, '', 'SECTION', 'OneSizeFitsAll?'
 BEGIN
@@ -57,23 +55,17 @@ BEGIN
 		UPDATE Forms SET rgt = rgt + 2 WHERE rgt > @myLeft;
 		UPDATE Forms SET lft = lft + 2 WHERE lft > @myLeft;
 
-		INSERT INTO Forms(Type,Descrip,lft,rgt) VALUES(@Type, @Descrip, @myLeft + 1, @myLeft + 2);
+		INSERT INTO Forms(Type,Code,Descrip,lft,rgt) VALUES(@Type, @Code, @Descrip, @myLeft + 1, @myLeft + 2);
 		SET @FormID = @@IDENTITY
 
-		IF @Type = 'NODE'
-		BEGIN
-			EXEC AddChild @FormID, 'RESPONSE', 'RESPONSE'
-			EXEC AddChild @FormID, 'REQUEST', 'REQUEST'
-		END
-
-		SELECT @FormID AS FormID, @Type AS Type, @Descrip AS Descrip, dbo.GetParent(@FormID) AS ParentID
+		SELECT @FormID AS FormID, @Type AS Type, @Code AS Code, @Descrip AS Descrip, dbo.GetParent(@FormID) AS ParentID
 	COMMIT TRANSACTION
 END
 
 GO
 ---------------------------------------------------------------------------------------------------------------
 
-ALTER PROC [dbo].[InsNode] (@ToRightOf INT, @Type VARCHAR(10), @Descrip VARCHAR(MAX)) AS
+ALTER PROC [dbo].[InsNode] (@ToRightOf INT, @Code VARCHAR(10) = NULL, @Type VARCHAR(10), @Descrip VARCHAR(MAX)) AS
 -- Adds a sibling after @ToRightOf
 -- InsNode 13, 'RESPONSE', 'INPUT', 'Email Password'
 BEGIN
@@ -87,16 +79,16 @@ BEGIN
 		UPDATE Forms SET rgt = rgt + 2 WHERE rgt > @myRight;
 		UPDATE Forms SET lft = lft + 2 WHERE lft > @myRight;
 
-		INSERT INTO Forms(Type,Descrip,lft,rgt) VALUES(@Type, @Descrip, @myRight + 1, @myRight + 2);
+		INSERT INTO Forms(Type,Code,Descrip,lft,rgt) VALUES(@Type, @Code, @Descrip, @myRight + 1, @myRight + 2);
 		SET @FormID = @@IDENTITY
 
-		SELECT @FormID AS FormID, @Type AS Type, @Descrip AS Descrip, dbo.GetParent(@FormID) AS ParentID
+		SELECT @FormID AS FormID, @Type AS Type, @Code AS Code, @Descrip AS Descrip, dbo.GetParent(@FormID) AS ParentID
 	COMMIT TRANSACTION
 END
 GO
 ---------------------------------------------------------------------------------------------------------------
 ALTER PROC DelNode (@FormID INT) AS
--- Mark as Deleted Node and all it's children 
+-- Delete Node and all it's children (Yikes!)
 -- DelNode 119
 BEGIN
 	BEGIN TRANSACTION
@@ -105,7 +97,10 @@ BEGIN
 		FROM Forms
 		WHERE ID = @FormID
 
-		UPDATE Forms SET Deleted = 1 WHERE lft BETWEEN @myLeft AND @myRight;
+		DELETE FROM Forms WHERE lft BETWEEN @myLeft AND @myRight;
+
+		UPDATE Forms SET rgt = rgt - @myWidth WHERE rgt > @myRight;
+		UPDATE Forms SET lft = lft - @myWidth WHERE lft > @myRight;
 	COMMIT TRANSACTION
 END
 GO
@@ -251,18 +246,18 @@ exec InsRequest @SupvName = 'J. Supv Wilson', @Items = N'
 GO
 
 ---------------------------------------------------------------------------------------------------------------
-PublishForm 2
+PublishForm 4
 GO
 ---------------------------------------------------------
 
-GetForm 2
+GetForm 4
 go
 GetForm 129
 
 go
-DelNode 8
+DelNode 485
 go
-DelNode 9
+DelNode 204
 go
 DelNode 203
 go

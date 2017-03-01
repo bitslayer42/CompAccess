@@ -77,7 +77,7 @@ export default class Admin extends React.Component {
   }
 
   
-  renderNextStep() {      //console.log("adminData",this.state.adminData);                                                      
+  renderNextStep() {   //console.log("adminData",this.state.adminData);                                                      
     var self = this; //so nested funcs can see the parent object
     let listRequests = <tr ><td colSpan="4">No unresolved requests.</td></tr>
     if(this.state.adminData.requests[0]) { 
@@ -138,7 +138,7 @@ export default class Admin extends React.Component {
         </table>
         <ul>
           <li >
-            <AddNew typeToAdd="UNPUB" procToCall="AddChild" code="" parNodeID={this.state.adminData.root} handleRedraw={self.handleRedraw} />
+            <AddNew typeToAdd="UNPUB" procToCall="AddChild" parNodeID={this.state.adminData.root} handleRedraw={self.handleRedraw} />
           </li>
         </ul>
         </div>

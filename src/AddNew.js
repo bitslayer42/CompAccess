@@ -3,7 +3,7 @@ import addbutton from './images/plus.png';
 import axios from 'axios'; //ajax library
 import LibPath from './LibPath';
 
-//USAGE:   // <AddNew typeToAdd="FORM" procToCall={this.props.procToCall} code="" parNodeID={this.state.adminData.root} handleRedraw={self.handleRedraw} />
+//USAGE:   // <AddNew typeToAdd="FORM" procToCall={this.props.procToCall} parNodeID={this.state.adminData.root} handleRedraw={self.handleRedraw} />
 
 export default class AddNew extends React.Component {
   constructor(props) { 
@@ -19,16 +19,16 @@ export default class AddNew extends React.Component {
   componentDidMount() { 
     if(this.props.typeToAdd===">>"){
       this.setState({
-        listToAdd: ["NODE","INPUT","SELECT","RADIO","TEXT"],
-        showClosedList: true
-      });   
-    }
-    if(this.props.typeToAdd==="REQUEST"||this.props.typeToAdd==="RESPONSE"){
-      this.setState({
         listToAdd: ["INPUT","SELECT","RADIO","TEXT"],
         showClosedList: true
       });   
-    }    
+    }   
+    if(this.props.typeToAdd===">>>"){
+      this.setState({
+        listToAdd: ["NODE","INPUT","SELECT","RADIO","TEXT"],
+        showClosedList: true
+      });   
+    } 
   }    
   addForm=()=>{
     this.setState({ 
@@ -63,7 +63,6 @@ export default class AddNew extends React.Component {
         Proc: this.props.procToCall,
         FormID: this.props.parNodeID,
         Type: this.props.typeToAdd,
-        Code: this.props.code,
         Descrip: this.state.promptBoxText,
         cachebuster: Math.random()
       }
@@ -89,12 +88,12 @@ export default class AddNew extends React.Component {
     var self = this; //so nested funcs can see the parent object
     let convertUnpubLabel = this.props.typeToAdd==="UNPUB"?"FORM":this.props.typeToAdd;
     let typeToAddLabel = convertUnpubLabel.replace(/(.)(.*)/g, function(match, p1, p2){return p1+p2.toLowerCase()}); //converts NODE to Node
-    let placehold = typeToAddLabel + " Name";
+    let placehold = typeToAddLabel==="Text" ? "Text" : typeToAddLabel + " Name";
     let clickName = "Add " + typeToAddLabel;
     let listExpanded = this.state.listToAdd.map(function(toAdd,ix){
       return (
         <td key={ix}>
-          <AddNew typeToAdd={toAdd} procToCall={self.props.procToCall} code="" parNodeID={self.props.parNodeID} handleRedraw={self.handleRedraw} /> 
+          <AddNew typeToAdd={toAdd} procToCall={self.props.procToCall} parNodeID={self.props.parNodeID} handleRedraw={self.handleRedraw} /> 
         </td>
       )
     });    
