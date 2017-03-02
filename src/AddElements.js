@@ -30,11 +30,14 @@ export default class Edit extends React.Component {
             : this.props.type==="AFTER" ? (
               <AddNew typeToAdd=">>>" procToCall="AddSister" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
             )
-            : this.props.type==="REQUEST" || this.props.type==="RESPONSE" ? (
+            : (this.props.type==="REQUEST" || this.props.type==="RESPONSE") ? (
               <AddNew typeToAdd=">>" procToCall="AddChild" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
             )
-            : this.props.type==="RADIO" ? (
+            : this.props.type==="OPTION" ? (
               <AddNew typeToAdd="OPTION" procToCall="AddChild" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
+            )
+            : this.props.type==="OPTIONAFTER" ? (
+              <AddNew typeToAdd="OPTION" procToCall="AddSister" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
             )
             : <AddNew typeToAdd="TODO" procToCall="AddChild" parNodeID="0" handleRedraw={this.handleRedraw} />
 

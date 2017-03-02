@@ -13,7 +13,7 @@ IF @FormID = 0 --Pull the request, first figure out which form this is.
 		ON RequestItems.RequestID = Requests.RequestID
 		INNER JOIN Forms 
 		ON RequestItems.FieldID = Forms.ID
-		WHERE Forms.Type = 'FORM'
+		WHERE Forms.Type IN ('FORM','UNPUB')
 		AND RequestItems.RequestID = @RequestID
 	END
 ELSE           --Pull just the form.

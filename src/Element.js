@@ -29,7 +29,7 @@ export default class Element extends React.Component {   //An element can be any
           }else if(curr.Type==="SELECT"){
             return <ElementSelect     curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw}/>
           }else{
-            return <div>Unknown Element</div>
+            return <div key={curr.FormID}>Unknown Element</div>
           }
           
         })
@@ -189,19 +189,31 @@ class ElementInput extends React.Component {
 class ElementRadio extends React.Component { 
   render() { 
     let curr = this.props.curr;
+    let optcount = curr.children.length;
       return (
       <div>
-      {curr.children[0] ?
+      {optcount>0 ?
         curr.children.map((chld,ix) => { //these should be OPTIONS
         return( 
           <div key={chld.FormID}>
-            <label>{ix!==0?"":curr.Descrip+":"}
-              <DeleteElement className="delclass" view={this.props.view} DelID={this.props.curr.FormID} handleRedraw={this.props.handleRedraw} /> 
-            </label>
+            {ix===0 && (
+              <span>
+                <label></label>
+                <AddElements view={this.props.view} type="OPTION" curr={curr} handleRedraw={this.props.handleRedraw} />
+              </span>)
+            }
+            {ix===0
+              ?(<label>
+                {curr.Descrip+":"}
+                <DeleteElement className="delclass" view={this.props.view} DelID={this.props.curr.FormID} handleRedraw={this.props.handleRedraw} /> 
+                </label>
+              )
+              :(<label></label>)
+            }
             <input type="radio" name={curr.FormID} defaultChecked={chld.Descrip===curr.ItemValue?"checked":""} value={chld.Descrip} id={chld.FormID} />
             <DeleteElement className="delclass" view={this.props.view} DelID={chld.FormID} handleRedraw={this.props.handleRedraw} /> 
-            {chld.Descrip}
-            <AddElements view={this.props.view} type="RADIO"/>  
+            {chld.Descrip} 
+              <AddElements view={this.props.view} type="OPTIONAFTER" curr={chld} handleRedraw={this.props.handleRedraw} /> 
           </div>
         )
       })//if no OPTIONS
@@ -212,11 +224,11 @@ class ElementRadio extends React.Component {
             </label>
             <input type="radio" name={curr.FormID} />
 
-            <AddElements view={this.props.view} type="RADIO"/>  
+            <AddElements view={this.props.view} type="OPTION" curr={curr} handleRedraw={this.props.handleRedraw} />  
           </div>
       )
       }
-      <AddElements view={this.props.view} type="AFTER"/>       
+      <AddElements view={this.props.view} type="AFTER" curr={curr} handleRedraw={this.props.handleRedraw} />       
       </div>      
       ) 
   }
@@ -226,7 +238,8 @@ class ElementSelect extends React.Component {
   render() { 
     let curr = this.props.curr;
     return (
-      <div>
+      <div key={curr.FormID}>
+
         <label>
         {curr.Descrip}:
         <DeleteElement className="delclass" view={this.props.view} DelID={this.props.curr.FormID} handleRedraw={this.props.handleRedraw} /> 
@@ -239,8 +252,23 @@ class ElementSelect extends React.Component {
             )
           })}
         </select>
-        <AddElements view={this.props.view} type="OPTION"/> 
-        <AddElements view={this.props.view} type="SELECT"/> 
+        <AddElements view={this.props.view} type="OPTION" curr={curr} handleRedraw={this.props.handleRedraw} />  
+          {this.props.view==="EDIT" && 
+            curr.children.map((chld) => { //these should be OPTIONS
+              return(
+                <span key={chld.FormID}>
+                  
+                  <div className="editselectoption">
+                    <label></label>
+                    <DeleteElement className="delclass" view={this.props.view} DelID={chld.FormID} handleRedraw={this.props.handleRedraw} />
+                    {chld.Descrip}
+                  </div>
+                  <AddElements view={this.props.view} type="OPTIONAFTER" curr={chld} handleRedraw={this.props.handleRedraw} /> 
+                </span>
+              )
+            })
+          }
+        <AddElements view={this.props.view} type="AFTER" curr={curr} handleRedraw={this.props.handleRedraw} />       
       </div>
     )
   }
