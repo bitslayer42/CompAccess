@@ -25,10 +25,10 @@ export default class Edit extends React.Component {
               <AddNew typeToAdd=">>>" procToCall="AddChild" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
             )
             : this.props.type==="SECTIONAFTER" ? (
-              <AddNew typeToAdd="SECTION" procToCall="InsNode" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
+              <AddNew typeToAdd="SECTION" procToCall="AddSister" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
             )
             : this.props.type==="AFTER" ? (
-              <AddNew typeToAdd=">>>" procToCall="InsNode" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
+              <AddNew typeToAdd=">>>" procToCall="AddSister" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
             )
             : this.props.type==="REQUEST" || this.props.type==="RESPONSE" ? (
               <AddNew typeToAdd=">>" procToCall="AddChild" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
@@ -48,7 +48,7 @@ export default class Edit extends React.Component {
           // {this.props.type==="NODE"
           // && (
 
-            // <AddNew typeToAdd="REQUEST" procToCall="InsNode" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
-            // <AddNew typeToAdd="RESPONSE" procToCall="InsNode" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
+            // <AddNew typeToAdd="REQUEST" procToCall="AddSister" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
+            // <AddNew typeToAdd="RESPONSE" procToCall="AddSister" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
 
           // )

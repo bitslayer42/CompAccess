@@ -72,6 +72,11 @@ div.editclass {
   width:90px;
 
 }
+div.requestclass{
+  background-color:#dae4eb;
+  border-radius: 0;
+  padding: 3px 0 6px 0;
+}
 div.responseclass{
   background-color:#e39aaa;
   border-radius: 0;

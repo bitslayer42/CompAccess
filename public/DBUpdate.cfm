@@ -1,30 +1,28 @@
 <!---This is called using ajax for updating database while editing urls--->
 <!--- Use POST to call this page (NOTE I changed it to GET so I wouldn't have to deal with CORS issues in devel. Slack.)--->
-<cfif url.Proc EQ "InsNode">
-  <!---InsNode - Inserts new node (url,section,field,etc) to right of (after) given--->
-	<cfstoredproc procedure="InsNode" datasource="ITForms">
+<cfif url.Proc EQ "AddSister">
+  <!---AddSister - Inserts new node (url,section,field,etc) to right of (after) given--->
+	<cfstoredproc procedure="AddSister" datasource="ITForms">
     <cfprocparam cfsqltype="cf_sql_integer" value="#url.FormID#">
-    <cfprocparam cfsqltype="cf_sql_varchar" value="#url.Code#">
     <cfprocparam cfsqltype="cf_sql_varchar" value="#url.Type#">
     <cfprocparam cfsqltype="cf_sql_varchar" value="#url.Descrip#">
     <cfprocresult name="ret">    
   </cfstoredproc>
   <cfcontent type="application/json" reset="yes">  
   <cfoutput query="ret">
-  {"FormID":#ret.FormID#,"Type":"#ret.Type#","Code":"#ret.Code#","Descrip":"#ret.Descrip#","ParentID":#ret.ParentID#}
+  {"FormID":#ret.FormID#,"Type":"#ret.Type#","Descrip":"#ret.Descrip#","ParentID":#ret.ParentID#}
   </cfoutput>
 <cfelseif url.Proc EQ "AddChild">
   <!---AddChild - Inserts new node (url,section,field,etc) as first child of given--->
 	<cfstoredproc procedure="AddChild" datasource="ITForms">
     <cfprocparam cfsqltype="cf_sql_integer" value="#url.FormID#">
-    <cfprocparam cfsqltype="cf_sql_varchar" value="#url.Code#">
     <cfprocparam cfsqltype="cf_sql_varchar" value="#url.Type#">
     <cfprocparam cfsqltype="cf_sql_varchar" value="#url.Descrip#">
     <cfprocresult name="ret">    
   </cfstoredproc>
   <cfcontent type="application/json" reset="yes">  
   <cfoutput query="ret">
-  {"FormID":#ret.FormID#,"Type":"#ret.Type#","Code":"#ret.Code#","Descrip":"#ret.Descrip#","ParentID":#ret.ParentID#}
+  {"FormID":#ret.FormID#,"Type":"#ret.Type#","Descrip":"#ret.Descrip#","ParentID":#ret.ParentID#}
   </cfoutput>
 <cfelseif url.Proc EQ "DelNode">
   <!---DelNode - Delete Node and all it's children (Yikes!)--->

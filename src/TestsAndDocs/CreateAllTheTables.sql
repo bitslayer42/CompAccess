@@ -1,4 +1,4 @@
-/****** Object:  Table [dbo].[AdminEmails]    Script Date: 3/1/2017 8:35:16 AM ******/
+/****** Object:  Table [dbo].[AdminEmails]    Script Date: 3/2/2017 8:29:20 AM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -23,7 +23,7 @@ GO
 SET ANSI_PADDING OFF
 GO
 
-/****** Object:  Table [dbo].[Admins]    Script Date: 3/1/2017 8:35:17 AM ******/
+/****** Object:  Table [dbo].[Admins]    Script Date: 3/2/2017 8:29:20 AM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -48,7 +48,7 @@ GO
 SET ANSI_PADDING OFF
 GO
 
-/****** Object:  Table [dbo].[Edits]    Script Date: 3/1/2017 8:35:17 AM ******/
+/****** Object:  Table [dbo].[Edits]    Script Date: 3/2/2017 8:29:20 AM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -70,7 +70,7 @@ GO
 SET ANSI_PADDING OFF
 GO
 
-/****** Object:  Table [dbo].[Forms]    Script Date: 3/1/2017 8:35:17 AM ******/
+/****** Object:  Table [dbo].[Forms]    Script Date: 3/2/2017 8:29:20 AM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -82,12 +82,14 @@ GO
 
 CREATE TABLE [dbo].[Forms](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
-	[Code] [varchar](20) NULL,
 	[Type] [varchar](10) NULL,
 	[Descrip] [varchar](max) NULL,
 	[lft] [int] NULL,
 	[rgt] [int] NULL,
+	[Created] [datetime] NULL,
+	[Deleted] [datetime] NULL,
 	[HeaderRecord] [bit] NULL,
+	[Required] [bit] NULL,
  CONSTRAINT [PK_nested_category] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
@@ -96,10 +98,18 @@ CREATE TABLE [dbo].[Forms](
 
 GO
 
+
+----------------------------------------------------------------------------------
+INSERT INTO dbo.Forms(Type,Descrip,lft,rgt,Created)
+VALUES
+('ROOT','Root of Tree',1,2,GETDATE()
+)
+----------------------------------------------------------------------------------
+GO
 SET ANSI_PADDING OFF
 GO
 
-/****** Object:  Table [dbo].[RequestItems]    Script Date: 3/1/2017 8:35:17 AM ******/
+/****** Object:  Table [dbo].[RequestItems]    Script Date: 3/2/2017 8:29:20 AM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -125,7 +135,7 @@ GO
 SET ANSI_PADDING OFF
 GO
 
-/****** Object:  Table [dbo].[Requests]    Script Date: 3/1/2017 8:35:17 AM ******/
+/****** Object:  Table [dbo].[Requests]    Script Date: 3/2/2017 8:29:20 AM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -140,8 +150,6 @@ CREATE TABLE [dbo].[Requests](
 	[EmpName] [varchar](100) NULL,
 	[SupvName] [varchar](100) NULL,
 	[EnteredDate] [datetime] NULL,
-	[LastEditor] [varchar](100) NULL,
-	[EditedDate] [datetime] NULL,
 	[Completed] [bit] NULL,
 	[headerXML] [xml] NULL,
  CONSTRAINT [PK_Request] PRIMARY KEY CLUSTERED 

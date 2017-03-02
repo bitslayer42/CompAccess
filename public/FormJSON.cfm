@@ -36,7 +36,6 @@
   "body": [ 
   <cfoutput query="body">
   { "FormID": #body.FormID#
-  , "Code": "#body.Code#"
   , "depth": #body.depth#
   , "Type": "#body.Type#"
   , "Descrip": "#body.Descrip#"
@@ -52,6 +51,6 @@
 
 <!---
 
-https://ccp1.msj.org/CompAccess/FormJSON.cfm?FormID=4
-https://ccp1.msj.org/CompAccess/FormJSON.cfm?FormID=4&reqID=5
+https://ccp1.msj.org/CompAccess/FormJSON.cfm?FormID=2
+https://ccp1.msj.org/CompAccess/FormJSON.cfm?FormID=2&reqID=5
 --->

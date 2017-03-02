@@ -14,8 +14,6 @@
   { "RequestID": #RequestID#
   , "SupvName": "#SupvName#"
   , "EnteredDate": "#EnteredDate#"
-  , "LastEditor": "#LastEditor#"
-  , "EditedDate": "#EditedDate#"
   , "Completed": #Completed#
   , "headerXML": "#headerXML#"
   }

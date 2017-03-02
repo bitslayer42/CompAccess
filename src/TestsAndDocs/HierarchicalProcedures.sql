@@ -3,13 +3,24 @@ ALTER PROC [dbo].[GetForm] (@FormID INT, @RequestID INT = NULL) AS
 -- If called with formid=0, the form will be looked up from requestid
 -- GetForm 4
 -- GetForm 0, 9
-IF @FormID = 0 
-BEGIN
-	SELECT @FormID = RequestItems.FieldID
-	FROM RequestItems INNER JOIN Forms ON RequestItems.FieldID = Forms.ID
-	WHERE Forms.Type = 'FORM'
-	AND RequestItems.RequestID = @RequestID
-END
+DECLARE @ReqDate datetime
+
+IF @FormID = 0 --Pull the request, first figure out which form this is.
+	BEGIN
+		SELECT @FormID = RequestItems.FieldID, @ReqDate = Requests.EnteredDate
+		FROM RequestItems 
+		INNER JOIN Requests
+		ON RequestItems.RequestID = Requests.RequestID
+		INNER JOIN Forms 
+		ON RequestItems.FieldID = Forms.ID
+		WHERE Forms.Type = 'FORM'
+		AND RequestItems.RequestID = @RequestID
+	END
+ELSE           --Pull just the form.
+	BEGIN
+		SET @ReqDate = GETDATE()
+	END
+
 SELECT * FROM Requests WHERE RequestID = @RequestID
 SELECT inr2.ID AS FormID, inr2.depth, inr2.Type, inr2.Descrip, ParentID, ItemValue FROM (
 	SELECT inr.ID, inr.depth, inr.Type, inr.Descrip, inr.lft, (SELECT TOP 1 ID 
@@ -22,7 +33,7 @@ SELECT inr2.ID AS FormID, inr2.depth, inr2.Type, inr2.Descrip, ParentID, ItemVal
 		FROM Forms AS node
 		INNER JOIN Forms AS parent
 		ON node.lft BETWEEN parent.lft AND parent.rgt
-		WHERE node.Deleted IS NULL
+		WHERE (node.Created <= @ReqDate AND (node.Deleted >= @ReqDate OR node.Deleted IS NULL))
 		GROUP BY node.ID, node.lft, node.rgt, node.Type, node.Descrip
 	) As inr
 	INNER JOIN (
@@ -46,7 +57,7 @@ GO
 ---------------------------------------------------------------------------------------------------------------
 ALTER PROC [dbo].[AddChild] (@IntoCategory INT, @Type VARCHAR(10), @Descrip VARCHAR(MAX)) AS
 -- Adds first child to category
--- AddChild 129, '', 'SECTION', 'OneSizeFitsAll?'
+-- AddChild 129, 'SECTION', 'OneSizeFitsAll?'
 BEGIN
 	BEGIN TRANSACTION
 		DECLARE @FormID INT
@@ -57,10 +68,10 @@ BEGIN
 		UPDATE Forms SET rgt = rgt + 2 WHERE rgt > @myLeft;
 		UPDATE Forms SET lft = lft + 2 WHERE lft > @myLeft;
 
-		INSERT INTO Forms(Type,Descrip,lft,rgt) VALUES(@Type, @Descrip, @myLeft + 1, @myLeft + 2);
+		INSERT INTO Forms(Type,Descrip,lft,rgt,Created) VALUES(@Type, @Descrip, @myLeft + 1, @myLeft + 2, GETDATE());
 		SET @FormID = @@IDENTITY
 
-		IF @Type = 'NODE'
+		IF @Type = 'NODE' --Nodes always have request and response
 		BEGIN
 			EXEC AddChild @FormID, 'RESPONSE', 'RESPONSE'
 			EXEC AddChild @FormID, 'REQUEST', 'REQUEST'
@@ -73,9 +84,9 @@ END
 GO
 ---------------------------------------------------------------------------------------------------------------
 
-ALTER PROC [dbo].[InsNode] (@ToRightOf INT, @Type VARCHAR(10), @Descrip VARCHAR(MAX)) AS
+ALTER PROC [dbo].AddSister (@ToRightOf INT, @Type VARCHAR(10), @Descrip VARCHAR(MAX)) AS
 -- Adds a sibling after @ToRightOf
--- InsNode 13, 'RESPONSE', 'INPUT', 'Email Password'
+-- AddSister 13, 'INPUT', 'Email Password'
 BEGIN
 	BEGIN TRANSACTION
 		DECLARE @FormID INT
@@ -87,8 +98,14 @@ BEGIN
 		UPDATE Forms SET rgt = rgt + 2 WHERE rgt > @myRight;
 		UPDATE Forms SET lft = lft + 2 WHERE lft > @myRight;
 
-		INSERT INTO Forms(Type,Descrip,lft,rgt) VALUES(@Type, @Descrip, @myRight + 1, @myRight + 2);
+		INSERT INTO Forms(Type,Descrip,lft,rgt,Created) VALUES(@Type, @Descrip, @myRight + 1, @myRight + 2, GETDATE());
 		SET @FormID = @@IDENTITY
+
+		IF @Type = 'NODE' --Nodes always have request and response
+		BEGIN
+			EXEC AddChild @FormID, 'RESPONSE', 'RESPONSE'
+			EXEC AddChild @FormID, 'REQUEST', 'REQUEST'
+		END
 
 		SELECT @FormID AS FormID, @Type AS Type, @Descrip AS Descrip, dbo.GetParent(@FormID) AS ParentID
 	COMMIT TRANSACTION
@@ -105,7 +122,7 @@ BEGIN
 		FROM Forms
 		WHERE ID = @FormID
 
-		UPDATE Forms SET Deleted = 1 WHERE lft BETWEEN @myLeft AND @myRight;
+		UPDATE Forms SET Deleted = GETDATE() WHERE lft BETWEEN @myLeft AND @myRight;
 	COMMIT TRANSACTION
 END
 GO
@@ -124,10 +141,6 @@ BEGIN
 	AND ID = @FormID
 END
 GO
-
-
-
-
 
 -------------------------------------------------------------------
 ALTER PROC [dbo].[InsRequest](@SupvName VARCHAR(100), @Items XML) AS
@@ -174,6 +187,7 @@ ALTER PROC [dbo].[AdminScreen] AS
 
 	SELECT ID AS FormID, Descrip, Type FROM Forms
 	WHERE Type IN('FORM','UNPUB')
+	AND Deleted IS NULL
 	ORDER BY Descrip
 
 	SELECT ID AS FormID, Descrip FROM Forms

@@ -9,7 +9,7 @@ export default class AddNew extends React.Component {
   constructor(props) { 
     super(props);
     this.state = {
-      showPrompt: false,
+      showPrompt: false, //show the text box to enter a name
       showClosedList: false,
       showOpenedList: false,
       promptBoxText: '',
@@ -17,6 +17,9 @@ export default class AddNew extends React.Component {
     };
   }  
   componentDidMount() { 
+    this.setUpClosedList();
+  } 
+  setUpClosedList(){
     if(this.props.typeToAdd===">>"){
       this.setState({
         listToAdd: ["INPUT","SELECT","RADIO","TEXT"],
@@ -28,9 +31,9 @@ export default class AddNew extends React.Component {
         listToAdd: ["NODE","INPUT","SELECT","RADIO","TEXT"],
         showClosedList: true
       });   
-    } 
-  }    
-  addForm=()=>{
+    }     
+  }
+  showThePrompt=()=>{
     this.setState({ 
       showPrompt: true
     });
@@ -42,17 +45,20 @@ export default class AddNew extends React.Component {
     });   
   }
   handleRedraw=()=>{ 
-      this.setState({ 
-        showPrompt: false,
-        showOpenedList: false,
-        showClosedList: true,
-        promptBoxText: ''
-      });  
+    this.setState({ 
+      showPrompt: false,
+      showOpenedList: false,
+      showClosedList: false,
+      promptBoxText: ''
+    }); 
+    this.setUpClosedList();      
     this.props.handleRedraw();
   }
   
   handleChange=(event)=>{
-    this.setState({promptBoxText: event.target.value});
+    this.setState({   
+      promptBoxText: event.target.value
+    });
   }  
   handleSubmit=(event)=>{
     let self=this;
@@ -68,13 +74,7 @@ export default class AddNew extends React.Component {
       }
     })
     .then(res => {   //debugger;
-      self.setState({ 
-        showPrompt: false,
-        showOpenedList: false,
-        showClosedList: true,
-        promptBoxText: ''
-      });
-      self.props.handleRedraw();
+      self.handleRedraw();
     })
     .catch(err => {
       self.setState({
@@ -114,7 +114,7 @@ export default class AddNew extends React.Component {
                 <a onClick={() => this.handleSubmit()}><img src={addbutton} alt="Add"/></a>
               </form>
           )
-          : <span><a className="editclass" onClick={this.addForm}>{clickName}</a></span>
+          : <span><a className="editclass" onClick={this.showThePrompt}>{clickName}</a></span>
         }
         
      </span>
