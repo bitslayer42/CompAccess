@@ -1,5 +1,5 @@
 import React from 'react';
-import AddNew from './AddNew';
+import AddElement from './AddElement';
 
 export default class Edit extends React.Component {  
   constructor(props) {
@@ -19,27 +19,27 @@ export default class Edit extends React.Component {
         <div className="editclass" >
           {
               this.props.type==="FORM" ? (
-              <AddNew typeToAdd="SECTION" procToCall="AddChild" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
+              <AddElement typeToAdd="SECTION" procToCall="AddChild" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
             )
             : this.props.type==="SECTION" ? (
-              <AddNew typeToAdd=">>>" procToCall="AddChild" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
+              <AddElement typeToAdd=">>>" procToCall="AddChild" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
             )
             : this.props.type==="SECTIONAFTER" ? (
-              <AddNew typeToAdd="SECTION" procToCall="AddSister" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
+              <AddElement typeToAdd="SECTION" procToCall="AddSister" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
             )
             : this.props.type==="AFTER" ? (
-              <AddNew typeToAdd=">>>" procToCall="AddSister" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
+              <AddElement typeToAdd=">>>" procToCall="AddSister" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
             )
             : (this.props.type==="REQUEST" || this.props.type==="RESPONSE") ? (
-              <AddNew typeToAdd=">>" procToCall="AddChild" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
+              <AddElement typeToAdd=">>" procToCall="AddChild" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
             )
             : this.props.type==="OPTION" ? (
-              <AddNew typeToAdd="OPTION" procToCall="AddChild" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
+              <AddElement typeToAdd="OPTION" procToCall="AddChild" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
             )
             : this.props.type==="OPTIONAFTER" ? (
-              <AddNew typeToAdd="OPTION" procToCall="AddSister" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
+              <AddElement typeToAdd="OPTION" procToCall="AddSister" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
             )
-            : <AddNew typeToAdd="TODO" procToCall="AddChild" parNodeID="0" handleRedraw={this.handleRedraw} />
+            : <AddElement typeToAdd="TODO" procToCall="AddChild" parNodeID="0" handleRedraw={this.handleRedraw} />
 
           }   
           
@@ -51,7 +51,7 @@ export default class Edit extends React.Component {
           // {this.props.type==="NODE"
           // && (
 
-            // <AddNew typeToAdd="REQUEST" procToCall="AddSister" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
-            // <AddNew typeToAdd="RESPONSE" procToCall="AddSister" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
+            // <AddElement typeToAdd="REQUEST" procToCall="AddSister" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
+            // <AddElement typeToAdd="RESPONSE" procToCall="AddSister" parNodeID={this.props.curr.FormID} handleRedraw={this.handleRedraw} />
 
           // )

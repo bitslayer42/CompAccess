@@ -83,7 +83,7 @@ div.responseclass{
   padding: 3px 0 6px 0;
 }
 div.editselectoption{
-  background-color:#dae4eb;
+  background-color:#ccc;
 
 }
 label {
@@ -106,13 +106,13 @@ tr.reqsrow:hover{
   background-color:#DDD;
   cursor:pointer;
 }
-table.addnewtable{
+table.addelementtable{
   
   margin-left: auto;
   margin-right: auto;
   
 }
-.addnew img, .addnew input {
+.addelement img, .addelement input {
     vertical-align:bottom;
     padding-left:3px;
 }

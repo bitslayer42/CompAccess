@@ -1,7 +1,7 @@
 ALTER PROC [dbo].[GetForm] (@FormID INT, @RequestID INT = NULL) AS 
 --Based on Nested Set Model here: http://mikehillyer.com/articles/managing-hierarchical-data-in-mysql/
 -- If called with formid=0, the form will be looked up from requestid
--- GetForm 4
+-- GetForm 2
 -- GetForm 0, 9
 DECLARE @ReqDate datetime
 
@@ -141,7 +141,36 @@ BEGIN
 	AND ID = @FormID
 END
 GO
-
+---------------------------------------------------------------------------------------------------------------
+ALTER PROC ToggleHeaderRecord (@FormID INT) AS
+-- Toggles form HeaderRecord true/false
+-- ToggleHeaderRecord 4
+BEGIN
+	UPDATE f
+	SET HeaderRecord = opt 
+	FROM Forms f
+	CROSS JOIN (
+		SELECT 1 AS opt UNION SELECT 0
+	) AS opts
+	WHERE opt <> HeaderRecord
+	AND ID = @FormID
+END
+GO
+---------------------------------------------------------------------------------------------------------------
+ALTER PROC ToggleRequired (@FormID INT) AS
+-- Toggles form Required  true/false
+-- ToggleRequired 4
+BEGIN
+	UPDATE f
+	SET Required = opt 
+	FROM Forms f
+	CROSS JOIN (
+		SELECT 1 AS opt UNION SELECT 0
+	) AS opts
+	WHERE opt <> Required 
+	AND ID = @FormID
+END
+GO
 -------------------------------------------------------------------
 ALTER PROC [dbo].[InsRequest](@SupvName VARCHAR(100), @Items XML) AS
 BEGIN

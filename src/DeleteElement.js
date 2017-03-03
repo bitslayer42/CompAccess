@@ -33,7 +33,7 @@ export default class DeleteElement extends React.Component {
       return null
     }else{    
     return (
-        <span className="addnew"><a onClick={this.onClick}><img src={delbutton} alt="Delete" /></a></span>
+        <span className="addelement"><a onClick={this.onClick}><img src={delbutton} title="Delete" alt="Delete" /></a></span>
     )
     }
   }

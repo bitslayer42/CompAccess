@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios'; //ajax library
 import LibPath from './LibPath';
-import AddNew from './AddNew';
+import AddElement from './AddElement';
 import TogglePublish from './TogglePublish';
 import DeleteElement from './DeleteElement';
 import { Link } from 'react-router';
@@ -138,7 +138,7 @@ export default class Admin extends React.Component {
         </table>
         <ul>
           <li >
-            <AddNew typeToAdd="UNPUB" procToCall="AddChild" parNodeID={this.state.adminData.root} handleRedraw={self.handleRedraw} />
+            <AddElement typeToAdd="UNPUB" procToCall="AddChild" parNodeID={this.state.adminData.root} handleRedraw={self.handleRedraw} />
           </li>
         </ul>
         </div>

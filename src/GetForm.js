@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios'; //ajax library
 import LibPath from './LibPath';
 import Element from './Element';
+import { Link } from 'react-router';
 
 export default class GetForm extends React.Component {
   constructor(props) { 
@@ -88,7 +89,10 @@ export default class GetForm extends React.Component {
     }
                                                                           //console.log("statenodes",this.state.nodes); //console.log("localnodes",nodes);//console.log("atree",atree);
     return (
+      <div>
+      <Link to={`/ADMIN`}>Admin</Link>
       <Element tree={atree} view={this.state.view} header={this.state.header} handleRedraw={this.handleRedraw}/>
+      </div>
     )
     
   }

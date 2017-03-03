@@ -196,7 +196,7 @@ class ElementRadio extends React.Component {
         curr.children.map((chld,ix) => { //these should be OPTIONS
         return( 
           <div key={chld.FormID}>
-            {ix===0 && (
+            {(this.props.view==="EDIT" && ix===0) && (
               <span>
                 <label></label>
                 <AddElements view={this.props.view} type="OPTION" curr={curr} handleRedraw={this.props.handleRedraw} />

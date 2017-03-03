@@ -3,9 +3,9 @@ import addbutton from './images/plus.png';
 import axios from 'axios'; //ajax library
 import LibPath from './LibPath';
 
-//USAGE:   // <AddNew typeToAdd="FORM" procToCall={this.props.procToCall} parNodeID={this.state.adminData.root} handleRedraw={self.handleRedraw} />
+//USAGE:   // <AddElement typeToAdd="FORM" procToCall={this.props.procToCall} parNodeID={this.state.adminData.root} handleRedraw={self.handleRedraw} />
 
-export default class AddNew extends React.Component {
+export default class AddElement extends React.Component {
   constructor(props) { 
     super(props);
     this.state = {
@@ -93,25 +93,25 @@ export default class AddNew extends React.Component {
     let listExpanded = this.state.listToAdd.map(function(toAdd,ix){
       return (
         <td key={ix}>
-          <AddNew typeToAdd={toAdd} procToCall={self.props.procToCall} parNodeID={self.props.parNodeID} handleRedraw={self.handleRedraw} /> 
+          <AddElement typeToAdd={toAdd} procToCall={self.props.procToCall} parNodeID={self.props.parNodeID} handleRedraw={self.handleRedraw} /> 
         </td>
       )
     });    
     return (
-      <span className="addnew">
+      <span className="addelement">
         {
           this.state.showClosedList ? (
             <span><a className="editclass" onClick={this.showList}>{clickName}</a></span>
           )
           : this.state.showOpenedList ? (
-            <table className="addnewtable"><tbody>
+            <table className="addelementtable"><tbody>
             <tr>{listExpanded}</tr>
             </tbody></table>
           )
           : this.state.showPrompt ? (
-              <form id="AddNewForm" onSubmit={this.handleSubmit}>
+              <form id="AddElementForm" onSubmit={this.handleSubmit}>
                 <input type="text" autoFocus value={this.state.promptBoxText} onChange={this.handleChange} placeholder={placehold} />
-                <a onClick={() => this.handleSubmit()}><img src={addbutton} alt="Add"/></a>
+                <a onClick={() => this.handleSubmit()}><img src={addbutton} alt="Add" title="Add"/></a>
               </form>
           )
           : <span><a className="editclass" onClick={this.showThePrompt}>{clickName}</a></span>
