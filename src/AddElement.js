@@ -22,13 +22,13 @@ export default class AddElement extends React.Component {
   setUpClosedList(){
     if(this.props.typeToAdd===">>"){
       this.setState({
-        listToAdd: ["INPUT","SELECT","RADIO","TEXT"],
+        listToAdd: ["INPUT","DATE","SELECT","RADIO","MESSAGE"],
         showClosedList: true
       });   
     }   
     if(this.props.typeToAdd===">>>"){
       this.setState({
-        listToAdd: ["NODE","INPUT","SELECT","RADIO","TEXT"],
+        listToAdd: ["NODE","INPUT","DATE","SELECT","RADIO","MESSAGE"],
         showClosedList: true
       });   
     }     
@@ -88,7 +88,7 @@ export default class AddElement extends React.Component {
     var self = this; //so nested funcs can see the parent object
     let convertUnpubLabel = this.props.typeToAdd==="UNPUB"?"FORM":this.props.typeToAdd;
     let typeToAddLabel = convertUnpubLabel.replace(/(.)(.*)/g, function(match, p1, p2){return p1+p2.toLowerCase()}); //converts NODE to Node
-    let placehold = typeToAddLabel==="Text" ? "Text" : typeToAddLabel + " Name";
+    let placehold = typeToAddLabel==="Message" ? "Message" : typeToAddLabel + " Name";
     let clickName = "Add " + typeToAddLabel;
     let listExpanded = this.state.listToAdd.map(function(toAdd,ix){
       return (

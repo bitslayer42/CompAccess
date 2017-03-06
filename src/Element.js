@@ -1,8 +1,10 @@
 import React from 'react';
 import moment from 'moment'; //date library
+import DatePicker  from 'react-datepicker'; //datepicker library
 import LibPath from './LibPath';
 import AddElements from './AddElements';
 import DeleteElement from './DeleteElement';
+import './react-datepicker.css';
 
 export default class Element extends React.Component {   //An element can be any row returned from stored proc
   render() { 
@@ -16,14 +18,16 @@ export default class Element extends React.Component {   //An element can be any
             return <ElementSection    curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw} />
           }else if(curr.Type==="NODE"){
             return <ElementNode       curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw} /> 
-          }else if(curr.Type==="TEXT"){
-            return <ElementText       curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw}/> 
+          }else if(curr.Type==="MESSAGE"){
+            return <ElementMessage       curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw}/> 
           }else if(curr.Type==="REQUEST"){
             return <ElementRequest    curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw}/> 
           }else if(curr.Type==="RESPONSE"){
             return <ElementResponse   curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw}/>
           }else if(curr.Type==="INPUT"){
             return <ElementInput      curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw}/> 
+          }else if(curr.Type==="DATE"){
+            return <ElementDate      curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw}/> 
           }else if(curr.Type==="RADIO"){
             return <ElementRadio      curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw}/> 
           }else if(curr.Type==="SELECT"){
@@ -35,7 +39,7 @@ export default class Element extends React.Component {   //An element can be any
         })
       }
       </div>
-    )
+    ) 
   }
 }
 function ElementFormHeader(props) {
@@ -91,10 +95,10 @@ function ElementSection(props) {
     </div>
   )
 }
-function ElementText(props) {  
+function ElementMessage(props) {  
   return (
     <div key={props.curr.FormID}>
-      <div className="textclass">
+      <div className="messageclass">
         <div>{props.curr.Descrip}
         <DeleteElement className="delclass" view={props.view} DelID={props.curr.FormID} handleRedraw={props.handleRedraw} /> 
         </div>
@@ -110,8 +114,6 @@ class ElementNode extends React.Component {
     this.state = {
       childVisible: props.curr.ItemValue==="on"||props.view==="EDIT"?true:false 
     };
-    //this.onClick = this.onClick.bind(this); //React components using ES6 classes don't autobind "this". You can add a "bind" or use arrow funcs 
-    //https://facebook.github.io/react/docs/handling-events.html The latter is called "property initializer syntax" Warning: this is *experimental* syntax.
   }
   onClick=()=>{
     this.setState({childVisible: !this.state.childVisible});
@@ -133,7 +135,7 @@ class ElementNode extends React.Component {
               : null
           }      
         </div>
-        <AddElements view={this.props.view} type="AFTER" curr={this.props.curr} handleRedraw={this.props.handleRedraw} /> 
+        <AddElements view={this.props.view} type="AFTER" curr={curr} handleRedraw={this.props.handleRedraw} /> 
       </div>
     )
   }
@@ -179,6 +181,33 @@ class ElementInput extends React.Component {
             <DeleteElement className="delclass" view={this.props.view} DelID={curr.FormID} handleRedraw={this.props.handleRedraw} />            
             </label>
             <input type="text" className="inputclass" name={curr.FormID} id={curr.FormID} defaultValue={curr.ItemValue}/>
+          </div>
+          <AddElements view={this.props.view} type="AFTER" curr={curr} handleRedraw={this.props.handleRedraw} /> 
+        </div>
+      ) 
+  }
+}
+
+class ElementDate extends React.Component { 
+  constructor(props) {
+    super(props);
+    this.state = {
+      date: null
+    };
+  }
+  handleChange=(date)=>{
+    this.setState({date});
+  }
+  render() { 
+    let curr = this.props.curr;
+      return (
+        <div key={curr.FormID}>
+          <div>
+            <label>
+            {curr.Descrip}:
+            <DeleteElement className="delclass" view={this.props.view} DelID={curr.FormID} handleRedraw={this.props.handleRedraw} />            
+            </label>
+            <DatePicker selected={this.state.date} onChange={this.handleChange} className="inputclass" name={curr.FormID} id={curr.FormID} defaultValue={curr.ItemValue}/>
           </div>
           <AddElements view={this.props.view} type="AFTER" curr={curr} handleRedraw={this.props.handleRedraw} /> 
         </div>
