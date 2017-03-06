@@ -111,7 +111,7 @@ export default class AddElement extends React.Component {
           : this.state.showPrompt ? (
               <form id="AddElementForm" onSubmit={this.handleSubmit}>
                 <input type="text" autoFocus value={this.state.promptBoxText} onChange={this.handleChange} placeholder={placehold} />
-                <a onClick={() => this.handleSubmit()}><img src={addbutton} alt="Add" title="Add"/></a>
+                <a onClick={this.handleSubmit}><img src={addbutton} alt="Add" title="Add"/></a>
               </form>
           )
           : <span><a className="editclass" onClick={this.showThePrompt}>{clickName}</a></span>

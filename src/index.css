@@ -72,6 +72,11 @@ div.editclass {
   width:90px;
 
 }
+.queueheaders {
+  color: green;
+  font-size:0.6em;
+  width:120px;
+}
 div.requestclass{
   background-color:#dae4eb;
   border-radius: 0;

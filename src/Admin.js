@@ -55,15 +55,16 @@ export default class Admin extends React.Component {
     let parser = new DOMParser();
     let xmlDoc = parser.parseFromString(text,"text/xml");
     let returnArr = [];
+    let cols = xmlDoc.getElementsByTagName("Col");
     let values = xmlDoc.getElementsByTagName("ItemValue");
     for (let i = 0; i < values.length; i++) {
-        values[i].childNodes[0] && returnArr.push(<td key={i}>{values[i].childNodes[0].nodeValue}</td>);
+    values[i].childNodes[0] && returnArr.push(<td key={i}><div className="queueheaders">{cols[i].childNodes[0].nodeValue}:</div>{values[i].childNodes[0].nodeValue}</td>);  
     }
     return returnArr;
   }
   
   handleFormRowClick(ReqID){
-    hashHistory.push(`/ADMIN/0/${ReqID}`);
+    hashHistory.push(`/ADMIN/0/${ReqID}`); 
   }
 
   handleRedraw() { //(renamed from EditCB) 
@@ -116,7 +117,6 @@ export default class Admin extends React.Component {
         <h3> Unresolved Queue </h3>
         <table>
           <tbody>
-            <tr><th>Form</th><th>Name</th><th>Reason</th><th>Access Needed</th></tr>
             {listRequests}
           </tbody>
         </table>
