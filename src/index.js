@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom';
 import GetForm from './GetForm';
 import CheckAdmin from './CheckAdmin';
 import UserAdmin from './UserAdmin';
-import './index.css';
+import './css/index.css';
 
 ReactDOM.render(
   <Router history={hashHistory}>
@@ -26,5 +26,4 @@ ReactDOM.render(
 //    /ADMIN/0/:reqid
 //    /EDIT/:formid
 
-//<Route path="/edit" component={() => (<GetForm view="EDIT"  />)} /> 
 

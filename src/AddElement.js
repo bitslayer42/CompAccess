@@ -109,7 +109,7 @@ export default class AddElement extends React.Component {
             </tbody></table>
           )
           : this.state.showPrompt ? (
-              <form id="AddElementForm" onSubmit={this.handleSubmit}>
+              <form onSubmit={this.handleSubmit}>
                 <input type="text" autoFocus value={this.state.promptBoxText} onChange={this.handleChange} placeholder={placehold} />
                 <a onClick={this.handleSubmit}><img src={addbutton} alt="Add" title="Add"/></a>
               </form>

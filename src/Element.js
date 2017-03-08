@@ -4,7 +4,7 @@ import DatePicker  from 'react-datepicker'; //datepicker library
 import LibPath from './LibPath';
 import AddElements from './AddElements';
 import DeleteElement from './DeleteElement';
-import './react-datepicker.css';
+import './css/react-datepicker.css';
 
 export default class Element extends React.Component {   //An element can be any row returned from stored proc
   render() { 
