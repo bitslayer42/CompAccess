@@ -23,8 +23,9 @@ ReactDOM.render(
 );
 
 // GetForm :view options:
-//    /SUPV/:formid, 
-//    /ADMIN/0/:reqid
-//    /EDIT/:formid
-
+//    /SUPV/:formid,      Supv is filling out a form
+//    /ADMIN/0/:reqid     The IS department is working a request
+//    /EDIT/:formid       Add and remove form elements
+//    /HEADER/:formid     Set form elements as header records to appear in Unresolved Queue
+//    /REQUIRED/:formid   Set form elements as Requred
 

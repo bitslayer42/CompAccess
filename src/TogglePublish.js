@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios'; //ajax library
 import LibPath from './LibPath';
 
-export default class TogglePublish extends React.Component {
+export default class TogglePublish extends React.Component { 
  
   onChange=()=>{
     event && event.preventDefault();    
