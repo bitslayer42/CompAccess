@@ -15,7 +15,7 @@
     <cfif IsDefined("CLIENT.EMPNAME")>
       <cfset SupvName = CLIENT.EMPNAME>
     <cfelse>
-      <cfset SupvName = "Super Jario Brothers">  <!--- CAUTION DEBUGGING ONLY!!! --->
+      <cfset SupvName = "Super Jariotte Brothers">  <!--- CAUTION DEBUGGING ONLY!!! --->
     </cfif>
       <cfset EnteredDate = DateFormat(Now(),"YYYY-MM-DD") & "T" & TimeFormat(Now(),"HH:MM")>
 <cfelse>
@@ -35,10 +35,14 @@
   </cfoutput>
   "body": [ 
   <cfoutput query="body">
+  <cfif body.Type EQ "DATE">
+    <cfset body.ItemValue = DateFormat(body.ItemValue,"YYYY-MM-DD") >
+  </cfif>
   { "FormID": #body.FormID#
-  , "depth": #body.depth#
   , "Type": "#body.Type#"
   , "Descrip": "#body.Descrip#"
+  , "Required": #body.Required# 
+  , "HeaderRecord": #body.HeaderRecord#    
   , "ParentID": #body.ParentID#
   , "ItemValue": "#body.ItemValue#"
   }
@@ -50,7 +54,7 @@
 
 
 <!---
-
+, "depth": #body.depth#
 https://ccp1.msj.org/CompAccess/FormJSON.cfm?FormID=2
 https://ccp1.msj.org/CompAccess/FormJSON.cfm?FormID=0&reqID=38
 --->

@@ -3,8 +3,9 @@ import moment from 'moment'; //date library
 import DatePicker  from 'react-datepicker'; //datepicker library
 import LibPath from './LibPath';
 import AddElements from './AddElements';
-import DeleteElement from './DeleteElement';
+import Edit from './Edit';
 import './css/react-datepicker.css';
+import { Link } from 'react-router';
 
 export default class Element extends React.Component {   //An element can be any row returned from stored proc
   render() { 
@@ -45,40 +46,61 @@ export default class Element extends React.Component {   //An element can be any
 }
 function ElementFormHeader(props) {
   return (
-    <div className="formclass" key={props.curr.FormID}>
-        <h1>Computer Access Authorization E-Form</h1>
-        <h2>{props.curr.Descrip}</h2>
-          {props.curr.Type==="UNPUB" && <div style={{color:"red"}}>Unpublished Form</div>}
-        {props.header.SupvName && <p><i>Entered by:</i> {props.header.SupvName}</p>} 
-        {props.formatdate}
+      <div className="formclass" key={props.curr.FormID}>
+        {   props.view==="EDIT"
+          ? <h1 style={{color:"red"}}>Add and remove form elements</h1>
+          : props.view==="HEADER"
+          ? <h1 style={{color:"red"}}>Set fields to appear in Unresolved Queue</h1>
+          : props.view==="REQUIRED"
+          ? <h1 style={{color:"red"}}>Set fields that are Required</h1>
+        : <h1>Computer Access Authorization E-Form</h1>}
+          
+          <h2>{props.curr.Descrip}</h2>
+            {props.curr.Type==="UNPUB" && <div style={{color:"red"}}>Unpublished Form</div>}
+          {props.header.SupvName && <p><i>Entered by:</i> {props.header.SupvName}</p>} 
+          {props.formatdate}
 
-    </div>
+      </div>
   )
 }
 
 function ElementForm(props) {
   let formatdate = moment(props.header.EnteredDate).format("MMMM Do YYYY, h:mm a"); //if no date in header, is NOW    
   return (
-    <div className="formclass" key={props.curr.FormID}>
-      <ElementFormHeader curr={props.curr} header={props.header} formatdate={formatdate}/>
-      {props.view==="SUPV" 
-      ?(
-        <form method="post" action={LibPath + 'SupvPost.cfm'}>
-          <Element tree={props.curr.children} view={props.view} />
-          <input type="hidden" name={props.curr.FormID} id={props.curr.FormID} defaultValue={props.curr.Descrip} /> {/*form*/}
-          <input type="hidden" name="DateEntered"   id={props.curr.FormID} defaultValue={formatdate} />
-          <input type="hidden" name="SupvName"      id={props.curr.FormID} defaultValue={props.header.SupvName} />    
-          <Signature SupvName={props.header.SupvName} />
-        </form>
-       )
-      :(
+    <div>
+      {props.view!=="SUPV" && (
         <div>
-        <AddElements view={props.view} type="FORM" curr={props.curr} handleRedraw={props.handleRedraw} /> 
-        <Element tree={props.curr.children} view={props.view} handleRedraw={props.handleRedraw} />
+        <Link to={'/'}>&larr; Return to Admin menu</Link>     
+          {props.view!=="EDIT"     && (<div><Link to={`/EDIT/${props.curr.FormID}`}>Add and Remove</Link></div>)}
+          {props.view!=="HEADER"   && (<div><Link to={`/HEADER/${props.curr.FormID}`}>Set Unresolved Queue</Link></div>)}
+          {props.view!=="REQUIRED" && (<div><Link to={`/REQUIRED/${props.curr.FormID}`}>Set REQUIRED</Link></div>)}
+          {<div><Link to={`/SUPV/${props.curr.FormID}`}>Preview Form</Link></div>}          
         </div>
-      )
-      }
+      )}
+ 
+      <div className="formclass" key={props.curr.FormID}>
+        <ElementFormHeader curr={props.curr} view={props.view} header={props.header} formatdate={formatdate}/>
+        {props.view==="SUPV" 
+        ?(
+          <form method="post" action={LibPath + 'SupvPost.cfm'}>
+            <Element tree={props.curr.children} view={props.view} />
+            <input type="hidden" name={props.curr.FormID} id={props.curr.FormID} defaultValue={props.curr.Descrip} /> {/*form*/}
+            <input type="hidden" name="DateEntered"   id={props.curr.FormID} defaultValue={formatdate} />
+            <input type="hidden" name="SupvName"      id={props.curr.FormID} defaultValue={props.header.SupvName} />    
+            <Signature SupvName={props.header.SupvName} />
+          </form>
+         )
+        :(
+          <div>
+          <AddElements view={props.view} type="FORM" curr={props.curr} handleRedraw={props.handleRedraw} /> 
+          <Element tree={props.curr.children} view={props.view} handleRedraw={props.handleRedraw} />
+          </div>
+        )
+        }
+      </div>
+      <div style={{height:"100px"}}/>
     </div>
+
   )
 }
 
@@ -87,7 +109,7 @@ function ElementSection(props) {
     <div key={props.curr.FormID}>
       <div className="sectionclass">
         <h2>{props.curr.Descrip}
-        <DeleteElement className="delclass" view={props.view} DelID={props.curr.FormID} handleRedraw={props.handleRedraw} />
+        <Edit className="delclass" view={props.view} curr={props.curr} handleRedraw={props.handleRedraw} />
         </h2>
         <AddElements view={props.view} type="SECTION" curr={props.curr} handleRedraw={props.handleRedraw} />  
         <Element tree={props.curr.children} view={props.view} handleRedraw={props.handleRedraw}/>
@@ -101,7 +123,7 @@ function ElementMessage(props) {
     <div key={props.curr.FormID}>
       <div className="messageclass">
         <div>{props.curr.Descrip}
-        <DeleteElement className="delclass" view={props.view} DelID={props.curr.FormID} handleRedraw={props.handleRedraw} /> 
+        <Edit className="delclass" view={props.view} curr={props.curr} handleRedraw={props.handleRedraw} /> 
         </div>
       </div>
       <AddElements view={props.view} type="AFTER" curr={props.curr} handleRedraw={props.handleRedraw} /> 
@@ -126,7 +148,7 @@ class ElementNode extends React.Component {
         <div className="nodeclass" >
         <label >
          {curr.Descrip}:
-         <DeleteElement className="delclass" view={this.props.view} DelID={this.props.curr.FormID} handleRedraw={this.props.handleRedraw} /> 
+         <Edit className="delclass" view={this.props.view} curr={this.props.curr} handleRedraw={this.props.handleRedraw} /> 
         </label>
 
         <input type="checkbox" name={curr.FormID} onClick={this.onClick} defaultChecked={this.state.childVisible}/>      
@@ -174,30 +196,37 @@ class ElementResponse extends React.Component {
 class ElementInput extends React.Component { 
   render() { 
     let curr = this.props.curr;
-      return (
-        <div key={curr.FormID}>
-          <div>
-            <label>
-            {curr.Descrip}:
-            <DeleteElement className="delclass" view={this.props.view} DelID={curr.FormID} handleRedraw={this.props.handleRedraw} />            
-            </label>
-            <input type="text" className="inputclass" name={curr.FormID} id={curr.FormID} defaultValue={curr.ItemValue}/>
-          </div>
-          <AddElements view={this.props.view} type="AFTER" curr={curr} handleRedraw={this.props.handleRedraw} /> 
+    return (
+      <div key={curr.FormID}>
+        <div>
+          <label>
+          {curr.Required ? <span >*</span> : null}
+          {curr.Descrip}:
+          <Edit className="delclass" view={this.props.view} curr={curr} handleRedraw={this.props.handleRedraw} />            
+          </label>
+          {curr.Required
+          ?<input type="text" className="inputclass" name={curr.FormID} id={curr.FormID} defaultValue={curr.ItemValue} required />
+          :<input type="text" className="inputclass" name={curr.FormID} id={curr.FormID} defaultValue={curr.ItemValue} />}
         </div>
-      ) 
+        <AddElements view={this.props.view} type="AFTER" curr={curr} handleRedraw={this.props.handleRedraw} /> 
+      </div>
+    ) 
   }
 }
 
 class ElementDate extends React.Component { 
-  constructor(props) {
+
+  constructor(props) {  //debugger;
     super(props);
+    let thedate = props.curr.ItemValue?moment(props.curr.ItemValue):null
     this.state = {
-      date: null
+      adate: thedate
     };
   }
   handleChange=(date)=>{
-    this.setState({date});
+    this.setState({
+      adate:date
+    });
   }
   render() { 
     let curr = this.props.curr;
@@ -205,10 +234,13 @@ class ElementDate extends React.Component {
         <div key={curr.FormID}>
           <div>
             <label>
+            {curr.Required ? <span >*</span> : null}
             {curr.Descrip}:
-            <DeleteElement className="delclass" view={this.props.view} DelID={curr.FormID} handleRedraw={this.props.handleRedraw} />            
+            <Edit className="delclass" view={this.props.view} curr={curr} handleRedraw={this.props.handleRedraw} />            
             </label>
-            <DatePicker selected={this.state.date} onChange={this.handleChange} className="inputclass" name={curr.FormID} id={curr.FormID} defaultValue={curr.ItemValue}/>
+            {curr.Required
+            ?<DatePicker selected={this.state.adate} name={curr.FormID} onChange={this.handleChange} className="inputclass" required />
+            :<DatePicker selected={this.state.adate} name={curr.FormID} onChange={this.handleChange} className="inputclass" />}
           </div>
           <AddElements view={this.props.view} type="AFTER" curr={curr} handleRedraw={this.props.handleRedraw} /> 
         </div>
@@ -218,7 +250,7 @@ class ElementDate extends React.Component {
 
 class ElementRadio extends React.Component {    
   constructor(props) { 
-    super(props);                   //console.log("curr",this.props.curr); 
+    super(props);                    //
     this.state = {
       selectedOption: this.props.curr.ItemValue
     };
@@ -237,8 +269,9 @@ class ElementRadio extends React.Component {
         curr.children.map((chld,ix) => { //children of RADIO can be OPTION or SUBFORM
           let firstlabel = ix===0  //Only put the label for the radio on the first line
           ?(<label>
+            {curr.Required ? <span >*</span> : null}
             {curr.Descrip+":"}
-            <DeleteElement className="delclass" view={this.props.view} DelID={this.props.curr.FormID} handleRedraw={this.props.handleRedraw} /> 
+            <Edit className="delclass" view={this.props.view} curr={this.props.curr} handleRedraw={this.props.handleRedraw} /> 
             </label>
           )
           :<label/>;
@@ -251,10 +284,14 @@ class ElementRadio extends React.Component {
                   </span>)
                 }
                 {firstlabel}
-                <input type="radio"  value={chld.Descrip} 
+                {curr.Required
+                ?<input type="radio" name={curr.FormID}  value={chld.Descrip} 
                                 checked={this.state.selectedOption === chld.Descrip} 
-                                onChange={this.handleOptionChange} />
-                <DeleteElement className="delclass" view={this.props.view} DelID={chld.FormID} handleRedraw={this.props.handleRedraw} /> 
+                                onChange={this.handleOptionChange} required/>
+                :<input type="radio" name={curr.FormID} value={chld.Descrip} 
+                                checked={this.state.selectedOption === chld.Descrip} 
+                                onChange={this.handleOptionChange} />}                
+                <Edit className="delclass" view={this.props.view} curr={chld} handleRedraw={this.props.handleRedraw} /> 
                 {chld.Descrip} 
                 {chld.Type==="SUBFORM" 
                   && (this.state.selectedOption === chld.Descrip || this.props.view==="EDIT")
@@ -275,7 +312,7 @@ class ElementRadio extends React.Component {
       :(
         <div>
             <label>{curr.Descrip}
-              <DeleteElement className="delclass" view={this.props.view} DelID={this.props.curr.FormID} handleRedraw={this.props.handleRedraw} /> 
+              <Edit className="delclass" view={this.props.view} curr={this.props.curr} handleRedraw={this.props.handleRedraw} /> 
             </label>
             <input type="radio" name={curr.FormID} />
 
@@ -302,17 +339,29 @@ class ElementSelect extends React.Component {
       <div key={curr.FormID}>
 
         <label>
+        {curr.Required ? <span >*</span> : null}
         {curr.Descrip}:
-        <DeleteElement className="delclass" view={this.props.view} DelID={this.props.curr.FormID} handleRedraw={this.props.handleRedraw} /> 
+        <Edit className="delclass" view={this.props.view} curr={this.props.curr} handleRedraw={this.props.handleRedraw} /> 
         </label>
-        <select id={curr.FormID} name={curr.FormID} defaultValue={curr.ItemValue}>
-          <option key={0} value="">(Choose One)</option>
-          {curr.children.map((chld) => { //these should be OPTIONS
-            return( 
-              <option key={chld.FormID} value={chld.Descrip}>{chld.Descrip}</option>
-            )
-          })}
-        </select>
+        {curr.Required
+          ? (<select id={curr.FormID} name={curr.FormID} defaultValue={curr.ItemValue} required>
+              <option key={0} value="">(Choose One)</option>
+              {curr.children.map((chld) => { //these should be OPTIONS
+                return( 
+                  <option key={chld.FormID} value={chld.Descrip}>{chld.Descrip}</option>
+                )
+              })}
+            </select>)
+          
+          : (<select id={curr.FormID} name={curr.FormID} defaultValue={curr.ItemValue}>
+              <option key={0} value="">(Choose One)</option>
+              {curr.children.map((chld) => { //these should be OPTIONS
+                return( 
+                  <option key={chld.FormID} value={chld.Descrip}>{chld.Descrip}</option>
+                )
+              })}
+            </select>)
+        }
         <AddElements view={this.props.view} type="SOPTION" curr={curr} handleRedraw={this.props.handleRedraw} />  
           {this.props.view==="EDIT" && 
             curr.children.map((chld) => { //these should be OPTIONS
@@ -321,7 +370,7 @@ class ElementSelect extends React.Component {
                   
                   <div className="editselectoption">
                     <label></label>
-                    <DeleteElement className="delclass" view={this.props.view} DelID={chld.FormID} handleRedraw={this.props.handleRedraw} />
+                    <Edit className="delclass" view={this.props.view} curr={chld} handleRedraw={this.props.handleRedraw} />
                     {chld.Descrip}
                   </div>
                   <AddElements view={this.props.view} type="SOPTIONAFTER" curr={chld} handleRedraw={this.props.handleRedraw} /> 
@@ -345,17 +394,19 @@ class Signature extends React.Component {
         *Supervisor Authorization Signature:
         </label>
        
-        <input type="text" name="SupvSig" className="inputclass"/>
+        <input type="text" name="SupvSig" className="inputclass" required />
 
-        <p><i>      
-        (Typing your name above implies you are authorizing the above computer access form.
-        We will verify your signature with the employee FormID you are currently logged in with.) 
+        <p style={{fontSize:"0.9em"}}><i>      
+        (Typing your name above implies you are authorizing these changes.) 
         </i></p>
         <p>
         You are logged in as <span style={{"color":"#fb7560"}}>{this.props.SupvName}</span>
         </p>
         <p>
         <button className="submit" >Submit</button>
+        </p>
+        <p style={{fontSize:"0.7em"}}>
+        * Required Field
         </p>
       </div>
     )

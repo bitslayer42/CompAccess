@@ -25,13 +25,23 @@
   {"FormID":#ret.FormID#,"Type":"#ret.Type#","Descrip":"#ret.Descrip#","ParentID":#ret.ParentID#}
   </cfoutput>
 <cfelseif url.Proc EQ "DelNode">
-  <!---DelNode - Delete Node and all it's children (Yikes!)--->
+  <!---DelNode - Mark as Deleted Node and all it's children --->
 	<cfstoredproc procedure="DelNode" datasource="ITForms">
-    <cfprocparam cfsqltype="cf_sql_integer" value="#url.DelID#">
+    <cfprocparam cfsqltype="cf_sql_integer" value="#url.FormID#">
   </cfstoredproc>
 <cfelseif url.Proc EQ "PublishForm">
   <!---Publishurl - Toggles url from Type url to UNPUB--->
 	<cfstoredproc procedure="PublishForm" datasource="ITForms">
     <cfprocparam cfsqltype="cf_sql_integer" value="#url.FormID#">
   </cfstoredproc>  
+<cfelseif url.Proc EQ "ToggleHeaderRecord">
+  <!--- Toggles HeaderRecord field true/false--->
+	<cfstoredproc procedure="ToggleHeaderRecord" datasource="ITForms">
+    <cfprocparam cfsqltype="cf_sql_integer" value="#url.FormID#">
+  </cfstoredproc> 
+<cfelseif url.Proc EQ "ToggleRequired">
+  <!--- Toggles Required field true/false--->
+	<cfstoredproc procedure="ToggleRequired" datasource="ITForms">
+    <cfprocparam cfsqltype="cf_sql_integer" value="#url.FormID#">
+  </cfstoredproc>
 </cfif>

@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios'; //ajax library
 import LibPath from './LibPath';
 import AddElement from './AddElement';
-import TogglePublish from './TogglePublish';
+import TogglePublish from './TogglePublish'; 
 import DeleteElement from './DeleteElement';
 import { Link } from 'react-router';
 import { hashHistory } from 'react-router';
@@ -99,7 +99,7 @@ export default class Admin extends React.Component {
           </td><td>
           <Link to={`/EDIT/${form.FormID}`}>{form.Descrip}</Link>
           </td><td>
-          <DeleteElement DelID={form.FormID} view="EDIT" handleRedraw={self.handleRedraw}  />
+          <DeleteElement FormID={form.FormID} handleRedraw={self.handleRedraw}  />
           </td>
         </tr>
       )

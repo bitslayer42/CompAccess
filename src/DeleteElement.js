@@ -12,7 +12,7 @@ export default class DeleteElement extends React.Component {
       axios.get(LibPath + 'DBUpdate.cfm', {
         params: {
           Proc: "DelNode",
-          DelID: this.props.DelID,
+          FormID: this.props.FormID,
           cachebuster: Math.random()
         }
       })
@@ -20,22 +20,15 @@ export default class DeleteElement extends React.Component {
         this.props.handleRedraw();
       })
       .catch(err => {
-        this.setState({
-          loading: false,
-          error: err
-        });
+        console.log(err);
       });
     }
   }  
 
-  render()  {
-    if(this.props.view !== "EDIT"){
-      return null
-    }else{    
+  render()  {  
     return (
         <span className="addelement"><a onClick={this.onClick}><img src={delbutton} title="Delete" alt="Delete" /></a></span>
     )
-    }
   }
 };
  

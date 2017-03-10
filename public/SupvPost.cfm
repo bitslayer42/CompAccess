@@ -1,4 +1,4 @@
-
+<cfdump var="#form#">
 <cfset ItemStr = "<reqrows>">
 <cfloop collection="#form#" item="theField">
   <cfif theField NEQ "fieldNames" AND theField NEQ "DateEntered" AND theField NEQ "SupvName" AND theField NEQ "SupvSig">

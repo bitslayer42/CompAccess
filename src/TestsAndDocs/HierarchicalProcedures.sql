@@ -2,7 +2,7 @@ ALTER PROC [dbo].[GetForm] (@FormID INT, @RequestID INT = NULL) AS
 --Based on Nested Set Model here: http://mikehillyer.com/articles/managing-hierarchical-data-in-mysql/
 -- If called with formid=0, the form will be looked up from requestid
 -- GetForm 2
--- GetForm 0, 9
+-- GetForm 0, 51
 DECLARE @ReqDate datetime
 
 IF @FormID = 0 --Pull the request, first figure out which form this is.
@@ -22,19 +22,19 @@ ELSE           --Pull just the form.
 	END
 
 SELECT * FROM Requests WHERE RequestID = @RequestID
-SELECT inr2.ID AS FormID, inr2.depth, inr2.Type, inr2.Descrip, ParentID, ItemValue FROM (
-	SELECT inr.ID, inr.depth, inr.Type, inr.Descrip, inr.lft, (SELECT TOP 1 ID 
+SELECT inr2.ID AS FormID, inr2.Type, inr2.Descrip, inr2.Required, inr2.HeaderRecord, ParentID, ItemValue FROM (
+	SELECT inr.ID, inr.Type, inr.Descrip, inr.Required, inr.HeaderRecord, inr.lft, (SELECT TOP 1 ID 
 			   FROM Forms parent 
 			   WHERE parent.lft < inr.lft AND parent.rgt > inr.rgt    
 			   ORDER BY parent.rgt-inr.rgt ASC) AS ParentID
 	FROM (
-		SELECT node.ID, (COUNT(parent.ID) - 1) AS depth, 
+		SELECT node.ID, node.Required, node.HeaderRecord, --(COUNT(parent.ID) - 1) AS depth, 
 		node.lft, node.rgt, node.Type, node.Descrip
 		FROM Forms AS node
 		INNER JOIN Forms AS parent
 		ON node.lft BETWEEN parent.lft AND parent.rgt
 		WHERE (node.Created <= @ReqDate AND (node.Deleted >= @ReqDate OR node.Deleted IS NULL))
-		GROUP BY node.ID, node.lft, node.rgt, node.Type, node.Descrip
+		GROUP BY node.ID, node.lft, node.rgt, node.Type, node.Descrip, node.Required, node.HeaderRecord
 	) As inr
 	INNER JOIN (
 		SELECT *
@@ -62,13 +62,15 @@ BEGIN
 	BEGIN TRANSACTION
 		DECLARE @FormID INT
 		DECLARE @myLeft int
+		DECLARE @Head BIT
 		SELECT @myLeft = lft FROM Forms
 		WHERE ID = @IntoCategory;
 
 		UPDATE Forms SET rgt = rgt + 2 WHERE rgt > @myLeft;
 		UPDATE Forms SET lft = lft + 2 WHERE lft > @myLeft;
 
-		INSERT INTO Forms(Type,Descrip,lft,rgt,Created) VALUES(@Type, @Descrip, @myLeft + 1, @myLeft + 2, GETDATE());
+		IF @Type = 'UNPUB' SET @Head = 1 ELSE SET @Head = 0
+		INSERT INTO Forms(Type,Descrip,lft,rgt,Created,HeaderRecord) VALUES(@Type, @Descrip, @myLeft + 1, @myLeft + 2, GETDATE(),@Head);
 		SET @FormID = @@IDENTITY
 
 		IF @Type = 'NODE' --Nodes always have request and response
@@ -80,7 +82,6 @@ BEGIN
 		SELECT @FormID AS FormID, @Type AS Type, @Descrip AS Descrip, dbo.GetParent(@FormID) AS ParentID
 	COMMIT TRANSACTION
 END
-
 GO
 ---------------------------------------------------------------------------------------------------------------
 
@@ -113,16 +114,28 @@ END
 GO
 ---------------------------------------------------------------------------------------------------------------
 ALTER PROC DelNode (@FormID INT) AS
--- Mark as Deleted Node and all it's children 
+-- Checks if element has ever been used in a request. If yes, mark as Deleted 
+-- if no delete Node and all it's children 
 -- DelNode 119
 BEGIN
 	BEGIN TRANSACTION
-		DECLARE @myLeft INT, @myRight INT, @myWidth INT
+		DECLARE @myLeft INT, @myRight INT, @myWidth INT, @IsUsed INT
 		SELECT @myLeft = lft, @myRight = rgt, @myWidth = rgt - lft + 1
 		FROM Forms
 		WHERE ID = @FormID
 
-		UPDATE Forms SET Deleted = GETDATE() WHERE lft BETWEEN @myLeft AND @myRight;
+		SELECT @IsUsed = count(*) FROM RequestItems
+		WHERE FieldID = @FormID
+		IF @IsUsed = 0
+		BEGIN
+			DELETE FROM Forms WHERE lft BETWEEN @myLeft AND @myRight;
+			UPDATE Forms SET rgt = rgt - @myWidth WHERE rgt > @myRight;
+			UPDATE Forms SET lft = lft - @myWidth WHERE lft > @myRight;
+		END 
+		ELSE 
+		BEGIN
+			UPDATE Forms SET Deleted = GETDATE() WHERE lft BETWEEN @myLeft AND @myRight;
+		END
 	COMMIT TRANSACTION
 END
 GO

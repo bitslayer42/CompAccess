@@ -17,8 +17,8 @@ CREATE TABLE [dbo].[Forms](
 	[rgt] [int] NULL,
 	[Created] [datetime] NULL,
 	[Deleted] [datetime] NULL,
-	[HeaderRecord] [bit] NULL,
-	[Required] [bit] NULL,
+	[HeaderRecord] [bit] NULL CONSTRAINT [DF_Forms_HeaderRecord]  DEFAULT ((0)),
+	[Required] [bit] NULL CONSTRAINT [DF_Forms_Required]  DEFAULT ((0)),
  CONSTRAINT [PK_nested_category] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC

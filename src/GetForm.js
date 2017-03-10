@@ -2,13 +2,13 @@ import React from 'react';
 import axios from 'axios'; //ajax library
 import LibPath from './LibPath';
 import Element from './Element';
-import { Link } from 'react-router';
+
 
 export default class GetForm extends React.Component {
-  constructor(props) { 
+  constructor(props) { //console.log("getform constructor props",props.params.view); 
     super(props);
     this.state = {
-      view: props.params.view, //Can be "SUPV", "ADMIN", or "EDIT"
+      view: props.params.view, //Can be "SUPV", "ADMIN", "EDIT", "HEADER", "REQUIRED"
       formID: props.params.formID,
       reqID: props.params.reqID,
       nodes: [], //the tree 'flat'
@@ -23,8 +23,14 @@ export default class GetForm extends React.Component {
   componentDidMount() {
     this.getFromServer();
   }
-  
-  getFromServer(){
+  componentWillReceiveProps(nextProps) {
+    if(this.props!==nextProps){
+      this.setState({
+        view: nextProps.params.view
+      })
+    }
+  }
+  getFromServer(){ 
     axios.get(LibPath + 'FormJSON.cfm', {
       params: {
         FormID: this.state.formID,
@@ -40,6 +46,7 @@ export default class GetForm extends React.Component {
       header.EnteredDate = res.data.EnteredDate;
       
       this.setState({
+        view: this.props.params.view,
         nodes,
         header,
         loading: false,
@@ -54,7 +61,7 @@ export default class GetForm extends React.Component {
     }); 
   }
 
-  handleRedraw() { //(renamed from EditCB) 
+  handleRedraw() { //debugger; 
   // CallBack after adding or deleting node. Element is already deleted in db, 
   // now repull tree. 
     this.getFromServer();
@@ -87,14 +94,8 @@ export default class GetForm extends React.Component {
             atree.push(node); // first
         }
     }
-                                                                   console.log("atree",atree);       //console.log("statenodes",this.state.nodes); //console.log("localnodes",nodes);//
-    return (
-      <div>
-      <Link to={`/ADMIN`}>Admin</Link>
-      <Element tree={atree} view={this.state.view} header={this.state.header} handleRedraw={this.handleRedraw}/>
-      </div>
-    )
-    
+                                                                   console.log("atree",atree);       //console.log("state",this.state); //console.log("localnodes",nodes);//
+    return <Element tree={atree} view={this.state.view} header={this.state.header} handleRedraw={this.handleRedraw}/>
   }
   
   render()  {
