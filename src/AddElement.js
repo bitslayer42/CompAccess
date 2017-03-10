@@ -31,7 +31,14 @@ export default class AddElement extends React.Component {
         listToAdd: ["NODE","INPUT","DATE","SELECT","RADIO","MESSAGE"],
         showClosedList: true
       });   
-    }     
+    } 
+    if(this.props.typeToAdd==="OPTS>>"){
+      this.setState({
+        listToAdd: ["OPTION","SUBFORM"],
+        showClosedList: true
+      });   
+    }   
+    
   }
   showThePrompt=()=>{
     this.setState({ 

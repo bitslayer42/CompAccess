@@ -87,7 +87,7 @@ export default class GetForm extends React.Component {
             atree.push(node); // first
         }
     }
-                                                                          //console.log("statenodes",this.state.nodes); //console.log("localnodes",nodes);//console.log("atree",atree);
+                                                                   console.log("atree",atree);       //console.log("statenodes",this.state.nodes); //console.log("localnodes",nodes);//
     return (
       <div>
       <Link to={`/ADMIN`}>Admin</Link>

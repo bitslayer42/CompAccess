@@ -4,13 +4,14 @@ import ReactDOM from 'react-dom';
 import GetForm from './GetForm';
 import CheckAdmin from './CheckAdmin';
 import UserAdmin from './UserAdmin';
+//import RadioTest from './Radiotest';<Route path="/rad" component={RadioTest} /> 
 import './css/index.css';
 
 ReactDOM.render(
   <Router history={hashHistory}>
     <Route path="/" component={CheckAdmin} />
 
-
+    
     <Route path="/useradmin/:user" component={UserAdmin} />   
       
     <Route path="/:view/:formID" component={GetForm}>    

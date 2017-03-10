@@ -24,11 +24,20 @@ export default class Edit extends React.Component {
             : (this.props.type==="REQUEST" || this.props.type==="RESPONSE") ? (
               <AddElement typeToAdd=">>" procToCall="AddChild" parNodeID={this.props.curr.FormID} handleRedraw={this.props.handleRedraw} />
             )
-            : this.props.type==="OPTION" ? (
+            : this.props.type==="SOPTION" ? (
               <AddElement typeToAdd="OPTION" procToCall="AddChild" parNodeID={this.props.curr.FormID} handleRedraw={this.props.handleRedraw} />
             )
-            : this.props.type==="OPTIONAFTER" ? (
+            : this.props.type==="SOPTIONAFTER" ? (
               <AddElement typeToAdd="OPTION" procToCall="AddSister" parNodeID={this.props.curr.FormID} handleRedraw={this.props.handleRedraw} />
+            )
+            : this.props.type==="OPTION" ? (
+              <AddElement typeToAdd="OPTS>>" procToCall="AddChild" parNodeID={this.props.curr.FormID} handleRedraw={this.props.handleRedraw} />
+            )
+            : this.props.type==="OPTIONAFTER" ? (
+              <AddElement typeToAdd="OPTS>>" procToCall="AddSister" parNodeID={this.props.curr.FormID} handleRedraw={this.props.handleRedraw} />
+            )
+            : this.props.type==="SUBFORM" ? (
+              <AddElement typeToAdd=">>" procToCall="AddChild" parNodeID={this.props.curr.FormID} handleRedraw={this.props.handleRedraw} />
             )
             : <AddElement typeToAdd="TODO" procToCall="AddChild" parNodeID="0" handleRedraw={this.props.handleRedraw} />
           }   

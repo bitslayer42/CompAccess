@@ -143,6 +143,12 @@ export default class Admin extends React.Component {
         </ul>
         </div>
         
+        <div className="sectionclass" >        
+        <h3> View Completed Form </h3>
+        <ul>
+          {listFormsSUPV}
+        </ul>
+        </div>        
         <div className="sectionclass" >
         <h3> Administrators </h3>
         <ul>
@@ -152,13 +158,7 @@ export default class Admin extends React.Component {
           <li className="editclass" onClick={() => self.handleNewAdminClick()}>Add New Administrator</li>
         </ul> 
         </div>
-        
-        <div className="sectionclass" >        
-        <h3> Enter a Request </h3>
-        <ul>
-          {listFormsSUPV}
-        </ul>
-        </div>
+
       </div>
     )
   }

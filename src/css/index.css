@@ -40,8 +40,17 @@ div.nodeclass {
   border: 1px solid #3b5969;
   text-align:left;
   font-weight:bold;
-
 }
+div.subformstyle{
+  background-color: #aff7d8;
+}
+div.subformstyle label{
+ 	width:53%;
+}
+div.subformstyle input[type="text"]{
+ 	width:45%;
+}
+
 div.messageclass {
   font-style:italic;
   font-size:0.8em;
