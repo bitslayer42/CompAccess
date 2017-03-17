@@ -62,8 +62,8 @@ export default class GetForm extends React.Component {
   }
 
   handleRedraw() { //debugger; 
-  // CallBack after adding or deleting node. Element is already deleted in db, 
-  // now repull tree. 
+  // CallBack after adding or deleting node, or toggling header/required fields. 
+  // Element is already changed in db, now repull tree. 
     this.getFromServer();
   } 
   

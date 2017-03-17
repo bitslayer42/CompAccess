@@ -274,6 +274,18 @@ ELSE
 SELECT @RetType AS Results
 GO
 -------------------------------------------------------------------
+ALTER PROC SearchXML(@SearchString VARCHAR(MAX)) AS
+-- SearchXML 'ANew'
+-- TEST THIS SOME MORE...
+--Also create an XML index https://msdn.microsoft.com/en-us/library/bb934097.aspx
+SELECT [RequestID]
+      ,[EmpName]
+      ,[SupvName]
+      ,[EnteredDate]
+      ,[Completed]
+      ,[headerXML]
+  FROM Requests
+WHERE headerXML.value('(/row/ItemValue)[1]', 'varchar(max)') like '%'+@SearchString+'%'
 
 ---------------------------------------------------------------------------------------------------------------
 

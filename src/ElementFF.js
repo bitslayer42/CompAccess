@@ -3,6 +3,7 @@ import moment from 'moment'; //date library
 import DatePicker  from 'react-datepicker'; //datepicker library
 import LibPath from './LibPath';
 import AddElements from './AddElements';
+//import ElementResponse from './ElementResponse'; 
 import Edit from './Edit';
 import './css/react-datepicker.css';
 import { Link } from 'react-router';
@@ -12,7 +13,7 @@ export default class Element extends React.Component {   //An element can be any
     return ( 
       <div>
       {
-        this.props.tree.map((curr,ix) => {
+        this.props.tree.map((curr) => {
           if      (curr.Type==="FORM"||curr.Type==="UNPUB"){
             return <ElementForm       curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw} header={this.props.header} /> 
           }else if(curr.Type==="SECTION"){
@@ -26,13 +27,13 @@ export default class Element extends React.Component {   //An element can be any
           }else if(curr.Type==="RESPONSE"){
             return <ElementResponse   curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw}/>
           }else if(curr.Type==="INPUT"){
-            return <ElementInput ix={ix} curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw} handleChangeResponse={this.props.handleChangeResponse}/> 
+            return <ElementInput      curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw} handleChangeResponse={this.props.handleChangeResponse}/> 
           }else if(curr.Type==="DATE"){
-            return <ElementDate ix={ix} curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw} handleChangeResponse={this.props.handleChangeResponse}/> 
+            return <ElementDate       curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw} handleChangeResponse={this.props.handleChangeResponse}/> 
           }else if(curr.Type==="RADIO"){
-            return <ElementRadio ix={ix} curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw} handleChangeResponse={this.props.handleChangeResponse}/> 
+            return <ElementRadio      curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw} handleChangeResponse={this.props.handleChangeResponse}/> 
           }else if(curr.Type==="SELECT"){
-            return <ElementSelect ix={ix} curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw} handleChangeResponse={this.props.handleChangeResponse}/>
+            return <ElementSelect     curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw} handleChangeResponse={this.props.handleChangeResponse}/>
 
           }else{
             return <div key={curr.FormID}>Unknown Element {curr.Type}</div>
@@ -44,6 +45,8 @@ export default class Element extends React.Component {   //An element can be any
     ) 
   }
 }
+
+
 function ElementFormHeader(props) {
   return (
       <div className="formclass" key={props.curr.FormID}>
@@ -82,7 +85,7 @@ function ElementForm(props) {
         <ElementFormHeader curr={props.curr} view={props.view} header={props.header} formatdate={formatdate}/>
         {props.view==="SUPV" 
         ?(
-          <form method="post" action={LibPath + 'SupvPost.cfm'}> 
+          <form method="post" action={LibPath + 'SupvPost.cfm'}>
             <Element tree={props.curr.children} view={props.view} />
             <input type="hidden" name={props.curr.FormID} id={props.curr.FormID} defaultValue={props.curr.Descrip} /> {/*form*/}
             <input type="hidden" name="DateEntered"   id={props.curr.FormID} defaultValue={formatdate} />
@@ -116,17 +119,17 @@ function ElementForm(props) {
 
 class ElementSection extends React.Component { 
   handleChangeResponse=()=>{
-    //Nothing happens
+    //Nothing happens, we only care about these inside response
   }
   render() { 
-  return (
+    return (
       <div key={this.props.curr.FormID}>
         <div className="sectionclass">
           <h2>{this.props.curr.Descrip}
           <Edit className="delclass" view={this.props.view} curr={this.props.curr} handleRedraw={this.props.handleRedraw} />
           </h2>
           <AddElements view={this.props.view} type="SECTION" curr={this.props.curr} handleRedraw={this.props.handleRedraw} />  
-          <Element tree={this.props.curr.children} view={this.props.view} handleRedraw={this.props.handleRedraw} handleChangeResponse={this.props.handleChangeResponse} />
+          <Element tree={this.props.curr.children} view={this.props.view} handleRedraw={this.props.handleRedraw} handleChangeResponse={this.handleChangeResponse} />
         </div>
         <AddElements view={this.props.view} type="SECTIONAFTER" curr={this.props.curr} handleRedraw={this.props.handleRedraw} />  
       </div>
@@ -188,53 +191,60 @@ class ElementRequest extends React.Component {
     return (
       <div key={curr.FormID} className="requestclass">
         <AddElements view={this.props.view} type="REQUEST" curr={curr} handleRedraw={this.props.handleRedraw} /> 
-        <Element tree={curr.children} view={this.props.view} handleRedraw={this.props.handleRedraw} handleChangeResponse={this.props.handleChangeResponse} />
+        <Element tree={curr.children} view={this.props.view} handleRedraw={this.props.handleRedraw} handleChangeResponse={this.handleChangeResponse} />
       </div>
     ) 
   }
 }
 
-//RESPONSES are only used in Admin screens
+//RESPONSE
 class ElementResponse extends React.Component { 
   constructor(props) { 
     super(props);
     this.state = {
-      completed: false,
-      resultsSet: [],
-      responseClassName: "responseclass"
+      completed: false
+    };
+    this.handleMarkAsNotNeeded = this.handleMarkAsNotNeeded.bind(this);
+    this.handleChangeResponse = this.handleChangeResponse.bind(this);    
+  }
+
+  componentDidMount() { 
+    if(this.props.view !== "SUPV"){
+      this.ckIfAllFilled();
     }
   }
-  componentDidMount() { 
-    let newResultsSet = this.props.curr.children.map(function(item){return item.ItemValue!==""});
-    let newComplete = newResultsSet.indexOf(false) === -1;  //returns true if all true
+
+//Tests if all the ItemValues inside this response node have been filled in.
+  ckIfAllFilled(){
+    let isComplete = this.props.curr.children.reduce((accumulator,eachItem)=>{ 
+        return accumulator && (eachItem.ItemValue!==""?true:false)
+      }, true);
+    console.log(isComplete);
     this.setState({
-      resultsSet: newResultsSet,
-      completed: newComplete
-    }); 
-  }
-  handleChangeResponse=(id,completed)=>{
-    let newResultsSet = this.state.resultsSet.slice();
-    newResultsSet.splice(id,1,completed);
-    let newComplete = newResultsSet.indexOf(false) === -1;  //returns true if all true
-    this.setState({
-      resultsSet: newResultsSet,
-      completed: newComplete
+      completed: isComplete
     });    
   }
-  handleMarkAsNotNeeded=()=>{ 
+
+  handleChangeResponse() {
+    this.ckIfAllFilled();
+    console.log("in RESPONSE handleChangeResponse");
+  }
+  
+  handleMarkAsNotNeeded() { 
     this.setState({
       completed: true
     });
-  }   
-  render() { //console.log(JSON.stringify(this.props.curr));
+  }  
+  render() { 
     let curr = this.props.curr;
     if(this.props.view === "SUPV"){ //RESPONSES don't appear when SUPV is filling out form
       return null;
     }else{
       return (
-        <div key={curr.FormID} className={this.state.completed?"responsecompleteclass":"responseclass"}>
+        <div key={curr.FormID} className="responseclass">
           <AddElements view={this.props.view} type="RESPONSE" curr={curr} handleRedraw={this.props.handleRedraw} /> 
           <Element tree={curr.children} view={this.props.view} handleRedraw={this.props.handleRedraw} handleChangeResponse={this.handleChangeResponse} />
+          
           <label/>
           {this.state.completed
           ?<span>Completed</span>
@@ -247,8 +257,25 @@ class ElementResponse extends React.Component {
 }
 
 class ElementInput extends React.Component { 
-  handleChange=(event)=>{ 
-    this.props.handleChangeResponse(this.props.ix,event.target.value !== "");
+  constructor(props) {  
+    super(props);
+    this.state = {
+      value: ""
+    };
+  }
+  componentDidMount() { 
+    this.setState({
+      value: this.props.ItemValue
+    });  
+  }  
+  handleChange=(event)=>{
+    this.setState({
+      value:event.target.value
+    });  
+    console.log(this.state.value)
+  }
+  handleBlur=()=>{
+    //this.props.handleChangeResponse;
   }
   render() { 
     let curr = this.props.curr;
@@ -261,8 +288,10 @@ class ElementInput extends React.Component {
           <Edit className="delclass" view={this.props.view} curr={curr} handleRedraw={this.props.handleRedraw} />            
           </label>
           {curr.Required
-          ?<input type="text" className="inputclass" name={curr.FormID} id={curr.FormID} defaultValue={curr.ItemValue} onChange={this.handleChange} required />
-          :<input type="text" className="inputclass" name={curr.FormID} id={curr.FormID} defaultValue={curr.ItemValue} onChange={this.handleChange} />}
+          ?<input type="text" className="inputclass" name={curr.FormID} 
+            value={this.state.value} onBlur={this.handleBlur} onChange={this.handleChange} required />
+          :<input type="text" className="inputclass" name={curr.FormID} 
+            value={this.state.value} onBlur={this.handleBlur} onChange={this.handleChange} />}
         </div>
         <AddElements view={this.props.view} type="AFTER" curr={curr} handleRedraw={this.props.handleRedraw} /> 
       </div>
