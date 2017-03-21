@@ -185,13 +185,24 @@ BEGIN
 END
 GO
 -------------------------------------------------------------------
-ALTER PROC [dbo].[InsRequest](@SupvName VARCHAR(100), @Items XML) AS
+ALTER PROC UpsertRequest(@SupvName VARCHAR(100), @Items XML, @ReqID INT = NULL) AS
+-- If @ReqID param is null, adds new Request and RequestItems
+-- Otherwise just updates RequestItems
 BEGIN
 	DECLARE @RequestID INT
-	INSERT INTO Requests (SupvName, EnteredDate, Completed)
-	VALUES(@SupvName, GETDATE(), 0)
+	IF @ReqID IS NULL
+	BEGIN
+		INSERT INTO Requests (SupvName, EnteredDate, Completed)
+		VALUES(@SupvName, GETDATE(), 0)
 
-	SET @RequestID = @@IDENTITY
+		SET @RequestID = @@IDENTITY
+	END
+	ELSE
+	BEGIN
+		SET @RequestID = @ReqID
+		DELETE RequestItems
+		WHERE RequestID = @RequestID
+	END
 
     INSERT INTO RequestItems (RequestID, FieldID, ItemValue)
     SELECT @RequestID,
@@ -199,10 +210,10 @@ BEGIN
         tab.col.value( 'Value[1]', 'varchar(max)' ) AS ItemValue
     FROM @Items.nodes('reqrows/row') tab(col)
 
-
+	-- Update the HeaderRecord XML field in Requests table
 	DECLARE @xml xml
 	SELECT @xml = (
-		SELECT --CASE WHEN Forms.Type = 'FORM' THEN 'Form' ELSE Descrip END AS Col, 
+		SELECT CASE WHEN Forms.Type = 'FORM' THEN 'Form' ELSE Descrip END AS Col,
 		RequestItems.ItemValue ItemValue 
 		FROM Requests req
 		INNER JOIN RequestItems
@@ -290,7 +301,7 @@ WHERE headerXML.value('(/row/ItemValue)[1]', 'varchar(max)') like '%'+@SearchStr
 ---------------------------------------------------------------------------------------------------------------
 
 -------------------------------------------------------------------
-exec InsRequest @SupvName = 'J. Supv Wilson', @Items = N'
+exec UpsertRequest @SupvName = 'J. Supv Wilson', @Items = N'
 <reqrows>
 	<row>
 		<Field>9</Field>

@@ -58,7 +58,7 @@ export default class Admin extends React.Component {
     let cols = xmlDoc.getElementsByTagName("Col");
     let values = xmlDoc.getElementsByTagName("ItemValue");
     for (let i = 0; i < values.length; i++) {
-    values[i].childNodes[0] && returnArr.push(<td key={i}><div className="queueheaders">{cols[i].childNodes[0].nodeValue}:</div>{values[i].childNodes[0].nodeValue}</td>);  
+      values[i].childNodes[0] && cols[i].childNodes[0] && returnArr.push(<td key={i}><div className="queueheaders">{cols[i].childNodes[0].nodeValue}:</div>{values[i].childNodes[0].nodeValue}</td>);  
     }
     return returnArr;
   }

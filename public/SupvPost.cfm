@@ -10,7 +10,7 @@
 <cfset supv = form.SupvName & " - Signature:" & form.SupvSig>
 
 
-<cfstoredproc procedure="InsRequest" datasource="ITForms">
+<cfstoredproc procedure="UpsertRequest" datasource="ITForms">
   <cfprocparam cfsqltype="cf_sql_varchar" value="#supv#">
   <cfprocparam cfsqltype="cf_sql_varchar" value="#ItemStr#">
   <cfprocresult name="reqid">

@@ -7,7 +7,9 @@ import Edit from './Edit';
 import './css/react-datepicker.css';
 import { Link } from 'react-router';
 
-export default class Element extends React.Component {   //An element can be any row returned from stored proc
+export default class Element extends React.Component {   
+  //An element can be any row returned from stored proc
+  //This class iterates muliple children at this level of the tree, and delegates to the proper element type
   render() { 
     return ( 
       <div>
@@ -126,7 +128,7 @@ class ElementSection extends React.Component {
           <Edit className="delclass" view={this.props.view} curr={this.props.curr} handleRedraw={this.props.handleRedraw} />
           </h2>
           <AddElements view={this.props.view} type="SECTION" curr={this.props.curr} handleRedraw={this.props.handleRedraw} />  
-          <Element tree={this.props.curr.children} view={this.props.view} handleRedraw={this.props.handleRedraw} handleChangeResponse={this.props.handleChangeResponse} />
+          <Element tree={this.props.curr.children} view={this.props.view} handleRedraw={this.props.handleRedraw} handleChangeResponse={this.handleChangeResponse} />
         </div>
         <AddElements view={this.props.view} type="SECTIONAFTER" curr={this.props.curr} handleRedraw={this.props.handleRedraw} />  
       </div>
@@ -150,7 +152,7 @@ class ElementNode extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      childVisible: props.curr.ItemValue==="on"||props.view==="EDIT"?true:false 
+      childVisible: props.curr.ItemValue==="on"||props.view==="EDIT"||props.view==="REQUIRED"||props.view==="HEADER"?true:false 
     };
   }
   onClick=()=>{
@@ -166,7 +168,7 @@ class ElementNode extends React.Component {
          <Edit className="delclass" view={this.props.view} curr={this.props.curr} handleRedraw={this.props.handleRedraw} /> 
         </label>
 
-        <input type="checkbox" name={curr.FormID} onClick={this.onClick} defaultChecked={this.state.childVisible}/>      
+        <input type="checkbox" name={curr.FormID} onClick={this.onClick} defaultChecked={this.state.childVisible} />      
          {
             this.state.childVisible
               ? <Element tree={curr.children} view={this.props.view} handleRedraw={this.props.handleRedraw} />
@@ -188,7 +190,7 @@ class ElementRequest extends React.Component {
     return (
       <div key={curr.FormID} className="requestclass">
         <AddElements view={this.props.view} type="REQUEST" curr={curr} handleRedraw={this.props.handleRedraw} /> 
-        <Element tree={curr.children} view={this.props.view} handleRedraw={this.props.handleRedraw} handleChangeResponse={this.props.handleChangeResponse} />
+        <Element tree={curr.children} view={this.props.view} handleRedraw={this.props.handleRedraw} handleChangeResponse={this.handleChangeResponse} />
       </div>
     ) 
   }
@@ -199,9 +201,8 @@ class ElementResponse extends React.Component {
   constructor(props) { 
     super(props);
     this.state = {
-      completed: false,
-      resultsSet: [],
-      responseClassName: "responseclass"
+      resultsSet: [],   //Array of bool, whether each child is complete
+      completed: false  //ALL children are complete
     }
   }
   componentDidMount() { 
@@ -212,9 +213,9 @@ class ElementResponse extends React.Component {
       completed: newComplete
     }); 
   }
-  handleChangeResponse=(id,completed)=>{
+  handleChangeResponse=(ix,completed)=>{ //the index is given to the child by the Element component
     let newResultsSet = this.state.resultsSet.slice();
-    newResultsSet.splice(id,1,completed);
+    newResultsSet.splice(ix,1,completed);
     let newComplete = newResultsSet.indexOf(false) === -1;  //returns true if all true
     this.setState({
       resultsSet: newResultsSet,
@@ -272,17 +273,18 @@ class ElementInput extends React.Component {
 
 class ElementDate extends React.Component { 
 
-  constructor(props) {  //debugger;
+  constructor(props) {  //
     super(props);
     let thedate = props.curr.ItemValue?moment(props.curr.ItemValue):null
     this.state = {
       adate: thedate
     };
   }
-  handleChange=(date)=>{
+  handleChange=(date)=>{ //debugger;
     this.setState({
       adate:date
     });
+    this.props.handleChangeResponse(this.props.ix, date !== null);
   }
   render() { 
     let curr = this.props.curr;
@@ -314,7 +316,8 @@ class ElementRadio extends React.Component {
   handleOptionChange=(changeEvent)=>{
     this.setState({
       selectedOption: changeEvent.target.value
-    });
+    }); 
+    this.props.handleChangeResponse(this.props.ix,changeEvent.target.value !== "");
   }
   render() { 
     let curr = this.props.curr;
@@ -389,6 +392,9 @@ ElementRadio.propTypes = {
 }; 
 
 class ElementSelect extends React.Component { 
+  handleOptionChange=(changeEvent)=>{
+    this.props.handleChangeResponse(this.props.ix,changeEvent.target.value !== "");
+  }
   render() { 
     let curr = this.props.curr;
     return (
@@ -400,7 +406,7 @@ class ElementSelect extends React.Component {
         <Edit className="delclass" view={this.props.view} curr={this.props.curr} handleRedraw={this.props.handleRedraw} /> 
         </label>
         {curr.Required
-          ? (<select id={curr.FormID} name={curr.FormID} defaultValue={curr.ItemValue} required>
+          ? (<select id={curr.FormID} name={curr.FormID} defaultValue={curr.ItemValue} onChange={this.handleOptionChange} required>
               <option key={0} value="">(Choose One)</option>
               {curr.children.map((chld) => { //these should be OPTIONS
                 return( 
@@ -409,7 +415,7 @@ class ElementSelect extends React.Component {
               })}
             </select>)
           
-          : (<select id={curr.FormID} name={curr.FormID} defaultValue={curr.ItemValue}>
+          : (<select id={curr.FormID} name={curr.FormID} defaultValue={curr.ItemValue} onChange={this.handleOptionChange}>
               <option key={0} value="">(Choose One)</option>
               {curr.children.map((chld) => { //these should be OPTIONS
                 return( 
