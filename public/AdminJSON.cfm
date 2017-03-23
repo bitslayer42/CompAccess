@@ -16,6 +16,7 @@
   , "EnteredDate": "#EnteredDate#"
   , "Completed": #Completed#
   , "headerXML": "#headerXML#"
+  , "EditedXML": "#EditedXML#"  
   }
   <cfif loopctr NEQ requests.RecordCount>,</cfif>
   <cfset loopctr = loopctr + 1>

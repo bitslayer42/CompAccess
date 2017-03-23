@@ -42,10 +42,11 @@ export default class GetForm extends React.Component {
       const nodes = res.data.body; 
       const header = {};
       header.RequestID = res.data.RequestID;
-      header.SupvName = res.data.SupvName;
+      header.LoggedInName = res.data.LoggedInName;
+      header.SupvName = res.data.SupvName;      
       header.EnteredDate = res.data.EnteredDate;
       
-      this.setState({
+      this.setState({ 
         view: this.props.params.view,
         nodes,
         header,
@@ -79,17 +80,17 @@ export default class GetForm extends React.Component {
     );
   }
   
-  makeTree() {     //debugger;
+  makeTree() {     
     let nodes = JSON.parse(JSON.stringify(this.state.nodes));
     let rootID = nodes[0].FormID;
-    var map = {}, node, atree = [];
+    var amap = {}, node, atree = [];
     for (var i = 0; i < nodes.length; i += 1) {
         node = nodes[i];
         node.nodeid = i;
         node.children = [];
-        map[node.FormID] = i; // use map to look-up the parents:stackoverflow.com/questions/18017869/
+        amap[node.FormID] = i; // used to look-up the parents:stackoverflow.com/questions/18017869/
         if (node.FormID !== rootID) {
-            nodes[map[node.ParentID]].children.push(node);
+            nodes[amap[node.ParentID]].children.push(node);
         } else {
             atree.push(node); // first
         }

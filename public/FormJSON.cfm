@@ -11,16 +11,17 @@
   <cfprocresult resultset="2" name="body">
 </cfstoredproc>
 
-<cfif NOT IsDefined("url.reqID")>
-    <cfif IsDefined("CLIENT.EMPNAME")>
-      <cfset SupvName = CLIENT.EMPNAME>
-    <cfelse>
-      <cfset SupvName = "Super Jariotte Brothers">  <!--- CAUTION DEBUGGING ONLY!!! --->
-    </cfif>
-      <cfset EnteredDate = DateFormat(Now(),"YYYY-MM-DD") & "T" & TimeFormat(Now(),"HH:MM")>
+<cfif IsDefined("CLIENT.EMPNAME")>
+  <cfset LoggedInName = CLIENT.EMPNAME>
 <cfelse>
+  <cfset LoggedInName = "Logged, N. Name">  <!--- CAUTION DEBUGGING ONLY!!! --->
+</cfif>
+<cfif IsDefined("url.reqID")> <!--- previously entered --->
       <cfset EnteredDate = header.EnteredDate>
       <cfset SupvName = header.SupvName>
+<cfelse>
+      <cfset EnteredDate = DateFormat(Now(),"YYYY-MM-DD") & "T" & TimeFormat(Now(),"HH:MM")>
+      <cfset SupvName = LoggedInName>
 </cfif>
 
 <cfset loopctr = 1>
@@ -30,6 +31,7 @@
   "RequestID": #header.RequestID#,
   "Completed": #header.Completed#,
   </cfif>
+  "LoggedInName": "#LoggedInName#",  
   "SupvName": "#SupvName#",
   "EnteredDate": "#EnteredDate#",
   </cfoutput>

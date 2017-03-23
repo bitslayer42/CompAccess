@@ -64,7 +64,7 @@ class CheckAdmin extends React.Component {
   
   render()  {
     return (
-      <div className="outerdiv">
+      <div>
           {this.state.loading ?
           this.renderLoading()
           : this.renderNextStep()}

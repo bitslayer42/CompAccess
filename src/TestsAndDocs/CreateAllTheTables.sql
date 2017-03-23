@@ -150,7 +150,6 @@ GO
 
 CREATE TABLE [dbo].[Requests](
 	[RequestID] [int] IDENTITY(1,1) NOT NULL,
-	[EmpName] [varchar](100) NULL,
 	[SupvName] [varchar](100) NULL,
 	[EnteredDate] [datetime] NULL,
 	[Completed] [bit] NULL,

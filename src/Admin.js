@@ -6,6 +6,7 @@ import TogglePublish from './TogglePublish';
 import DeleteElement from './DeleteElement';
 import { Link } from 'react-router';
 import { hashHistory } from 'react-router';
+import moment from 'moment'; //date library
 
 export default class Admin extends React.Component {
 
@@ -42,24 +43,36 @@ export default class Admin extends React.Component {
         error: err
       });
     });
-  
   }
   
   renderLoading() {
     return <div>Loading...</div>;
   }
   
-  unpackXML(xmlStr) { //The request has some of the key detail fields duplicated in the Requests.headerXML field, here we turn xml into a table row.
-    let text = "<xml>" + xmlStr + "</xml>";
-
-    let parser = new DOMParser();
-    let xmlDoc = parser.parseFromString(text,"text/xml");
+  unpackXML(headerXML,EditedXML) { //The request has some of the key detail fields duplicated in the Requests.headerXML field, here we turn xml into a table row.
+    let xmlDoc;
     let returnArr = [];
+    let parser = new DOMParser();
+    
+    xmlDoc = parser.parseFromString(headerXML,"text/xml");
     let cols = xmlDoc.getElementsByTagName("Col");
     let values = xmlDoc.getElementsByTagName("ItemValue");
     for (let i = 0; i < values.length; i++) {
-      values[i].childNodes[0] && cols[i].childNodes[0] && returnArr.push(<td key={i}><div className="queueheaders">{cols[i].childNodes[0].nodeValue}:</div>{values[i].childNodes[0].nodeValue}</td>);  
+      values[i].childNodes[0] && cols[i].childNodes[0] 
+      && returnArr.push(<td key={i}><div className="queueheaders">{cols[i].childNodes[0].nodeValue}:</div>{values[i].childNodes[0].nodeValue}</td>);  
     }
+
+    xmlDoc = parser.parseFromString(EditedXML,"text/xml");
+    let names = xmlDoc.getElementsByTagName("UserName");
+    let dates = xmlDoc.getElementsByTagName("DateMod");
+    let EditedTD = [];
+    for (let i = 0; i < names.length; i++) {
+      let formatdate = moment(dates[i].childNodes[0].nodeValue).format("MM/DD/YY, h:mma");
+      names[i].childNodes[0] && dates[i].childNodes[0] 
+      && EditedTD.push(<p key={i} style={{margin:"0",fontSize:"0.7em"}}>{names[i].childNodes[0].nodeValue}({formatdate})</p>);  
+    }    
+    returnArr.push(<td key="100"><div className="queueheaders">Edited By:</div>{EditedTD}</td>);
+    
     return returnArr;
   }
   
@@ -80,13 +93,12 @@ export default class Admin extends React.Component {
   
   renderNextStep() {   //console.log("adminData",this.state.adminData);                                                      
     var self = this; //so nested funcs can see the parent object
-    let listRequests = <tr ><td colSpan="4">No unresolved requests.</td></tr>
+    let listRequests = <tr ><td>No unresolved requests.</td></tr>
     if(this.state.adminData.requests[0]) { 
       listRequests = this.state.adminData.requests.map(function(req){
         return (
           <tr key={req.RequestID}  className="reqsrow" onClick={() => self.handleFormRowClick(req.RequestID)}>
-            
-            {self.unpackXML(req.headerXML)}
+            {self.unpackXML(req.headerXML,req.EditedXML)}
           </tr>
         )
       });
@@ -173,7 +185,7 @@ export default class Admin extends React.Component {
   
   render()  {
     return (
-      <div className="outerdiv">
+      <div className="adminouterdiv">
           {this.state.loading ?
           this.renderLoading()
           : this.renderNextStep()}

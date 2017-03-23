@@ -1,8 +1,8 @@
 ALTER PROC [dbo].[GetForm] (@FormID INT, @RequestID INT = NULL) AS 
 --Based on Nested Set Model here: http://mikehillyer.com/articles/managing-hierarchical-data-in-mysql/
 -- If called with formid=0, the form will be looked up from requestid
--- GetForm 2
--- GetForm 0, 51
+-- GetForm 24
+-- GetForm 0, 101
 DECLARE @ReqDate datetime
 
 IF @FormID = 0 --Pull the request, first figure out which form this is.
@@ -185,21 +185,34 @@ BEGIN
 END
 GO
 -------------------------------------------------------------------
-ALTER PROC UpsertRequest(@SupvName VARCHAR(100), @Items XML, @ReqID INT = NULL) AS
--- If @ReqID param is null, adds new Request and RequestItems
--- Otherwise just updates RequestItems
+ALTER PROC UpsertRequest(@LoggedInName VARCHAR(100), @Items XML, @ReqID INT = NULL) AS
+-- If @ReqID param is null, adds new Request and RequestItems (Supervisor creating original)
+-- Otherwise just updates RequestItems (Admins updating)
 BEGIN
 	DECLARE @RequestID INT
+	DECLARE @Completed BIT
 	IF @ReqID IS NULL
-	BEGIN
-		INSERT INTO Requests (SupvName, EnteredDate, Completed)
-		VALUES(@SupvName, GETDATE(), 0)
+	BEGIN   --(Supervisor creating original)
+		INSERT INTO Requests (SupvName, EnteredDate, Completed, EditedXML)
+		VALUES(@LoggedInName, GETDATE(), 0, '<root />')
 
 		SET @RequestID = @@IDENTITY
+		SET @Completed = 0
 	END
 	ELSE
-	BEGIN
+	BEGIN   --(Admins updating)
 		SET @RequestID = @ReqID
+
+		--update "Edited by"
+		DECLARE @EditDate datetime = GETDATE()
+		DECLARE @xmlrow xml = '<row/>'
+		SET @xmlrow.modify('insert <UserName>{sql:variable("@LoggedInName")}</UserName> into (/row)[1]')
+		SET @xmlrow.modify('insert <DateMod>{sql:variable("@EditDate")}</DateMod> into (/row)[1]')
+		update Requests
+		set editedXML.modify('insert sql:variable("@xmlrow") as last into (/root)[1]')
+		where RequestID = @RequestID
+
+		--clear out requested items before re-adding edited ones
 		DELETE RequestItems
 		WHERE RequestID = @RequestID
 	END
@@ -209,6 +222,18 @@ BEGIN
         tab.col.value( 'Field[1]', 'int' ) AS FieldID,
         tab.col.value( 'Value[1]', 'varchar(max)' ) AS ItemValue
     FROM @Items.nodes('reqrows/row') tab(col)
+
+	--Check if completed
+	SELECT @Completed = CASE WHEN NOT EXISTS (
+		SELECT RequestItems.ItemValue
+		FROM RequestItems 
+		INNER JOIN Forms 
+		ON RequestItems.FieldID = Forms.ID
+		WHERE Forms.Type = 'RESPONSE' AND RequestItems.RequestID = @RequestID
+		GROUP BY RequestItems.ItemValue
+		HAVING RequestItems.ItemValue <> 'true'
+	)
+	THEN 1 ELSE 0 END 
 
 	-- Update the HeaderRecord XML field in Requests table
 	DECLARE @xml xml
@@ -223,13 +248,16 @@ BEGIN
 		WHERE Completed = 0
 		AND HeaderRecord = 1
 		AND req.RequestID = @RequestID
-		FOR XML PATH)
+		FOR XML PATH, ROOT)
 	
-	UPDATE Requests SET HeaderXML = @xml
+	UPDATE Requests SET 
+	HeaderXML = @xml,
+	Completed = @Completed
 	WHERE RequestID = @RequestID
 
-	SELECT @RequestID AS RequestID
+	SELECT @Completed AS Completed
 END
+
 
 GO
 -------------------------------------------------------------------
