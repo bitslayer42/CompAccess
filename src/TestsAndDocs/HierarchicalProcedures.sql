@@ -313,68 +313,18 @@ ELSE
 SELECT @RetType AS Results
 GO
 -------------------------------------------------------------------
-ALTER PROC SearchXML(@SearchString VARCHAR(MAX)) AS
--- SearchXML 'ANew'
--- TEST THIS SOME MORE...
 --Also create an XML index https://msdn.microsoft.com/en-us/library/bb934097.aspx
+ALTER PROC [dbo].[SearchXML](@SearchString VARCHAR(MAX)) AS
+-- SearchXML 'Henny'
+SET @SearchString = UPPER(@SearchString)
 SELECT [RequestID]
-      ,[EmpName]
       ,[SupvName]
       ,[EnteredDate]
       ,[Completed]
       ,[headerXML]
+	  ,[EditedXML]
   FROM Requests
-WHERE headerXML.value('(/row/ItemValue)[1]', 'varchar(max)') like '%'+@SearchString+'%'
-
+WHERE headerXML.exist('/root/row/ItemValue/text()[contains(upper-case(.), sql:variable("@SearchString"))]') = 1
 ---------------------------------------------------------------------------------------------------------------
-
+GO
 -------------------------------------------------------------------
-exec UpsertRequest @SupvName = 'J. Supv Wilson', @Items = N'
-<reqrows>
-	<row>
-		<Field>9</Field>
-		<Value>J. Staffy Wilson</Value>
-	</row>
-	<row>
-		<Field>35</Field>
-		<Value>1027126</Value>
-	</row>
-	<row>
-		<Field>37</Field>
-		<Value>2017-03-01</Value>
-	</row>
-	<row>
-		<Field>36</Field>
-		<Value>Johannes Staffy Wilson</Value>
-	</row>
-	<row>
-		<Field>19</Field>
-		<Value>External Temp Agency Staff</Value>
-	</row>
-</reqrows>
-	
-'
-
-GO
-
----------------------------------------------------------------------------------------------------------------
-PublishForm 2
-GO
----------------------------------------------------------
-
-GetForm 2
-go
-GetForm 129
-
-go
-DelNode 8
-go
-DelNode 9
-go
-DelNode 203
-go
-DelNode 197
-go
-DelNode 198
-go
-DelNode 199

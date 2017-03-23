@@ -92,7 +92,10 @@ function ElementForm(props) {
             <input type="hidden" name="DateEntered"   defaultValue={formatdate} />
             <input type="hidden" name="LoggedInName"      defaultValue={props.header.LoggedInName} />    
             <input type="hidden" name="ReqID"   defaultValue={props.header.RequestID} />
-            <button className="submit" >Submit</button>
+            {props.header.Completed===1
+            ? <div>Completed</div>
+            : <button className="submit" >Submit</button>
+            }
           </form>
         )
         :(

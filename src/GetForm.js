@@ -42,6 +42,7 @@ export default class GetForm extends React.Component {
       const nodes = res.data.body; 
       const header = {};
       header.RequestID = res.data.RequestID;
+      header.Completed = res.data.Completed;
       header.LoggedInName = res.data.LoggedInName;
       header.SupvName = res.data.SupvName;      
       header.EnteredDate = res.data.EnteredDate;

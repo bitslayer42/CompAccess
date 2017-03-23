@@ -4,6 +4,7 @@ import LibPath from './LibPath';
 import AddElement from './AddElement';
 import TogglePublish from './TogglePublish'; 
 import DeleteElement from './DeleteElement';
+import Search from './Search';
 import { Link } from 'react-router';
 import { hashHistory } from 'react-router';
 import moment from 'moment'; //date library
@@ -136,9 +137,7 @@ export default class Admin extends React.Component {
         
         <div className="sectionclass" >
         <h3> Search Forms </h3>
-        <ul>
-          <input/><button>Search</button>
-        </ul>
+            <Search />
         </div>
         
         <div className="sectionclass" >
