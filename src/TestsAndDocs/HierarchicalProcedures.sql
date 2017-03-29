@@ -313,7 +313,6 @@ ELSE
 SELECT @RetType AS Results
 GO
 -------------------------------------------------------------------
---Also create an XML index https://msdn.microsoft.com/en-us/library/bb934097.aspx
 ALTER PROC [dbo].[SearchXML](@SearchString VARCHAR(MAX)) AS
 -- SearchXML 'Henny'
 SET @SearchString = UPPER(@SearchString)
@@ -328,3 +327,27 @@ WHERE headerXML.exist('/root/row/ItemValue/text()[contains(upper-case(.), sql:va
 ---------------------------------------------------------------------------------------------------------------
 GO
 -------------------------------------------------------------------
+GO
+ALTER PROC [dbo].[GetAdmin](@AdminID VARCHAR(15),@Name VARCHAR(200) = NULL,@EmailAddress VARCHAR(40) = NULL) AS
+-- GetAdmin '1027126'
+-- GetAdmin '1','name','nam@nom'
+BEGIN
+	INSERT INTO Admins(AdminID,Name,EmailAddress)
+	SELECT @AdminID, @Name, @EmailAddress
+	WHERE NOT EXISTS(SELECT * FROM Admins
+					WHERE AdminID = @AdminID)
+
+	SELECT Admins.AdminID, Admins.Name, Admins.EmailAddress,
+	GetNodeList.FormName, GetNodeList.ID, GetNodeList.Descrip,
+	CASE WHEN ae.SubscribedNode IS NULL THEN 0 ELSE 1 END AS Subscribed
+	FROM Admins
+	CROSS JOIN GetNodeList
+	LEFT JOIN (
+		SELECT * FROM AdminEmails
+		WHERE AdminID = @AdminID
+	) AS ae
+	ON Admins.AdminID = ae.AdminID
+	AND ae.SubscribedNode = GetNodeList.ID
+	WHERE Admins.AdminID = @AdminID
+	 ORDER BY Sorter
+END

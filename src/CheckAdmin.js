@@ -5,7 +5,7 @@ import LibPath from './LibPath';
 import Supv from './Supv';
 import Admin from './Admin';
 
-class CheckAdmin extends React.Component {
+export default class CheckAdmin extends React.Component {
 //checks if logged in user is SUPV, ADMIN, or neither
   constructor(props) { 
     super(props);
@@ -73,5 +73,3 @@ class CheckAdmin extends React.Component {
   }
 }
 
-
-export default CheckAdmin;

@@ -202,18 +202,22 @@ class ElementResponse extends React.Component {
     }
   }
   componentDidMount() { //debugger;
-    let newResultsSet = this.props.curr.children.map(function(item){return item.ItemValue!==""});
-    let newComplete = newResultsSet.indexOf(false) === -1;  //returns true if all true
+    let newComplete = false,
+        newResultsSet = [];
+    if(this.props.curr.children.length > 0){
+      newResultsSet = this.props.curr.children.map(function(item){return item.ItemValue!==""});
+      newComplete = newResultsSet.indexOf(false) === -1;  //returns true if all true
+    }    
     if(this.props.view === "EDIT"){newComplete=false};
     if(this.props.curr.ItemValue === 'true'){newComplete=true};
     this.setState({
       resultsSet: newResultsSet,
       completed: newComplete
-    }); 
+    });
   }
   handleChangeResponse=(ix,completed)=>{ //the index is given to the child by the Element component
-    let newResultsSet = this.state.resultsSet.slice();
-    newResultsSet.splice(ix,1,completed);
+    let newResultsSet = this.state.resultsSet.slice();      //copy
+    newResultsSet.splice(ix,1,completed);                   //mark this one as complete or not
     let newComplete = newResultsSet.indexOf(false) === -1;  //returns true if all true
     if(this.props.view === "EDIT"){newComplete=false};
     this.setState({
@@ -222,9 +226,7 @@ class ElementResponse extends React.Component {
     });    
   }
   handleMarkAsNotNeeded=()=>{ 
-    this.setState({
-      completed: true
-    });
+    this.setState({ completed: true });
   }   
   render() { 
     let curr = this.props.curr;
@@ -240,7 +242,7 @@ class ElementResponse extends React.Component {
           <label/>
           {this.state.completed
           ?<span>Completed</span>
-          :<span><input type="checkbox" onChange={this.handleMarkAsNotNeeded} />Not needed</span>
+          :<span><input type="checkbox" onChange={this.handleMarkAsNotNeeded} />Mark as complete or not needed</span>
           }
           <input type="hidden" name={curr.FormID} value={this.state.completed} />
         </div>
@@ -483,10 +485,10 @@ function ElementMenu(props) {
       {props.view!=="SUPV" && <Link to={'/'}>&larr; Return to Admin menu</Link> }    
       {props.view!=="SUPV" && props.view!=="ADMIN" &&(
         <div>
-          {props.view!=="EDIT"     && (<div><Link to={`/EDIT/${props.FormID}`}>Add and Remove</Link></div>)}
-          {props.view!=="HEADER"   && (<div><Link to={`/HEADER/${props.FormID}`}>Set Unresolved Queue</Link></div>)}
-          {props.view!=="REQUIRED" && (<div><Link to={`/REQUIRED/${props.FormID}`}>Set REQUIRED</Link></div>)}
-          <div><Link to={`/SUPV/${props.FormID}`}>Preview Form</Link></div>         
+          <Link to={`/SUPV/${props.FormID}`}><span className="btn-class">Preview Form</span></Link>
+          {props.view!=="EDIT"     && (<Link to={`/EDIT/${props.FormID}`}><span className="btn-class">Add and Remove</span></Link>)}
+          {props.view!=="HEADER"   && (<Link to={`/HEADER/${props.FormID}`}><span className="btn-class">Set Unresolved Queue</span></Link>)}
+          {props.view!=="REQUIRED" && (<Link to={`/REQUIRED/${props.FormID}`}><span className="btn-class">Set REQUIRED</span></Link>)}
         </div>
       )}
     </div>

@@ -56,11 +56,14 @@ export default class Supv extends React.Component {
         )
       });
       return (
-        <div>
+        <div className="formclass">
+          <h1> Computer Access Forms </h1>
+          <div className="sectionclass" >
           <h3> Form List </h3>
           <ul>
             {listItems}
           </ul>
+          </div>
         </div>
       )
     }

@@ -4,6 +4,7 @@ import LibPath from './LibPath';
 import AddElement from './AddElement';
 import TogglePublish from './TogglePublish'; 
 import DeleteElement from './DeleteElement';
+import DeleteAdmin from './DeleteAdmin';
 import Search from './Search';
 import { Link } from 'react-router';
 import { hashHistory } from 'react-router';
@@ -86,11 +87,6 @@ export default class Admin extends React.Component {
   // now repull tree. 
     this.getFromServer();
   } 
-    
-  handleNewAdminClick(){
-    //console.log("handleNewAdminClick");
-  }
-
   
   renderNextStep() {   //console.log("adminData",this.state.adminData);                                                      
     var self = this; //so nested funcs can see the parent object
@@ -121,7 +117,15 @@ export default class Admin extends React.Component {
       return <li key={form.FormID}><Link to={`/SUPV/${form.FormID}`}>{form.Descrip}</Link></li>;
     });
     let listAdmins = this.state.adminData.admins.map(function(adm){
-      return <li key={adm.AdminID}><Link to={`/useradmin/${adm.AdminID}`}>{adm.Name}</Link></li>;
+      return (
+        <tr key={adm.AdminID}>
+          <td>
+          <Link to={`/useradmin/${adm.AdminID}`}>{adm.Name}</Link>
+          </td><td>
+          <DeleteAdmin AdminID={adm.AdminID} handleRedraw={self.handleRedraw}  />
+          </td>
+        </tr>
+      )      
     });
     return (
       <div className="formclass" >
@@ -136,7 +140,7 @@ export default class Admin extends React.Component {
         </div>
         
         <div className="sectionclass" >
-        <h3> Search Forms </h3>
+        <h3> Search Requests </h3>
             <Search />
         </div>
         
@@ -162,11 +166,14 @@ export default class Admin extends React.Component {
         </div>        
         <div className="sectionclass" >
         <h3> Administrators </h3>
+        <table>
+          <tbody>
+            {listAdmins}
+          </tbody>
+        </table>        
+
         <ul>
-          {listAdmins}
-        </ul>
-        <ul>
-          <li className="editclass" onClick={() => self.handleNewAdminClick()}>Add New Administrator</li>
+          <Link className="editclass"  to={`/useradmin`}>Add New Administrator</Link>
         </ul> 
         </div>
 

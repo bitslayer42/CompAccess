@@ -149,3 +149,19 @@ table.addelementtable{
 	opacity:0.7;
   cursor: pointer;
 }
+.btn-class{
+ display: inline-block;
+ border:1px solid #7D99CA;
+ color: #fff;
+ border-radius: 10px;
+ -webkit-border-radius: 10px;
+ -moz-border-radius: 10px;
+ font-family: Verdana;
+ width: auto;
+ height: auto;
+ font-size: 16px;
+ padding: 10px 40px;
+ background-image: linear-gradient(to top, #A8BBDE, #7089B3);
+ background-color: #A5B8DA;
+ margin:4px;
+}

@@ -3,12 +3,11 @@ import axios from 'axios'; //ajax library
 import LibPath from './LibPath';
 import Element from './Element';
 
-
 export default class GetForm extends React.Component {
   constructor(props) { //console.log("getform constructor props",props.params.view); 
     super(props);
     this.state = {
-      view: props.params.view, //Can be "SUPV", "ADMIN", "EDIT", "HEADER", "REQUIRED"
+      view: props.params.view, //params comes from router :view . Can be "SUPV", "ADMIN", "EDIT", "HEADER", "REQUIRED"
       formID: props.params.formID,
       reqID: props.params.reqID,
       nodes: [], //the tree 'flat'
@@ -110,6 +109,3 @@ export default class GetForm extends React.Component {
     );
   }
 }
-
-
-//export default GetForm;
