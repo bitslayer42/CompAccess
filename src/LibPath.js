@@ -5,9 +5,9 @@
 
 
 //Test
-var LibPath = 'https://ccp1.msj.org/CompAccess/';
+//var LibPath = 'https://ccp1.msj.org/CompAccess/';
 
 //Live
-//var LibPath = 'https://ccp1.msj.org/login/login/CompAccess/';
+var LibPath = 'https://ccp1.msj.org/login/login/CompAccess/';
 
 export default LibPath;

@@ -1,14 +1,15 @@
 import React from 'react';
-import { hashHistory, Router, Route } from 'react-router'
+import { browserHistory, Router, Route } from 'react-router'
 import ReactDOM from 'react-dom';
 import GetForm from './GetForm';
 import CheckAdmin from './CheckAdmin';
 import UserAdmin from './UserAdmin';
 import './css/index.css';
-//import ResponseTest from './ResponseTest';   <Route path="/Test" component={ResponseTest} />
 
+//import ResponseTest from './ResponseTest';   <Route path="/Test" component={ResponseTest} />
+  
 ReactDOM.render(
-  <Router history={hashHistory}>
+  <Router history={browserHistory}>
     <Route path="/" component={CheckAdmin} />
     
     <Route path="/useradmin" component={UserAdmin}>   

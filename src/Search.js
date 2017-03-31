@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios'; //ajax library
 import LibPath from './LibPath';
-import { hashHistory } from 'react-router';
+import { browserHistory } from 'react-router';
 import moment from 'moment'; //date library
 
 export default class Search extends React.Component {
@@ -80,7 +80,7 @@ export default class Search extends React.Component {
   }
   
   handleFormRowClick(ReqID){
-    hashHistory.push(`/ADMIN/0/${ReqID}`); 
+    browserHistory.push(`/ADMIN/0/${ReqID}`); 
   }
   
   render()  {

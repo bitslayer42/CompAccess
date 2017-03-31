@@ -1,7 +1,7 @@
 import React from 'react';
 import StaffList from './StaffList';
 import ShowAdministrator from './ShowAdministrator';
-import { hashHistory, Link } from 'react-router'
+import { browserHistory, Link } from 'react-router'
 
 export default class UserAdmin extends React.Component {
   constructor(props) { 
@@ -31,7 +31,7 @@ export default class UserAdmin extends React.Component {
       this.setState({
         AdminRecord: selAdmin
       });   
-    hashHistory.replace(`/useradmin/${SelectedStaff.BadgeNum}`);      
+    browserHistory.replace(`/useradmin/${SelectedStaff.BadgeNum}`);      
   }
 
   render()  { 

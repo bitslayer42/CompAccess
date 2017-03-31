@@ -7,7 +7,7 @@ import DeleteElement from './DeleteElement';
 import DeleteAdmin from './DeleteAdmin';
 import Search from './Search';
 import { Link } from 'react-router';
-import { hashHistory } from 'react-router';
+import { browserHistory } from 'react-router';
 import moment from 'moment'; //date library
 
 export default class Admin extends React.Component {
@@ -79,7 +79,7 @@ export default class Admin extends React.Component {
   }
   
   handleFormRowClick(ReqID){
-    hashHistory.push(`/ADMIN/0/${ReqID}`); 
+    browserHistory.push(`/ADMIN/0/${ReqID}`); 
   }
 
   handleRedraw() { //(renamed from EditCB) 

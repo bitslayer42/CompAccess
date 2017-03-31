@@ -2,7 +2,7 @@ import React from 'react';
 import axios from 'axios'; //ajax library
 import LibPath from './LibPath';
 import { Link } from 'react-router'
-import { hashHistory } from 'react-router';
+import { browserHistory } from 'react-router';
 
 export default class Supv extends React.Component {
 //Lists Forms
@@ -46,7 +46,7 @@ export default class Supv extends React.Component {
 
   renderNextStep() {
     if(this.state.FormList.length===1){
-      hashHistory.replace(`/SUPV/${this.state.FormList[0].FormID}`);
+      browserHistory.replace(`/SUPV/${this.state.FormList[0].FormID}`);
     }else{
       var listItems = this.state.FormList.map(function(form){
         return (
