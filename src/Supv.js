@@ -1,8 +1,9 @@
 import React from 'react';
 import axios from 'axios'; //ajax library
-import LibPath from './LibPath';
+import { LibPath } from './LibPath';
 import { Link } from 'react-router'
 import { browserHistory } from 'react-router';
+import { HomePath } from './LibPath';
 
 export default class Supv extends React.Component {
 //Lists Forms
@@ -51,7 +52,7 @@ export default class Supv extends React.Component {
       var listItems = this.state.FormList.map(function(form){
         return (
           <li key={form.FormID}>
-              <Link to={`/SUPV/${form.FormID}`}>{form.Descrip}</Link><br/>
+              <Link to={`${HomePath}SUPV/${form.FormID}`}>{form.Descrip}</Link><br/>
           </li> 
         )
       });

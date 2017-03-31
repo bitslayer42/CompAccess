@@ -1,7 +1,7 @@
 import React from 'react';
 import addbutton from './images/plus.png';
 import axios from 'axios'; //ajax library
-import LibPath from './LibPath';
+import { LibPath } from './LibPath';
 
 //USAGE:   // <AddElement typeToAdd="FORM" procToCall={this.props.procToCall} parNodeID={this.state.adminData.root} handleRedraw={self.handleRedraw} />
 

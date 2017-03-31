@@ -12,8 +12,10 @@
 </cfstoredproc>
 
 <cfif IsDefined("CLIENT.EMPNAME")>
+  <cfset LoggedInID = CLIENT.EMPID>
   <cfset LoggedInName = CLIENT.EMPNAME>
 <cfelse>
+  <cfset LoggedInID = "1111111">
   <cfset LoggedInName = "Logged, N. Name">  <!--- CAUTION DEBUGGING ONLY!!! --->
 </cfif>
 <cfif IsDefined("url.reqID")> <!--- previously entered --->
@@ -31,6 +33,7 @@
   "RequestID": #header.RequestID#,
   "Completed": #header.Completed#,
   </cfif>
+  "LoggedInID": "#LoggedInID#",  
   "LoggedInName": "#LoggedInName#",  
   "SupvName": "#SupvName#",
   "EnteredDate": "#EnteredDate#",

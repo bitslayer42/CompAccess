@@ -1,11 +1,12 @@
 import React from 'react';
 import moment from 'moment'; //date library
 import DatePicker  from 'react-datepicker'; //datepicker library
-import LibPath from './LibPath';
+import { LibPath } from './LibPath';
 import AddElements from './AddElements';
 import Edit from './Edit';
 import './css/react-datepicker.css';
 import { Link } from 'react-router';
+import { HomePath } from './LibPath';
 
 export default class Element extends React.Component {   
   //An element can be any row returned from stored proc
@@ -80,7 +81,8 @@ function ElementForm(props) {
             <Element tree={props.curr.children} view={props.view} />
             <input type="hidden" name={props.curr.FormID} defaultValue={props.curr.Descrip} /> {/*form*/}
             <input type="hidden" name="DateEntered"   defaultValue={formatdate} />
-            <input type="hidden" name="LoggedInName"      defaultValue={props.header.LoggedInName} />    
+            <input type="hidden" name="LoggedInID"      defaultValue={props.header.LoggedInID} />    
+            <input type="hidden" name="LoggedInName"      defaultValue={props.header.LoggedInName} />  
             <Signature LoggedInName={props.header.LoggedInName} />
           </form>
          )
@@ -90,6 +92,7 @@ function ElementForm(props) {
             <Element tree={props.curr.children} view={props.view} />
             <input type="hidden" name={props.curr.FormID} defaultValue={props.curr.Descrip} /> {/*form*/}
             <input type="hidden" name="DateEntered"   defaultValue={formatdate} />
+            <input type="hidden" name="LoggedInID"      defaultValue={props.header.LoggedInID} />    
             <input type="hidden" name="LoggedInName"      defaultValue={props.header.LoggedInName} />    
             <input type="hidden" name="ReqID"   defaultValue={props.header.RequestID} />
             {props.header.Completed===1
@@ -482,13 +485,13 @@ class Signature extends React.Component {
 function ElementMenu(props) {  
   return (
     <div>
-      {props.view!=="SUPV" && <Link to={'/'}>&larr; Return to Admin menu</Link> }    
+      {props.view!=="SUPV" && <Link to={HomePath}>&larr; Return to Admin menu</Link> }    
       {props.view!=="SUPV" && props.view!=="ADMIN" &&(
         <div>
-          <Link to={`/SUPV/${props.FormID}`}><span className="btn-class">Preview Form</span></Link>
-          {props.view!=="EDIT"     && (<Link to={`/EDIT/${props.FormID}`}><span className="btn-class">Add and Remove</span></Link>)}
-          {props.view!=="HEADER"   && (<Link to={`/HEADER/${props.FormID}`}><span className="btn-class">Set Unresolved Queue</span></Link>)}
-          {props.view!=="REQUIRED" && (<Link to={`/REQUIRED/${props.FormID}`}><span className="btn-class">Set REQUIRED</span></Link>)}
+          <Link to={`${HomePath}SUPV/${props.FormID}`}><span className="btn-class">Preview Form</span></Link>
+          {props.view!=="EDIT"     && (<Link to={`${HomePath}EDIT/${props.FormID}`}><span className="btn-class">Add and Remove</span></Link>)}
+          {props.view!=="HEADER"   && (<Link to={`${HomePath}HEADER/${props.FormID}`}><span className="btn-class">Set Unresolved Queue</span></Link>)}
+          {props.view!=="REQUIRED" && (<Link to={`${HomePath}REQUIRED/${props.FormID}`}><span className="btn-class">Set REQUIRED</span></Link>)}
         </div>
       )}
     </div>

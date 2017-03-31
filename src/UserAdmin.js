@@ -2,6 +2,7 @@ import React from 'react';
 import StaffList from './StaffList';
 import ShowAdministrator from './ShowAdministrator';
 import { browserHistory, Link } from 'react-router'
+import { HomePath } from './LibPath';
 
 export default class UserAdmin extends React.Component {
   constructor(props) { 
@@ -37,7 +38,7 @@ export default class UserAdmin extends React.Component {
   render()  { 
     return (
       <div>
-        <Link to={'/'}>&larr; Return to Admin menu</Link>
+        <Link to={HomePath}>&larr; Return to Admin menu</Link>
         <div className="formclass">
           <h1> Computer Access Forms </h1>
           <div className="sectionclass" >

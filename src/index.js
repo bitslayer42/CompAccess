@@ -1,25 +1,21 @@
 import React from 'react';
-import { browserHistory, Router, Route } from 'react-router'
+import { IndexRoute, browserHistory, Router, Route } from 'react-router'
 import ReactDOM from 'react-dom';
 import GetForm from './GetForm';
 import CheckAdmin from './CheckAdmin';
 import UserAdmin from './UserAdmin';
+import { HomePath } from './LibPath';
 import './css/index.css';
 
-//import ResponseTest from './ResponseTest';   <Route path="/Test" component={ResponseTest} />
-  
 ReactDOM.render(
-  <Router history={browserHistory}>
-    <Route path="/" component={CheckAdmin} />
-    
-    <Route path="/useradmin" component={UserAdmin}>   
-        <Route path="/useradmin/:AdminID" /> 
+  <Router history={ browserHistory }>
+    <Route path={HomePath}>
+      <IndexRoute component={CheckAdmin} />
+      <Route path="index.html" component={CheckAdmin} /> {/* used for email */}
+      <Route path="index.cfm" component={CheckAdmin} /> {/* used for email */}
+      <Route path="useradmin(/:AdminID)" component={UserAdmin} />   
+      <Route path=":view/:formID(/:reqID)" component={GetForm} />    
     </Route>
-    
-    <Route path="/:view/:formID" component={GetForm}>    
-        <Route path="/:view/:formID/:reqID" /> 
-    </Route>
-    
   </Router>,
   document.getElementById('root') 
 );
@@ -30,4 +26,5 @@ ReactDOM.render(
 //    /EDIT/:formid       Add and remove form elements
 //    /HEADER/:formid     Set form elements as header records to appear in Unresolved Queue
 //    /REQUIRED/:formid   Set form elements as Requred
-
+//    /useradmin/:AdminID Edit admin
+//    /useradmin          Add new admin

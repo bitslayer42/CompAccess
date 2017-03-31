@@ -1,7 +1,7 @@
 import React from 'react';
 import delbutton from './images/delete.png';
 import axios from 'axios'; //ajax library
-import LibPath from './LibPath';
+import { LibPath } from './LibPath';
 
 //Delete an Administrator
 export default class DeleteAdmin extends React.Component {

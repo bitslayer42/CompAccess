@@ -1,7 +1,7 @@
 import React from 'react';
 //import { browserHistory } from 'react-router'
 import axios from 'axios'; //ajax library
-import LibPath from './LibPath';
+import { LibPath } from './LibPath';
 
 export default class ShowAdministrator extends React.Component {
   constructor(props) { 

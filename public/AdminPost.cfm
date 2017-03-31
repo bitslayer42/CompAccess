@@ -1,16 +1,18 @@
 
 <cfset ItemStr = "<reqrows>">
 <cfloop collection="#form#" item="theField">
-  <cfif theField NEQ "fieldNames" AND theField NEQ "DateEntered" AND theField NEQ "LoggedInName" AND theField NEQ "ReqID">
+  <cfif theField NEQ "fieldNames" AND theField NEQ "DateEntered" AND theField NEQ "LoggedInID" 
+        AND theField NEQ "LoggedInName" AND theField NEQ "ReqID">
   <cfset ItemStr = ItemStr & "<row><Field>#theField#</Field><Value>#form[theField]#</Value></row>" >
   </cfif>
 </cfloop>
 <cfset ItemStr = ItemStr & "</reqrows>">
 
+<cfset LoggedInID = form.LoggedInID>
 <cfset LoggedInName = form.LoggedInName>
 
-
 <cfstoredproc procedure="UpsertRequest" datasource="ITForms">
+  <cfprocparam cfsqltype="cf_sql_varchar" value="#LoggedInID#">
   <cfprocparam cfsqltype="cf_sql_varchar" value="#LoggedInName#">
   <cfprocparam cfsqltype="cf_sql_varchar" value="#ItemStr#">
   <cfprocparam cfsqltype="cf_sql_integer" value="#ReqID#">

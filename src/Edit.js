@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios'; //ajax library
-import LibPath from './LibPath';
+import { LibPath } from './LibPath';
 import DeleteElement from './DeleteElement';
 import './css/checkbox.css';
 

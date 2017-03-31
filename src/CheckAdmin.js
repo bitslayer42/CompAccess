@@ -1,9 +1,10 @@
 import React from 'react';
-//import { browserHistory } from 'react-router'
+import { browserHistory } from 'react-router'
 import axios from 'axios'; //ajax library
-import LibPath from './LibPath';
+import { LibPath } from './LibPath';
 import Supv from './Supv';
 import Admin from './Admin';
+import { HomePath } from './LibPath';
 
 export default class CheckAdmin extends React.Component {
 //checks if logged in user is SUPV, ADMIN, or neither
@@ -16,7 +17,7 @@ export default class CheckAdmin extends React.Component {
     };
   }
 
-  componentDidMount() { 
+  componentDidMount() {
     axios.get(LibPath + 'DBGet.cfm', {
       params: {
         Proc: "IsAdminOrSupv",
@@ -25,12 +26,19 @@ export default class CheckAdmin extends React.Component {
     })
     .then(res => {
       const userType = res.data[0]; 
-      
-      this.setState({
-        userType,
-        loading: false,
-        error: null
-      });
+      if(this.props.location.query.reqid && userType==="ADMIN"){
+        //To call from email when user might not be logged in, hash (#) not passed to server, use query (?)
+        // call: https://ccp1.msj.org/login/login/CompAccess/index.cfm?reqid=33
+        browserHistory.push(`${HomePath}ADMIN/0/${this.props.location.query.reqid}`); 
+      }else{
+        if(userType==="ADMIN"){ 
+          this.setState({
+            userType,
+            loading: false,
+            error: null
+          });
+        }
+      }
     })
     .catch(err => {
       this.setState({
@@ -44,9 +52,11 @@ export default class CheckAdmin extends React.Component {
     return <div>Loading...</div>;
   }
 
-  renderNextStep() {
-    if(this.state.userType==="ADMIN"){
-        return <Admin />
+  renderNextStep=()=>{ 
+    if(this.state.userType==="ADMIN"){ 
+
+          return <Admin />
+
     }else if(this.state.userType==="SUPV"){
       return <Supv />
     }else{

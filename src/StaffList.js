@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios'; //ajax library
-import LibPath from './LibPath';
+import { LibPath } from './LibPath';
 import Autosuggest from 'react-autosuggest';
 import './css/StaffList.css';
 //https://github.com/moroshko/react-autosuggest

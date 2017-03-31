@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios'; //ajax library
-import LibPath from './LibPath';
+import { HomePath, LibPath } from './LibPath';
 import AddElement from './AddElement';
 import TogglePublish from './TogglePublish'; 
 import DeleteElement from './DeleteElement';
@@ -79,7 +79,7 @@ export default class Admin extends React.Component {
   }
   
   handleFormRowClick(ReqID){
-    browserHistory.push(`/ADMIN/0/${ReqID}`); 
+    browserHistory.push(`${HomePath}ADMIN/0/${ReqID}`); 
   }
 
   handleRedraw() { //(renamed from EditCB) 
@@ -106,7 +106,7 @@ export default class Admin extends React.Component {
           <td>
           <TogglePublish FormID={form.FormID} published={form.Type==="FORM" ? true : false} handleRedraw={self.handleRedraw} />
           </td><td>
-          <Link to={`/EDIT/${form.FormID}`}>{form.Descrip}</Link>
+          <Link to={`${HomePath}EDIT/${form.FormID}`}>{form.Descrip}</Link>
           </td><td>
           <DeleteElement FormID={form.FormID} handleRedraw={self.handleRedraw}  />
           </td>
@@ -114,13 +114,13 @@ export default class Admin extends React.Component {
       )
     });
     let listFormsSUPV = this.state.adminData.forms.map(function(form){
-      return <li key={form.FormID}><Link to={`/SUPV/${form.FormID}`}>{form.Descrip}</Link></li>;
+      return <li key={form.FormID}><Link to={`${HomePath}SUPV/${form.FormID}`}>{form.Descrip}</Link></li>;
     });
     let listAdmins = this.state.adminData.admins.map(function(adm){
       return (
         <tr key={adm.AdminID}>
           <td>
-          <Link to={`/useradmin/${adm.AdminID}`}>{adm.Name}</Link>
+          <Link to={`${HomePath}useradmin/${adm.AdminID}`}>{adm.Name}</Link>
           </td><td>
           <DeleteAdmin AdminID={adm.AdminID} handleRedraw={self.handleRedraw}  />
           </td>
@@ -128,6 +128,8 @@ export default class Admin extends React.Component {
       )      
     });
     return (
+     <div>
+      <a href="https://ccp1.msj.org/login/login/home.cfm"> &larr; Intranet Login Menu </a>
       <div className="formclass" >
         <h1>Computer Access Forms-Admin</h1>
         <div className="sectionclass" >
@@ -173,11 +175,11 @@ export default class Admin extends React.Component {
         </table>        
 
         <ul>
-          <Link className="editclass"  to={`/useradmin`}>Add New Administrator</Link>
+          <Link className="editclass"  to={`${HomePath}useradmin`}>Add New Administrator</Link>
         </ul> 
         </div>
-
       </div>
+     </div>
     )
   }
   

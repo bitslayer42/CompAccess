@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios'; //ajax library
-import LibPath from './LibPath';
+import { LibPath } from './LibPath';
 
 export default class TogglePublish extends React.Component { 
  

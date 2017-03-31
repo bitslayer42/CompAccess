@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios'; //ajax library
-import LibPath from './LibPath';
+import { LibPath } from './LibPath';
 import Element from './Element';
 
 export default class GetForm extends React.Component {
@@ -42,6 +42,7 @@ export default class GetForm extends React.Component {
       const header = {};
       header.RequestID = res.data.RequestID;
       header.Completed = res.data.Completed;
+      header.LoggedInID = res.data.LoggedInID;
       header.LoggedInName = res.data.LoggedInName;
       header.SupvName = res.data.SupvName;      
       header.EnteredDate = res.data.EnteredDate;
