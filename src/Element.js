@@ -2,12 +2,11 @@ import React from 'react';
 import moment from 'moment'; //date library
 import DatePicker  from 'react-datepicker'; //datepicker  library
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-import { LibPath } from './LibPath';
+import { LibPath, HomePath } from './LibPath';
 import AddElements from './AddElements';
 import Edit from './Edit';
 import './css/react-datepicker.css';
 import { Link } from 'react-router';
-import { HomePath } from './LibPath';
 
 export default class Element extends React.Component {   
   //An element can be any row returned from stored proc
@@ -73,7 +72,6 @@ function ElementForm(props) {
   return (
     <div>
       <ElementMenu view={props.view} FormID={props.curr.FormID} />
- 
       <div className="formclass" key={props.curr.FormID}>
         <ElementFormHeader curr={props.curr} view={props.view} header={props.header} formatdate={formatdate}/>
         {props.view==="SUPV" 
