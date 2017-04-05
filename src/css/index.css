@@ -1,5 +1,6 @@
 body {
-
+  background-image: url(../images/background.png);
+  background-attachment: fixed;
   font-family: sans-serif;
   text-align:center;
 }
@@ -17,23 +18,21 @@ body {
 }
 div {
   border-radius: 4px;
-
 }
 div.formclass {
-  background-color: #a4becc;
+  background-color: rgba(0,0,0, 0.1); /* #a4becc; */
   color: white;
   padding: 3px;
   margin-bottom: 1px;
   border: 2px solid #3b5969;
   text-align:left;
-  font-weight:bold;
-  
+  font-weight:bold; 
 } 
 div.sectionclass {
   background-color: #f0f4f7;
   color: black;
   padding: 10px;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
   border: 1px solid #3b5969;
   text-align:left;
   font-weight:bold;
@@ -49,7 +48,7 @@ div.nodeclass {
   font-weight:bold;
 }
 div.subformstyle{
-  background-color: #aff7d8;
+  background-color: #D2D3CB;
 }
 div.subformstyle label{
  	width:53%;
@@ -99,12 +98,12 @@ div.requestclass{
   padding: 3px 0 6px 0;
 }
 div.responseclass{
-  background-color:#e39aaa;
+  background-color:#E8B4C0; 
   border-radius: 0;
   padding: 3px 0 6px 0;
 }
 div.responsecompleteclass{
-  background-color:#5ad884;
+  background-color:#82D89E;
   border-radius: 0;
   padding: 3px 0 6px 0;
 }
@@ -160,8 +159,44 @@ table.addelementtable{
  width: auto;
  height: auto;
  font-size: 16px;
- padding: 10px 40px;
+ padding: 10px 25px;
  background-image: linear-gradient(to top, #A8BBDE, #7089B3);
  background-color: #A5B8DA;
  margin:4px;
+}
+.active-btn-class{
+ display: inline-block;
+ border:1px solid #7CC9AD;
+ color: #fff;
+ border-radius: 10px;
+ -webkit-border-radius: 10px;
+ -moz-border-radius: 10px;
+ font-family: Verdana;
+ width: auto;
+ height: auto;
+ font-size: 16px;
+ background-image: linear-gradient(to top, #A8DDCB, #70B29A);
+ background-color: #A4D8C5;
+}
+/* animation */
+.example-enter {
+  opacity: 0.01;
+  transform: scaley(0.4);
+}
+
+.example-enter.example-enter-active {
+  opacity: 1;
+  transform: scaley(1); 
+  transition: all 500ms ease-in;
+}
+
+.example-leave {
+  opacity: 1;
+  transform: scaley(1);
+}
+
+.example-leave.example-leave-active {
+  opacity: 0.01;
+  transform: scaley(0.4);
+  transition: all 300ms ease-in;
 }

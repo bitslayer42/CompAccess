@@ -15,8 +15,8 @@
   <cfset LoggedInID = CLIENT.EMPID>
   <cfset LoggedInName = CLIENT.EMPNAME>
 <cfelse>
-  <cfset LoggedInID = "1111111">
-  <cfset LoggedInName = "Logged, N. Name">  <!--- CAUTION DEBUGGING ONLY!!! --->
+  <cfset LoggedInID = "1027126">
+  <cfset LoggedInName = "Logged, N. az Jon">  <!--- CAUTION DEBUGGING ONLY!!! --->
 </cfif>
 <cfif IsDefined("url.reqID")> <!--- previously entered --->
       <cfset EnteredDate = header.EnteredDate>

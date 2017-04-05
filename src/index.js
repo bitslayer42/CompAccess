@@ -4,6 +4,9 @@ import ReactDOM from 'react-dom';
 import GetForm from './GetForm';
 import CheckAdmin from './CheckAdmin';
 import UserAdmin from './UserAdmin';
+
+import ToDoList from './ToDoList';
+
 import { HomePath } from './LibPath';
 import './css/index.css';
 
@@ -11,7 +14,8 @@ ReactDOM.render(
   <Router history={ browserHistory }>
     <Route path={HomePath}>
       <IndexRoute component={CheckAdmin} />
-      <Route path="index.html" component={CheckAdmin} /> {/* used for email */}
+      
+      <Route path="ToDoList" component={ToDoList} />
       <Route path="index.cfm" component={CheckAdmin} /> {/* used for email */}
       <Route path="useradmin(/:AdminID)" component={UserAdmin} />   
       <Route path=":view/:formID(/:reqID)" component={GetForm} />    

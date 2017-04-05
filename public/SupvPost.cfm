@@ -1,4 +1,4 @@
-<cfif IsDefined("url.reqID")>
+<cfif IsDefined("url.reqID")><!--- supervisor requesting own copy --->
   <cfset theReqID = url.reqID>
     <cfif IsDefined("CLIENT.EMPID")>
       <cfset UserID = CLIENT.EMPID>
@@ -30,10 +30,17 @@
     <cfprocresult name="ret">
   </cfstoredproc>
   <cfset theReqID = ret.RequestID>
-  <cfstoredproc procedure="GetEmailsForRequest" datasource="ITForms">
-    <cfprocparam cfsqltype="cf_sql_integer" value="#theReqID#">
-    <cfprocresult name="emails">
-  </cfstoredproc>
+                                                                                        <!---
+                                                                                        <cfstoredproc procedure="GetEmailsForRequest" datasource="ITForms">
+                                                                                          <cfprocparam cfsqltype="cf_sql_integer" value="#theReqID#">
+                                                                                          <cfprocresult name="emails">
+                                                                                        </cfstoredproc>
+                                                                                        --->
+                                                                                        <cfquery name="emails" datasource="ITForms">
+                                                                                        select 'Jon.Wilson@msj.org' AS EMailAddress
+                                                                                        UNION
+                                                                                        select 'jontwilson@gmail.com'
+                                                                                        </cfquery>
 </cfif>
 <!--- ---------------------- --->
 <cfstoredproc procedure="getForm" datasource="ITForms">
@@ -56,8 +63,12 @@
   <div class="sectionclass">
     <cfif IsDefined("url.reqID")>
       <div style="color:red;font-size:1.6em;">E-MAIL SENT</div>
+      <div>to: <cfoutput>#emails.EmailAddress#</cfoutput></div>
     <cfelse>
       You have successfully submitted a <b>Computer Access Authorization E-Form.<br>
+      <cfif emails.RecordCount GT 0>
+        <span style="color:#777;">Email sent to <cfoutput query="emails"> : #EmailAddress# </cfoutput></span><br>
+      </cfif>
       <div>
         <a href="SupvPost.cfm?reqID=<cfoutput>#theReqID#</cfoutput> ">Click here to email a copy to yourself</a> 
       </div>
@@ -83,7 +94,12 @@
 </div>
 
 <cfif emails.RecordCount GT 0>
-  <cfmail to = "#emails.Name#<#emails.EmailAddress#>" 
+  <cfset EmailList = "">
+  <cfoutput query="emails">
+  <cfset EmailList = ListAppend(EmailList,#EMailAddress#)>
+  </cfoutput>
+
+  <cfmail to="#EmailList#" 
   from = "cpisc@msj.org"
   subject = "#emailsubject#"
   type="html">
@@ -114,6 +130,7 @@
       </cfloop>
       </table>
     </div>
+    Sent to #EmailList#<br>
   </body>
   </html>
   </cfmail>

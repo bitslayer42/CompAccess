@@ -10,8 +10,8 @@ input[type=checkbox].css-checkbox {
     border:0;
 }
 
-.reqckbox{background-image:url(./req.png);}
-.queckbox{background-image:url(./que.png);}
+.reqckbox{background-image:url(../images/req.png);}
+.queckbox{background-image:url(../images/que.png);}
 
 input[type=checkbox].css-checkbox + label.css-label {
   -webkit-touch-callout: none;

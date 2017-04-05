@@ -78,10 +78,10 @@ export default class ShowAdministrator extends React.Component {
       <label>Name:</label>{userData.Name}<br/>
       <label>ID:</label>{userData.AdminID}<br/>
       <label>Email:</label>{userData.EmailAddress}<br/>
-      <div>
-        <h3 style={{margin:"0 auto"}}> Subscribe to emails for these systems</h3>
-        <div>An email will be sent to you when a supervisor requests access to any checked system.</div>
-        <div style={{margin:"0 auto"}}>
+      <div style={{margin:"0 auto",width:"700px"}}>
+        <h3 style={{textAlign:"center"}}> Subscribe to emails for these systems</h3>
+        <div><i>An email will be sent to you when a supervisor requests access to any checked system.</i></div>
+        <div style={{textAlign:"center",fontSize:"1.6em"}}>
           {listScrips}
         </div>
       </div>
@@ -117,9 +117,8 @@ class AdminNodeCheckbox extends React.Component {
     this.onChange = this.onChange.bind(this);
   }
   
-  onChange=()=>{ 
-    let newval = !this.state.value;  
-    this.setState({value: !this.state.value});    
+  onChange=()=>{ //debugger;
+    let newval = !this.state.value;   
     axios.get(LibPath + 'Administrator.cfm', {
       params: {
         Proc: "ToggleEmail",
@@ -140,10 +139,12 @@ class AdminNodeCheckbox extends React.Component {
 
   render()  {   
       return (
-        <tr className="reqsrow"  onClick={this.onChange}>
-          <td>
-            <input type="checkbox" checked={this.state.value} onChange={this.onChange} />
+        <tr className="reqsrow">
+          <td style={{width:"400px"}}>
+            <label style={{textAlign:"left",paddingLeft:"20px",width:"100%"}}>
+            <input type="checkbox"  checked={this.state.value} onChange={this.onChange} />
             {this.props.node.Descrip}
+            </label>
           </td>
         </tr>
       )

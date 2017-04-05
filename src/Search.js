@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios'; //ajax library
-import { LibPath } from './LibPath';
+import { LibPath, HomePath } from './LibPath';
 import { browserHistory } from 'react-router';
 import moment from 'moment'; //date library
 
@@ -80,7 +80,7 @@ export default class Search extends React.Component {
   }
   
   handleFormRowClick(ReqID){
-    browserHistory.push(`/ADMIN/0/${ReqID}`); 
+    browserHistory.push(`${HomePath}ADMIN/0/${ReqID}`); 
   }
   
   render()  {

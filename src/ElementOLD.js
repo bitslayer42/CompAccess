@@ -1,7 +1,6 @@
 import React from 'react';
 import moment from 'moment'; //date library
-import DatePicker  from 'react-datepicker'; //datepicker  library
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import DatePicker  from 'react-datepicker'; //datepicker library
 import { LibPath } from './LibPath';
 import AddElements from './AddElements';
 import Edit from './Edit';
@@ -54,9 +53,9 @@ function ElementFormHeader(props) {
         {   props.view==="EDIT"
           ? <h1 style={{color:"black"}}>Add and remove form elements</h1>
           : props.view==="HEADER"
-          ? <h1 style={{color:"black"}}>Set which fields appear in Unresolved Queue on Admin menu</h1>
+          ? <h1 style={{color:"black"}}>Set Unresolved Queue on Admin menu</h1>
           : props.view==="REQUIRED"
-          ? <h1 style={{color:"black"}}>Set which fields are Required</h1>
+          ? <h1 style={{color:"black"}}>Set fields that are Required</h1>
         : <h1>Computer Access Authorization E-Form</h1>}
           
           <h2>{props.curr.Descrip}</h2>
@@ -363,16 +362,10 @@ class ElementRadio extends React.Component {
                 {chld.Type==="SUBFORM" 
                   && (this.state.selectedOption === chld.Descrip || this.props.view==="EDIT")
                   && (
-                    <ReactCSSTransitionGroup
-                      transitionName="example"
-                      transitionEnterTimeout={500}
-                      transitionLeaveTimeout={300}>
-                        <div key={chld.FormID} className="subformstyle">
-                        <AddElements view={this.props.view} type="SUBFORM" curr={chld} handleRedraw={this.props.handleRedraw} />
-                          <Element tree={chld.children} view={this.props.view} handleRedraw={this.props.handleRedraw} />
-                        </div>
-                    </ReactCSSTransitionGroup>                    
-                    
+                    <div className="subformstyle">
+                    <AddElements view={this.props.view} type="SUBFORM" curr={chld} handleRedraw={this.props.handleRedraw} /> 
+                    <Element tree={chld.children} view={this.props.view} handleRedraw={this.props.handleRedraw} />
+                    </div>
                     )
                 }
                 <AddElements view={this.props.view} type="OPTIONAFTER" curr={chld} handleRedraw={this.props.handleRedraw} /> 

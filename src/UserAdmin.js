@@ -24,7 +24,6 @@ export default class UserAdmin extends React.Component {
   }
   
   handleAdminID(SelectedStaff){ 
-    //console.log(SelectedStaff);
     const selAdmin = {};
     selAdmin.AdminID = SelectedStaff.BadgeNum;
     selAdmin.Name = SelectedStaff.Name;
@@ -32,12 +31,12 @@ export default class UserAdmin extends React.Component {
       this.setState({
         AdminRecord: selAdmin
       });   
-    browserHistory.replace(`/useradmin/${SelectedStaff.BadgeNum}`);      
+    browserHistory.replace(`${HomePath}useradmin/${SelectedStaff.BadgeNum}`);      
   }
 
   render()  { 
     return (
-      <div>
+      <div className="outerdiv">
         <Link to={HomePath}>&larr; Return to Admin menu</Link>
         <div className="formclass">
           <h1> Computer Access Forms </h1>

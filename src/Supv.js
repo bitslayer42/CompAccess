@@ -47,7 +47,7 @@ export default class Supv extends React.Component {
 
   renderNextStep() {
     if(this.state.FormList.length===1){
-      browserHistory.replace(`/SUPV/${this.state.FormList[0].FormID}`);
+      browserHistory.replace(`${HomePath}SUPV/${this.state.FormList[0].FormID}`);
     }else{
       var listItems = this.state.FormList.map(function(form){
         return (
