@@ -28,9 +28,7 @@ div.formclass {
   text-align:left;
   font-weight:bold; 
 } 
-div.headerclass {
-  height:260px;
-} 
+ 
 div.sectionclass {
   background-color: #f0f4f7;
   color: black;
@@ -171,9 +169,9 @@ table.addelementtable{
  display: inline-block;
  border:1px solid #7CC9AD;
  color: #fff;
- border-radius: 10px;
- -webkit-border-radius: 10px;
- -moz-border-radius: 10px;
+ border-radius: 12px;
+ -webkit-border-radius: 12px;
+ -moz-border-radius: 12px;
  font-family: Verdana;
  width: auto;
  height: auto;

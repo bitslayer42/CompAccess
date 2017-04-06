@@ -53,7 +53,7 @@ function ElementFormHeader(props) {
         {   props.view==="EDIT"
           ? <h1 style={{color:"black"}}>Add and remove form elements</h1>
           : props.view==="HEADER"
-          ? <h1 style={{color:"black"}}>Set which fields appear in Unresolved Queue on Admin menu</h1>
+          ? <h1 style={{color:"black"}}>Fields in Unresolved Queue on Admin menu</h1>
           : props.view==="REQUIRED"
           ? <h1 style={{color:"black"}}>Set which fields are Required</h1>
         : <h1>Computer Access Authorization E-Form</h1>}

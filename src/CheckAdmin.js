@@ -31,13 +31,11 @@ export default class CheckAdmin extends React.Component {
         // call: https://ccp1.msj.org/login/login/CompAccess/index.cfm?reqid=33
         browserHistory.push(`${HomePath}ADMIN/0/${this.props.location.query.reqid}`); 
       }else{
-        if(userType==="ADMIN"){ 
-          this.setState({
-            userType,
-            loading: false,
-            error: null
-          });
-        }
+        this.setState({
+          userType,
+          loading: false,
+          error: null
+        });
       }
     })
     .catch(err => {
