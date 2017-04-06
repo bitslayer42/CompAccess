@@ -1,3 +1,6 @@
+<!--- 
+<cfdump var="#form#"><cfabort>
+ --->
 <cfif IsDefined("url.reqID")><!--- supervisor requesting own copy --->
   <cfset theReqID = url.reqID>
     <cfif IsDefined("CLIENT.EMPID")>
@@ -14,7 +17,7 @@
   <cfloop collection="#form#" item="theField">
     <cfif theField NEQ "fieldNames" AND theField NEQ "DateEntered" AND theField NEQ "LoggedInName" 
           AND theField NEQ "LoggedInID" AND theField NEQ "SupvSig">
-    <cfset ItemStr = ItemStr & "<row><Field>#theField#</Field><Value>#form[theField]#</Value></row>" >
+    <cfset ItemStr = ItemStr & "<row><Field>#XmlFormat(theField)#</Field><Value>#XmlFormat(form[theField])#</Value></row>" >
     </cfif>
   </cfloop>
   <cfset ItemStr = ItemStr & "</reqrows>">
@@ -30,17 +33,12 @@
     <cfprocresult name="ret">
   </cfstoredproc>
   <cfset theReqID = ret.RequestID>
-                                                                                        <!---
-                                                                                        <cfstoredproc procedure="GetEmailsForRequest" datasource="ITForms">
-                                                                                          <cfprocparam cfsqltype="cf_sql_integer" value="#theReqID#">
-                                                                                          <cfprocresult name="emails">
-                                                                                        </cfstoredproc>
-                                                                                        --->
-                                                                                        <cfquery name="emails" datasource="ITForms">
-                                                                                        select 'Jon.Wilson@msj.org' AS EMailAddress
-                                                                                        UNION
-                                                                                        select 'jontwilson@gmail.com'
-                                                                                        </cfquery>
+
+  <cfstoredproc procedure="GetEmailsForRequest" datasource="ITForms">
+  <cfprocparam cfsqltype="cf_sql_integer" value="#theReqID#">
+  <cfprocresult name="emails">
+  </cfstoredproc>
+
 </cfif>
 <!--- ---------------------- --->
 <cfstoredproc procedure="getForm" datasource="ITForms">
@@ -139,6 +137,12 @@
 
  
 <style>
+body {
+  background-image: url(./background.png);
+  background-attachment: fixed;
+  font-family: sans-serif;
+  text-align:center;
+}
   div {
     margin: 20px auto;
     text-align:center;
@@ -146,7 +150,7 @@
   }
   div.formclass {
     width: 700px;
-    background-color: #a4becc;
+    background-color: rgba(0,0,0, 0.1);
     color: white;
     padding: 3px;
     border: 2px solid #3b5969;

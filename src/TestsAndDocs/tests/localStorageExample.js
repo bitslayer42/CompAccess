@@ -1,3 +1,4 @@
+//localStorage is supported in modern browsers(IE11) - sessionStorage and localStorage
 localStorage.setItem('favoriteflavor','vanilla');
 var taste = localStorage.getItem('favoriteflavor');
 localStorage.removeItem('favoriteflavor');

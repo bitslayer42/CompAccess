@@ -3,7 +3,7 @@
 <cfloop collection="#form#" item="theField">
   <cfif theField NEQ "fieldNames" AND theField NEQ "DateEntered" AND theField NEQ "LoggedInID" 
         AND theField NEQ "LoggedInName" AND theField NEQ "ReqID">
-  <cfset ItemStr = ItemStr & "<row><Field>#theField#</Field><Value>#form[theField]#</Value></row>" >
+  <cfset ItemStr = ItemStr & "<row><Field>#XmlFormat(theField)#</Field><Value>#XmlFormat(form[theField])#</Value></row>" >
   </cfif>
 </cfloop>
 <cfset ItemStr = ItemStr & "</reqrows>">
@@ -109,6 +109,12 @@
 </div>
  
 <style>
+body {
+  background-image: url(./background.png);
+  background-attachment: fixed;
+  font-family: sans-serif;
+  text-align:center;
+}
 div {
   margin: 20px auto;
   text-align:center;
@@ -116,7 +122,7 @@ div {
 }
 div.formclass {
   width: 700px;
-  background-color: #a4becc;
+  background-color: rgba(0,0,0, 0.1);
   color: white;
   padding: 3px;
   border: 2px solid #3b5969;
