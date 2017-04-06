@@ -52,6 +52,8 @@ function ElementFormHeader(props) {
       <div className="headerclass formclass" key={props.curr.FormID}>
         {   props.view==="EDIT"
           ? <h1 style={{color:"black"}}>Add and remove form elements</h1>
+          : props.view==="PREVIEW"
+          ? <h1 style={{color:"black"}}>Preview Form</h1>
           : props.view==="HEADER"
           ? <h1 style={{color:"black"}}>Fields in Unresolved Queue on Admin menu</h1>
           : props.view==="REQUIRED"
@@ -493,7 +495,7 @@ function ElementMenu(props) {
       {props.view!=="SUPV" && <Link to={HomePath}>&larr; Return to Admin menu</Link> }    
       {props.view!=="SUPV" && props.view!=="ADMIN" &&(
         <div>
-          <Link to={`${HomePath}SUPV/${props.FormID}`} activeClassName="active-btn-class"><span className="btn-class">Preview...</span></Link>
+          <Link to={`${HomePath}PREVIEW/${props.FormID}`} activeClassName="active-btn-class"><span className="btn-class">Preview...</span></Link>
           <Link to={`${HomePath}EDIT/${props.FormID}`} activeClassName="active-btn-class"><span className="btn-class">Add and Remove</span></Link>
           <Link to={`${HomePath}HEADER/${props.FormID}`} activeClassName="active-btn-class"><span className="btn-class">Unresolved Queue</span></Link>
           <Link to={`${HomePath}REQUIRED/${props.FormID}`} activeClassName="active-btn-class"><span className="btn-class">REQUIRED</span></Link>
