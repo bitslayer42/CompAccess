@@ -28,7 +28,9 @@ div.formclass {
   text-align:left;
   font-weight:bold; 
 } 
-
+div.headerclass {
+  height:260px;
+} 
 div.sectionclass {
   background-color: #f0f4f7;
   color: black;
@@ -179,25 +181,50 @@ table.addelementtable{
  background-image: linear-gradient(to top, #A8DDCB, #70B29A);
  background-color: #A4D8C5;
 }
-/* animation */
-.example-enter {
+/* ReactCSSTransitionGroup animation */
+.AddElements-enter {
   opacity: 0.01;
-  transform: scaley(0.4);
+  transform: scaleY(0);
+  height: 0;
 }
-
-.example-enter.example-enter-active {
-  opacity: 1;
-  transform: scaley(1); 
+.AddElements-enter.AddElements-enter-active {
+  opacity: 0.7;
+  transform: scaleY(1); 
+  height: 10px;
+  transition: all 500ms ease-in;
+}
+.AddElements-leave {
+  opacity: 0.7;
+  transform: scaleY(1);
+  height: 10px;  
+}
+.AddElements-leave.AddElements-leave-active {
+  opacity: 0.01;
+  transform: scaleY(0);
+  height: 0;  
   transition: all 500ms ease-in;
 }
 
-.example-leave {
-  opacity: 1;
-  transform: scaley(1);
-}
-
-.example-leave.example-leave-active {
+.SubForm-enter {
   opacity: 0.01;
-  transform: scaley(0.4);
+  transform: scaleY(0);
+  height: 0;
+}
+.SubForm-enter.SubForm-enter-active {
+  opacity: 0.7;
+  transform: scaleY(1); 
+  height: 100%;  
   transition: all 300ms ease-in;
 }
+.SubForm-leave {
+  opacity: 0.7;
+  transform: scaleY(1);
+  height: 100%;  
+}
+.SubForm-leave.SubForm-leave-active {
+  opacity: 0.01;
+  transform: scaleY(0);
+  height: 0;  
+  transition: all 300ms ease-in;
+}
+/* END ReactCSSTransitionGroup animation */

@@ -49,7 +49,7 @@ export default class Element extends React.Component {
 }
 function ElementFormHeader(props) {
   return (
-      <div className="formclass" key={props.curr.FormID}>
+      <div className="headerclass formclass" key={props.curr.FormID}>
         {   props.view==="EDIT"
           ? <h1 style={{color:"black"}}>Add and remove form elements</h1>
           : props.view==="HEADER"
@@ -358,21 +358,21 @@ class ElementRadio extends React.Component {
                                 onChange={this.handleOptionChange} />}                
                 <Edit className="delclass" view={this.props.view} curr={chld} handleRedraw={this.props.handleRedraw} /> 
                 {chld.Descrip} 
-                {chld.Type==="SUBFORM" 
-                  && (this.state.selectedOption === chld.Descrip || this.props.view==="EDIT")
-                  && (
-                    <ReactCSSTransitionGroup
-                      transitionName="example"
-                      transitionEnterTimeout={500}
-                      transitionLeaveTimeout={300}>
-                        <div key={chld.FormID} className="subformstyle">
-                        <AddElements view={this.props.view} type="SUBFORM" curr={chld} handleRedraw={this.props.handleRedraw} />
-                          <Element tree={chld.children} view={this.props.view} handleRedraw={this.props.handleRedraw} />
-                        </div>
-                    </ReactCSSTransitionGroup>                    
-                    
-                    )
-                }
+                  <ReactCSSTransitionGroup
+                    transitionName="SubForm"
+                    transitionEnterTimeout={300}
+                    transitionLeaveTimeout={300}>
+                          {chld.Type==="SUBFORM" 
+                            && (this.state.selectedOption === chld.Descrip || this.props.view==="EDIT")
+                            ? (
+                              <div key={chld.FormID} className="subformstyle">
+                              <AddElements view={this.props.view} type="SUBFORM" curr={chld} handleRedraw={this.props.handleRedraw} />
+                                <Element tree={chld.children} view={this.props.view} handleRedraw={this.props.handleRedraw} />
+                              </div>
+                              )
+                            : null
+                          }
+                  </ReactCSSTransitionGroup> 
                 <AddElements view={this.props.view} type="OPTIONAFTER" curr={chld} handleRedraw={this.props.handleRedraw} /> 
               </div>
               
