@@ -59,6 +59,21 @@ SELECT [Type]
   order by lft
 GO
 
-
+/*
+INSERT INTO [dbo].[Forms] 
+([Type]
+,[Descrip]
+,[lft]
+,[rgt]
+,[Created]
+)
+VALUES(
+'ROOT',
+'Root of Tree',
+1,
+2,
+GETDATE()
+)
+*/
 
 

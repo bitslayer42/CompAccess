@@ -4,6 +4,7 @@ import DatePicker  from 'react-datepicker'; //datepicker  library
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import { LibPath, HomePath } from './LibPath';
 import AddElements from './AddElements';
+import SendHREmail from './SendHREmail';
 import Edit from './Edit';
 import './css/react-datepicker.css';
 import { Link } from 'react-router';
@@ -58,12 +59,13 @@ function ElementFormHeader(props) {
           ? <h1 style={{color:"black"}}>Fields in Unresolved Queue on Admin menu</h1>
           : props.view==="REQUIRED"
           ? <h1 style={{color:"black"}}>Set which fields are Required</h1>
-        : <h1>Computer Access Authorization E-Form</h1>}
+          : <h1>Computer Access Authorization E-Form</h1>
+        }
           
-          <h2>{props.curr.Descrip}</h2>
-          {props.curr.Type==="UNPUB" && <div style={{color:"black"}}>Unpublished Form</div>}
-          {props.header.LoggedInName && <p><i>Entered by:</i> {props.header.LoggedInName}</p>} 
-          {props.formatdate}
+        <h2>{props.curr.Descrip}</h2>
+        {props.curr.Type==="UNPUB" && <div style={{color:"black"}}>Unpublished Form</div>}
+        {props.header.SupvName && <p><i>Entered by:</i> {props.header.SupvName}</p>} 
+        {props.formatdate}
 
       </div>
   )
@@ -73,7 +75,7 @@ function ElementForm(props) {
   let formatdate = moment(props.header.EnteredDate).format("MMMM Do YYYY, h:mm a"); //if no date in header, is NOW    
   return (
     <div>
-      <ElementMenu view={props.view} FormID={props.curr.FormID} />
+      <ElementMenu view={props.view} FormID={props.curr.FormID} header={props.header} />
       <div className="formclass" key={props.curr.FormID}>
         <ElementFormHeader curr={props.curr} view={props.view} header={props.header} formatdate={formatdate}/>
         {props.view==="SUPV" 
@@ -148,11 +150,11 @@ function ElementMessage(props) {
   )
 }
 
-class ElementNode extends React.Component { //||props.view==="REQUIRED"||props.view==="HEADER"
+class ElementNode extends React.Component { 
   constructor(props) {
     super(props);
     this.state = {
-      childVisible: props.curr.ItemValue==="on"||props.view==="EDIT"?true:false 
+      childVisible: props.curr.ItemValue==="on"||props.view==="PREVIEW"?true:false 
     };
   }
   onClick=()=>{
@@ -245,8 +247,10 @@ class ElementResponse extends React.Component {
           <Element tree={curr.children} view={this.props.view} handleRedraw={this.props.handleRedraw} handleChangeResponse={this.handleChangeResponse} />
           <label/>
           {this.state.completed
-          ?<span>Completed</span>
-          :<span><input type="checkbox" onChange={this.handleMarkAsNotNeeded} />Mark as complete or not needed</span>
+          ? <span>Completed</span>
+          : this.props.view==="ADMIN"
+          ? <span><input type="checkbox" onChange={this.handleMarkAsNotNeeded} />Mark as complete or not needed</span>
+          : null
           }
           <input type="hidden" name={curr.FormID} value={this.state.completed} />
         </div>
@@ -489,10 +493,15 @@ class Signature extends React.Component {
   }
 }
 
-function ElementMenu(props) {  
+function ElementMenu(props) {
   return (
     <div>
-      {props.view!=="SUPV" && <Link to={HomePath}>&larr; Return to Admin menu</Link> }    
+      {props.view==="SUPV" 
+      ? <a href="https://ccp1.msj.org/login/login/home.cfm"> &larr; Intranet Login Menu </a>
+      : <Link to={HomePath}>&larr; Return to Admin menu</Link> }    
+      {props.view==="ADMIN" &&(
+        <SendHREmail reqID={props.header.RequestID} />
+      )}    
       {props.view!=="SUPV" && props.view!=="ADMIN" &&(
         <div>
           <Link to={`${HomePath}PREVIEW/${props.FormID}`} activeClassName="active-btn-class"><span className="btn-class">Preview...</span></Link>

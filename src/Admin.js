@@ -145,7 +145,9 @@ export default class Admin extends React.Component {
         <h3> Search Requests </h3>
             <Search />
             <div style={{width:"200px",float:"right",margin:"10px 0 0 0"}}>
-            <a href="https://ccp1.msj.org/login/login/issupport/ComputerAccess/">Search Older Records</a>
+            <a href="https://ccp1.msj.org/login/login/issupport/ComputerAccess/" style={{color:"white"}}>
+              Search Older Records
+            </a>
             </div>
         </div>
         

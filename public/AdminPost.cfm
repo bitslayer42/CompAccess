@@ -69,7 +69,9 @@
           <cfset inResponse = 1>
         <cfelseif Type EQ "NODE">
           <cfset inResponse = 0>
-          <tr><td colspan="2" style="text-align:center;"><b>Access requested for: <span style="color:orange;">#Descrip#</span></b></td></tr>          
+          <cfif ItemValue EQ "on">
+            <tr><td colspan="2" style="text-align:center;"><b>Access requested for: <span style="color:orange;">#Descrip#</span></b></td></tr>          
+          </cfif>
         <cfelseif ItemValue NEQ "">
           <cfif inResponse EQ 1>
             <tr>

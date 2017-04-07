@@ -1,10 +1,12 @@
 To go live:
 
 Toggle the path variable in LibPath.js
-Copy all the cfm files in \\ccp1.msj.org\wwwroot\CompAccess to local \public folder
+Copy all the cfm files in \\ccp1.msj.org\wwwroot\CompAccess to local \public folder (don't delete web.config or *.png)
 
 Run: npm run build
+
 Copy: build folder contents to \\ccp1.msj.org\wwwroot\login\login\CompAccess
+Copy: public and source folders to \\ccp1.msj.org\wwwroot\login\login\CompAccess\SourceCode
 
 rename index.html to index.cfm
 

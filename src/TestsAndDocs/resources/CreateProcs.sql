@@ -533,5 +533,17 @@ END
 
 
 GO
+/****** Object:  StoredProcedure [dbo].[GetEmailsForRequest]    Script Date: 4/7/2017 9:10:48 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROC GetRequest(@RequestID INT) AS
+--GetRequest  75
+SELECT Staff.EMailAddress, SupvName, EnteredDate, headerXML
+FROM Requests
+INNER JOIN Staff
+ON Requests.SupvID = Staff.BadgeNum
+WHERE Requests.RequestID = @RequestID
 
 
