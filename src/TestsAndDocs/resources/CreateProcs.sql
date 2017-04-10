@@ -76,7 +76,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROC [dbo].[AdminScreen] AS
+create PROC [dbo].[AdminScreen] AS
 	SELECT * FROM Requests
 	WHERE Completed = 0
 
@@ -89,6 +89,7 @@ CREATE PROC [dbo].[AdminScreen] AS
 	WHERE Type = 'ROOT'
 
 	SELECT AdminID, Name FROM Admins
+	ORDER BY Name
 
 
 GO
@@ -283,12 +284,16 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROC [dbo].[GetStaffList](@SearchString VARCHAR(20)) AS
--- GetStaffList 'WILS'
-SELECT TOP 20 BadgeNum, Name, EMailAddress
+ALTER PROC [dbo].[GetStaffList](@SearchString VARCHAR(20)) AS
+-- GetStaffList 'C'
+SELECT TOP 20 BadgeNum, Name, EMailAddress,1 as sorter
 FROM Staff
 WHERE Name LIKE @SearchString + '%'
-ORDER BY Name
+UNION
+SELECT TOP 20 BadgeNum, Name, EMailAddress,2 as sorter
+FROM Staff
+WHERE Name LIKE '%' + @SearchString + '%'
+ORDER BY sorter,Name
 GO
 
 /****** Object:  StoredProcedure [dbo].[IsAdminOrSupv]    Script Date: 4/6/2017 11:14:04 AM ******/
