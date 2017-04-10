@@ -53,7 +53,7 @@
   <cfset loopctr = 1>
    [ 
     <cfoutput query="results">
-    { "BadgeNum": #BadgeNum#
+    { "BadgeNum": "#BadgeNum#"
     , "Name": "#Name#"
     , "EmailAddress": "#EmailAddress#"
     }

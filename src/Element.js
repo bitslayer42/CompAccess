@@ -154,7 +154,7 @@ class ElementNode extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      childVisible: props.curr.ItemValue==="on"||props.view==="PREVIEW"?true:false 
+      childVisible: props.curr.ItemValue==="on"||props.view==="EDIT"||props.view==="PREVIEW"?true:false 
     };
   }
   onClick=()=>{

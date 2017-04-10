@@ -1,0 +1,125 @@
+
+[ 
+
+{ "ID": "4"
+, "Code": "CCPIT"
+, "depth": "1"
+, "Type": "FORM"
+, "Descrip": "CarePartners IT Access Form"
+}
+, 
+{ "ID": "7"
+, "Code": "HEADER"
+, "depth": "2"
+, "Type": "SECTION"
+, "Descrip": "Staff Information"
+}
+, 
+{ "ID": "9"
+, "Code": "NAME"
+, "depth": "3"
+, "Type": "INPUT"
+, "Descrip": "Staff Name"
+}
+, 
+{ "ID": "19"
+, "Code": "REASON"
+, "depth": "3"
+, "Type": "RADIO"
+, "Descrip": "Reason"
+}
+, 
+{ "ID": "10"
+, "Code": "NETWORK"
+, "depth": "2"
+, "Type": "SECTION"
+, "Descrip": "Network Setup Information"
+}
+, 
+{ "ID": "6"
+, "Code": "EMAILGRP"
+, "depth": "3"
+, "Type": "NODE"
+, "Descrip": "Email Groups"
+}
+, 
+{ "ID": "12"
+, "Code": "REQUEST"
+, "depth": "4"
+, "Type": "INPUT"
+, "Descrip": "Email Comments"
+}
+, 
+{ "ID": "13"
+, "Code": "RESPONSE"
+, "depth": "4"
+, "Type": "INPUT"
+, "Descrip": "Email Username"
+}
+, 
+{ "ID": "17"
+, "Code": "RESPONSE"
+, "depth": "4"
+, "Type": "INPUT"
+, "Descrip": "Email Password"
+}
+, 
+{ "ID": "2"
+, "Code": "CALENDARS"
+, "depth": "3"
+, "Type": "NODE"
+, "Descrip": "Calendars view or edit"
+}
+, 
+{ "ID": "15"
+, "Code": "SOFTWARE"
+, "depth": "2"
+, "Type": "SECTION"
+, "Descrip": "Software Setup Information"
+}
+, 
+{ "ID": "11"
+, "Code": "REDOC"
+, "depth": "3"
+, "Type": "NODE"
+, "Descrip": "ReDoc"
+}
+, 
+{ "ID": "16"
+, "Code": "UDSPRO"
+, "depth": "3"
+, "Type": "NODE"
+, "Descrip": "UDSPro"
+}
+, 
+{ "ID": "3"
+, "Code": "CAREWATCH"
+, "depth": "3"
+, "Type": "NODE"
+, "Descrip": "CareWatch"
+}
+, 
+{ "ID": "5"
+, "Code": "CERNERHW"
+, "depth": "3"
+, "Type": "NODE"
+, "Descrip": "Cerner HomeWorks"
+}
+, 
+{ "ID": "1"
+, "Code": "BLUE-E"
+, "depth": "3"
+, "Type": "NODE"
+, "Descrip": "Blue-E"
+}
+, 
+{ "ID": "8"
+, "Code": "MEDITECH"
+, "depth": "3"
+, "Type": "NODE"
+, "Descrip": "Meditech"
+}
+
+]
+
+
