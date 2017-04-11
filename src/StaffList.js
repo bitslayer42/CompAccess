@@ -40,7 +40,7 @@ export default class StaffList extends React.Component {
  
   ///////////////////////////////////////////////////////////////////////
   getSuggestions(value) {  
-    let self=this;
+    const self=this;
     const inputLength = value.length;
     if(inputLength === 0){
       return []; 

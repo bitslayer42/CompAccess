@@ -72,7 +72,7 @@ function ElementFormHeader(props) {
 }
 
 function ElementForm(props) { 
-  let formatdate = moment(props.header.EnteredDate).format("MMMM Do YYYY, h:mm a"); //if no date in header, is NOW    
+  const formatdate = moment(props.header.EnteredDate).format("MMMM Do YYYY, h:mm a"); //if no date in header, is NOW    
   return (
     <div>
       <ElementMenu view={props.view} FormID={props.curr.FormID} header={props.header} />
@@ -161,7 +161,7 @@ class ElementNode extends React.Component {
     this.setState({childVisible: !this.state.childVisible});
   }
   render() { 
-    let curr = this.props.curr;
+    const curr = this.props.curr;
     return (
       <div key={curr.FormID}>
         <div className="nodeclass" >
@@ -188,7 +188,7 @@ class ElementRequest extends React.Component {
     //Nothing happens
   }
   render() { 
-    let curr = this.props.curr;
+    const curr = this.props.curr;
     return (
       <div key={curr.FormID} className="requestclass">
         <AddElements view={this.props.view} type="REQUEST" curr={curr} handleRedraw={this.props.handleRedraw} /> 
@@ -222,7 +222,7 @@ class ElementResponse extends React.Component {
     });
   }
   handleChangeResponse=(ix,completed)=>{ //the index is given to the child by the Element component
-    let newResultsSet = this.state.resultsSet.slice();      //copy
+    const newResultsSet = this.state.resultsSet.slice();      //copy
     newResultsSet.splice(ix,1,completed);                   //mark this one as complete or not
     let newComplete = newResultsSet.indexOf(false) === -1;  //returns true if all true
     if(this.props.view === "EDIT"){newComplete=false};
@@ -235,7 +235,7 @@ class ElementResponse extends React.Component {
     this.setState({ completed: true });
   }   
   render() { 
-    let curr = this.props.curr;
+    const curr = this.props.curr;
     if(this.props.view === "SUPV"){ //RESPONSES don't appear when SUPV is filling out form
       return (
         <input type="hidden" name={curr.FormID} value="false" />
@@ -264,7 +264,7 @@ class ElementInput extends React.Component {
     this.props.handleChangeResponse(this.props.ix,event.target.value !== "");
   }
   render() { 
-    let curr = this.props.curr;
+    const curr = this.props.curr;
     return (
       <div key={curr.FormID}>
         <div>
@@ -287,7 +287,7 @@ class ElementDate extends React.Component {
 
   constructor(props) {  //
     super(props);
-    let thedate = props.curr.ItemValue?moment(props.curr.ItemValue):null
+    const thedate = props.curr.ItemValue?moment(props.curr.ItemValue):null
     this.state = {
       adate: thedate
     };
@@ -299,7 +299,7 @@ class ElementDate extends React.Component {
     this.props.handleChangeResponse(this.props.ix, date !== null);
   }
   render() { 
-    let curr = this.props.curr;
+    const curr = this.props.curr;
       return (
         <div key={curr.FormID}>
           <div>
@@ -332,13 +332,13 @@ class ElementRadio extends React.Component {
     this.props.handleChangeResponse(this.props.ix,changeEvent.target.value !== "");
   }
   render() { 
-    let curr = this.props.curr;
-    let optcount = curr.children.length;
+    const curr = this.props.curr;
+    const optcount = curr.children.length;
     return ( 
       <div>
       {optcount>0 ?
         curr.children.map((chld,ix) => { //children of RADIO can be OPTION or SUBFORM
-          let firstlabel = ix===0  //Only put the label for the radio on the first line
+          const firstlabel = ix===0  //Only put the label for the radio on the first line
           ?(<label>
             {curr.Required ? <span >*</span> : null}
             {curr.Descrip+":"}
@@ -414,7 +414,7 @@ class ElementSelect extends React.Component {
     this.props.handleChangeResponse(this.props.ix,changeEvent.target.value !== "");
   }
   render() { 
-    let curr = this.props.curr;
+    const curr = this.props.curr;
     return (
       <div key={curr.FormID}>
 

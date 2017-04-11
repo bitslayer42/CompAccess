@@ -41,23 +41,23 @@ export default class Search extends React.Component {
   
   unpackXML(headerXML,EditedXML) { //The request has some of the key detail fields duplicated in the Requests.headerXML field, here we turn xml into a table row.
     let xmlDoc;
-    let returnArr = [];
-    let parser = new DOMParser();
+    const returnArr = [];
+    const parser = new DOMParser();
     
     xmlDoc = parser.parseFromString(headerXML,"text/xml");
-    let cols = xmlDoc.getElementsByTagName("Col");
-    let values = xmlDoc.getElementsByTagName("ItemValue");
+    const cols = xmlDoc.getElementsByTagName("Col");
+    const values = xmlDoc.getElementsByTagName("ItemValue");
     for (let i = 0; i < values.length; i++) {
       values[i].childNodes[0] && cols[i].childNodes[0] 
       && returnArr.push(<td key={i}><div className="queueheaders">{cols[i].childNodes[0].nodeValue}:</div>{values[i].childNodes[0].nodeValue}</td>);  
     }
 
     xmlDoc = parser.parseFromString(EditedXML,"text/xml");
-    let names = xmlDoc.getElementsByTagName("UserName");
-    let dates = xmlDoc.getElementsByTagName("DateMod");
-    let EditedTD = [];
+    const names = xmlDoc.getElementsByTagName("UserName");
+    const dates = xmlDoc.getElementsByTagName("DateMod");
+    const EditedTD = [];
     for (let i = 0; i < names.length; i++) {
-      let formatdate = moment(dates[i].childNodes[0].nodeValue).format("MM/DD/YY, h:mma");
+      const formatdate = moment(dates[i].childNodes[0].nodeValue).format("MM/DD/YY, h:mma");
       names[i].childNodes[0] && dates[i].childNodes[0] 
       && EditedTD.push(<p key={i} style={{margin:"0",fontSize:"0.7em"}}>{names[i].childNodes[0].nodeValue}({formatdate})</p>);  
     }    
@@ -84,7 +84,7 @@ export default class Search extends React.Component {
   }
   
   render()  {
-    var self = this; //so nested funcs can see the parent object
+    const self = this; //so nested funcs can see the parent object
       
     return (
       <div >

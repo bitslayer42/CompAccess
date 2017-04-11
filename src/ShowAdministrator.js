@@ -44,18 +44,18 @@ export default class ShowAdministrator extends React.Component {
   }
 
   renderNextStep() { 
-    let userData = this.state.userData;
+    const userData = this.state.userData;
     
     //group by FormName
-    let groupedList = userData.Subscrips.reduce((acc, item)=>{  
-      var key = item.FormName;
+    const groupedList = userData.Subscrips.reduce((acc, item)=>{  
+      const key = item.FormName;
       acc[key] = acc[key] || [];
       acc[key].push(item);
       return acc;
     }, {});
 
-    let FormNames = Object.keys(groupedList);
-    let listScrips = FormNames.map((Form,ix)=>{
+    const FormNames = Object.keys(groupedList);
+    const listScrips = FormNames.map((Form,ix)=>{
       return (
         <div key={ix}>
           <div>{Form}</div>
@@ -118,7 +118,7 @@ class AdminNodeCheckbox extends React.Component {
   }
   
   onChange=()=>{ //debugger;
-    let newval = !this.state.value;   
+    const newval = !this.state.value;   
     axios.get(LibPath + 'Administrator.cfm', {
       params: {
         Proc: "ToggleEmail",

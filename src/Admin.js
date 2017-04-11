@@ -53,23 +53,23 @@ export default class Admin extends React.Component {
   
   unpackXML(headerXML,EditedXML) { //The request has some of the key detail fields duplicated in the Requests.headerXML field, here we turn xml into a table row.
     let xmlDoc;
-    let returnArr = [];
-    let parser = new DOMParser();
+    const returnArr = [];
+    const parser = new DOMParser();
     
     xmlDoc = parser.parseFromString(headerXML,"text/xml");
-    let cols = xmlDoc.getElementsByTagName("Col");
-    let values = xmlDoc.getElementsByTagName("ItemValue");
+    const cols = xmlDoc.getElementsByTagName("Col");
+    const values = xmlDoc.getElementsByTagName("ItemValue");
     for (let i = 0; i < values.length; i++) {
       values[i].childNodes[0] && cols[i].childNodes[0] 
       && returnArr.push(<td key={i}><div className="queueheaders">{cols[i].childNodes[0].nodeValue}:</div>{values[i].childNodes[0].nodeValue}</td>);  
     }
 
     xmlDoc = parser.parseFromString(EditedXML,"text/xml");
-    let names = xmlDoc.getElementsByTagName("UserName");
-    let dates = xmlDoc.getElementsByTagName("DateMod");
-    let EditedTD = [];
+    const names = xmlDoc.getElementsByTagName("UserName");
+    const dates = xmlDoc.getElementsByTagName("DateMod");
+    const EditedTD = [];
     for (let i = 0; i < names.length; i++) {
-      let formatdate = moment(dates[i].childNodes[0].nodeValue).format("MM/DD/YY, h:mma");
+      const formatdate = moment(dates[i].childNodes[0].nodeValue).format("MM/DD/YY, h:mma");
       names[i].childNodes[0] && dates[i].childNodes[0] 
       && EditedTD.push(<p key={i} style={{margin:"0",fontSize:"0.7em"}}>{names[i].childNodes[0].nodeValue}({formatdate})</p>);  
     }    
@@ -89,7 +89,7 @@ export default class Admin extends React.Component {
   } 
   
   renderNextStep() {   //console.log("adminData",this.state.adminData);                                                      
-    var self = this; //so nested funcs can see the parent object
+    let self = this; //so nested funcs can see the parent object
     let listRequests = <tr ><td>No unresolved requests.</td></tr>
     if(this.state.adminData.requests[0]) { 
       listRequests = this.state.adminData.requests.map(function(req){
@@ -100,7 +100,7 @@ export default class Admin extends React.Component {
         )
       });
     }
-    let listFormsEDIT = this.state.adminData.forms.map(function(form,ix){
+    const listFormsEDIT = this.state.adminData.forms.map(function(form,ix){
       return (
         <tr key={form.FormID}>
           <td>
@@ -113,10 +113,10 @@ export default class Admin extends React.Component {
         </tr>
       )
     });
-    let listFormsSUPV = this.state.adminData.forms.map(function(form){
+    const listFormsSUPV = this.state.adminData.forms.map(function(form){
       return <li key={form.FormID}><Link to={`${HomePath}SUPV/${form.FormID}`}>{form.Descrip}</Link></li>;
     });
-    let listAdmins = this.state.adminData.admins.map(function(adm){
+    const listAdmins = this.state.adminData.admins.map(function(adm){
       return (
         <tr key={adm.AdminID}>
           <td>
@@ -184,6 +184,7 @@ export default class Admin extends React.Component {
         </ul> 
         </div>
       </div>
+      <div style={{height:"100px"}}/>
      </div>
     )
   }

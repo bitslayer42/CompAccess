@@ -68,7 +68,7 @@ export default class AddElement extends React.Component {
     });
   }  
   handleSubmit=(event)=>{
-    let self=this;
+    const self=this;
     event && event.preventDefault();    
 
     axios.get(LibPath + 'DBUpdate.cfm', {
@@ -92,12 +92,12 @@ export default class AddElement extends React.Component {
   }  
 
   render()  {
-    var self = this; //so nested funcs can see the parent object
-    let convertUnpubLabel = this.props.typeToAdd==="UNPUB"?"FORM":this.props.typeToAdd;
-    let typeToAddLabel = convertUnpubLabel.replace(/(.)(.*)/g, function(match, p1, p2){return p1+p2.toLowerCase()}); //converts NODE to Node
-    let placehold = typeToAddLabel==="Message" ? "Message" : typeToAddLabel + " Name";
-    let clickName = "Add " + typeToAddLabel;
-    let listExpanded = this.state.listToAdd.map(function(toAdd,ix){
+    const self = this; //so nested funcs can see the parent object
+    const convertUnpubLabel = this.props.typeToAdd==="UNPUB"?"FORM":this.props.typeToAdd;
+    const typeToAddLabel = convertUnpubLabel.replace(/(.)(.*)/g, function(match, p1, p2){return p1+p2.toLowerCase()}); //converts NODE to Node
+    const placehold = typeToAddLabel==="Message" ? "Message" : typeToAddLabel + " Name";
+    const clickName = "Add " + typeToAddLabel;
+    const listExpanded = this.state.listToAdd.map(function(toAdd,ix){
       return (
         <td key={ix}>
           <AddElement typeToAdd={toAdd} procToCall={self.props.procToCall} parNodeID={self.props.parNodeID} handleRedraw={self.handleRedraw} /> 

@@ -82,10 +82,12 @@ export default class GetForm extends React.Component {
   }
   
   makeTree() {     
-    let nodes = JSON.parse(JSON.stringify(this.state.nodes));
-    let rootID = nodes[0].FormID;
-    var amap = {}, node, atree = [];
-    for (var i = 0; i < nodes.length; i += 1) {
+    const nodes = JSON.parse(JSON.stringify(this.state.nodes));
+    const rootID = nodes[0].FormID;
+    const amap = {};
+    let node;
+    const atree = [];
+    for (let i = 0; i < nodes.length; i += 1) {
         node = nodes[i];
         node.nodeid = i;
         node.children = [];

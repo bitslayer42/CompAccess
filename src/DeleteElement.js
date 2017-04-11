@@ -7,7 +7,7 @@ export default class DeleteElement extends React.Component {
  
   onClick=(event)=>{
     event && event.preventDefault();    
-    var r = confirm("Are you sure you want to delete?");
+    const r = confirm("Are you sure you want to delete?");
     if(r){
       axios.get(LibPath + 'DBUpdate.cfm', {
         params: {
