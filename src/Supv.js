@@ -21,7 +21,7 @@ export default class Supv extends React.Component {
     axios.get(LibPath + 'DBGet.cfm', {
       params: {
         Proc: "ListForms",
-        cachebuster: Math.random()
+        //cachebuster: Math.random()
       }
     })
     .then(res => {

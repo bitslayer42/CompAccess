@@ -10,7 +10,7 @@ export default class TogglePublish extends React.Component {
       params: {
         Proc: "PublishForm",
         FormID: this.props.FormID,
-        cachebuster: Math.random()
+        //cachebuster: Math.random()
       }
     })
     .then(() => {  

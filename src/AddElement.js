@@ -77,7 +77,7 @@ export default class AddElement extends React.Component {
         FormID: this.props.parNodeID,
         Type: this.props.typeToAdd,
         Descrip: this.state.promptBoxText,
-        cachebuster: Math.random()
+        //cachebuster: Math.random()
       }
     })
     .then(res => {   //debugger;

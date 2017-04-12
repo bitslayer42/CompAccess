@@ -14,7 +14,7 @@ export default class DeleteAdmin extends React.Component {
         params: {
           Proc: "DelAdmin",
           AdminID: this.props.AdminID,
-          cachebuster: Math.random()
+          //cachebuster: Math.random()
         }
       })
       .then(() => {  

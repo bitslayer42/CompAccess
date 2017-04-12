@@ -106,7 +106,7 @@ export default class Admin extends React.Component {
           <td>
           <TogglePublish FormID={form.FormID} published={form.Type==="FORM" ? true : false} handleRedraw={self.handleRedraw} />
           </td><td>
-          <Link to={`${HomePath}PREVIEW/${form.FormID}`}>{form.Descrip}</Link>
+          <Link to={`${HomePath}EDIT/${form.FormID}`}>{form.Descrip}</Link>
           </td><td>
           <DeleteElement FormID={form.FormID} handleRedraw={self.handleRedraw}  />
           </td>

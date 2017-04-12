@@ -21,7 +21,7 @@ export default class CheckAdmin extends React.Component {
     axios.get(LibPath + 'DBGet.cfm', {
       params: {
         Proc: "IsAdminOrSupv",
-        cachebuster: Math.random()
+        //cachebuster: Math.random()
       }
     })
     .then(res => {

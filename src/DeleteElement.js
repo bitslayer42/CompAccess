@@ -13,7 +13,7 @@ export default class DeleteElement extends React.Component {
         params: {
           Proc: "DelNode",
           FormID: this.props.FormID,
-          cachebuster: Math.random()
+          //cachebuster: Math.random()
         }
       })
       .then(() => {  
