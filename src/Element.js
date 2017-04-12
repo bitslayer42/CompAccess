@@ -154,7 +154,7 @@ class ElementNode extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      childVisible: props.curr.ItemValue==="on"||props.view==="EDIT"||props.view==="PREVIEW"?true:false 
+      childVisible: props.curr.ItemValue==="on"||props.view==="EDIT"?true:false 
     };
   }
   onClick=()=>{
@@ -506,8 +506,8 @@ function ElementMenu(props) {
         <div>
           <Link to={`${HomePath}PREVIEW/${props.FormID}`} activeClassName="active-btn-class"><span className="btn-class">Preview...</span></Link>
           <Link to={`${HomePath}EDIT/${props.FormID}`} activeClassName="active-btn-class"><span className="btn-class">Add and Remove</span></Link>
-          <Link to={`${HomePath}HEADER/${props.FormID}`} activeClassName="active-btn-class"><span className="btn-class">Unresolved Queue</span></Link>
-          <Link to={`${HomePath}REQUIRED/${props.FormID}`} activeClassName="active-btn-class"><span className="btn-class">REQUIRED</span></Link>
+           <Link to={`${HomePath}REQUIRED/${props.FormID}`} activeClassName="active-btn-class"><span className="btn-class">REQUIRED</span></Link>
+         <Link to={`${HomePath}HEADER/${props.FormID}`} activeClassName="active-btn-class"><span className="btn-class">Unresolved Queue</span></Link>
         </div>
       )}
     </div>

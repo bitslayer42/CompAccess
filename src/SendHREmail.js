@@ -14,7 +14,7 @@ export default class SendHREmail extends React.Component {
     axios.get(LibPath + 'SendHREmail.cfm', {
       params: {
         reqID: this.props.reqID,
-        cachebuster: Math.random()
+        //cachebuster: Math.random()
       }
     })
     .then(res => {   //debugger;

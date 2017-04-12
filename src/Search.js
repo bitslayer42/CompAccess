@@ -23,7 +23,7 @@ export default class Search extends React.Component {
     axios.get(LibPath + 'SearchJSON.cfm', {
       params: {
         searchString: searchString,
-        cachebuster: Math.random()
+        //cachebuster: Math.random()
       }
     })  
     .then(res => {

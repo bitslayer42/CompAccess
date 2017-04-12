@@ -51,7 +51,7 @@ class ToggleHeader extends React.Component {
       params: {
         Proc: "ToggleHeaderRecord",
         FormID: this.props.curr.FormID,
-        cachebuster: Math.random()
+        //cachebuster: Math.random()
       }
     })
     .then(() => {  
@@ -99,7 +99,7 @@ class ToggleRequired extends React.Component {
       params: {
         Proc: "ToggleRequired",
         FormID: this.props.curr.FormID,
-        cachebuster: Math.random()
+        //cachebuster: Math.random()
       }
     })
     .then(() => {  

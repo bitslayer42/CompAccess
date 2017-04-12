@@ -19,7 +19,7 @@ export default class ShowAdministrator extends React.Component {
         AdminID: this.props.AdminRecord.AdminID,
         Name: this.props.AdminRecord.Name,
         EmailAddress: this.props.AdminRecord.EmailAddress,
-        cachebuster: Math.random()
+        //cachebuster: Math.random()
       }
     })
     .then(res => {
@@ -124,7 +124,7 @@ class AdminNodeCheckbox extends React.Component {
         Proc: "ToggleEmail",
         AdminID: this.props.AdminID,
         NodeID: this.props.node.ID,
-        cachebuster: Math.random()
+        //cachebuster: Math.random()
       }
     })
     .then(() => {  
