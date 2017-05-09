@@ -9,7 +9,7 @@ import './css/index.css';
 
 ReactDOM.render(
   <Router history={ browserHistory }>
-    <Route path={HomePath}>
+    <Route path={HomePath}> {/* this is just "/" in test  */}
       <IndexRoute component={CheckAdmin} />
       <Route path="index.cfm" component={CheckAdmin} /> {/* used for email */}
       <Route path="useradmin(/:AdminID)" component={UserAdmin} />   

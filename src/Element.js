@@ -64,7 +64,7 @@ function ElementFormHeader(props) {
           
         <h2>{props.curr.Descrip}</h2>
         {props.curr.Type==="UNPUB" && <div style={{color:"black"}}>Unpublished Form</div>}
-        {props.header.SupvName && <p><i>Entered by:</i> {props.header.SupvName}</p>} 
+        {props.view==="ADMIN" && props.header.SupvName && <p><i>Entered by:</i> {props.header.SupvName}</p>} 
         {props.formatdate}
 
       </div>
@@ -191,6 +191,7 @@ class ElementRequest extends React.Component {
     const curr = this.props.curr;
     return (
       <div key={curr.FormID} className="requestclass">
+        {this.props.view==="EDIT" && <span style={{color:"grey"}}>Request</span>}
         <AddElements view={this.props.view} type="REQUEST" curr={curr} handleRedraw={this.props.handleRedraw} /> 
         <Element tree={curr.children} view={this.props.view} handleRedraw={this.props.handleRedraw} handleChangeResponse={this.handleChangeResponse} />
       </div>
@@ -243,6 +244,7 @@ class ElementResponse extends React.Component {
     }else{
       return (
         <div key={curr.FormID} className={this.state.completed?"responsecompleteclass":"responseclass"}>
+          {this.props.view==="EDIT" && <span style={{color:"grey"}}>Response</span>}
           <AddElements view={this.props.view} type="RESPONSE" curr={curr} handleRedraw={this.props.handleRedraw} /> 
           <Element tree={curr.children} view={this.props.view} handleRedraw={this.props.handleRedraw} handleChangeResponse={this.handleChangeResponse} />
           <label/>
