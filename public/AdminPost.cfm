@@ -11,7 +11,7 @@
 <cfset LoggedInID = form.LoggedInID>
 <cfset LoggedInName = form.LoggedInName>
 
-<cfstoredproc procedure="UpsertRequest" datasource="ITForms">
+<cfstoredproc procedure="UpsertRequest" datasource="ITFormsTest">
   <cfprocparam cfsqltype="cf_sql_varchar" value="#LoggedInID#">
   <cfprocparam cfsqltype="cf_sql_varchar" value="#LoggedInName#">
   <cfprocparam cfsqltype="cf_sql_varchar" value="#ItemStr#">
@@ -21,17 +21,18 @@
 
 <cfif ret.Completed EQ 1> <!--- form complete: send emails --->
   <cfset theReqID = ret.RequestID>
-  <cfstoredproc procedure="GetEmailsForRequest" datasource="ITForms">
+  <cfstoredproc procedure="GetEmailsForRequest" datasource="ITFormsTest">
     <cfprocparam cfsqltype="cf_sql_integer" value="#theReqID#">
     <cfprocresult name="emails">
   </cfstoredproc>
-  <cfstoredproc procedure="getForm" datasource="ITForms">
+  <cfstoredproc procedure="getForm" datasource="ITFormsTest">
     <cfprocparam cfsqltype="cf_sql_integer" value="0">
     <cfprocparam cfsqltype="cf_sql_integer" value="#theReqID#">
+	<cfprocparam cfsqltype="cf_sql_varchar" null=yes>	
     <cfprocresult resultset="1" name="header">
     <cfprocresult resultset="2" name="detail">
   </cfstoredproc>
-  <cfstoredproc procedure="GetEmailForSupv" datasource="ITForms">
+  <cfstoredproc procedure="GetEmailForSupv" datasource="ITFormsTest">
     <cfprocparam cfsqltype="cf_sql_varchar" value="#header.SupvID#">
     <cfprocresult name="emails">
   </cfstoredproc>  
@@ -43,6 +44,12 @@
           <cfset emailsubject = emailsubject & "-" & i.itemvalue.xmltext>
         </cfloop>
   </cfoutput> 
+  <cfset ResponseArr = ArrayNew(1)> 
+  <cfloop query="detail">
+	<cfif Type EQ "RESPONSE">
+		<cfscript>ArrayAppend(ResponseArr, "#FormID#");</cfscript>	  
+	</cfif>
+  </cfloop>
   
   <cfmail to = "#emails.EmailAddress#" 
   from = "cpisc@msj.org"
@@ -62,18 +69,19 @@
     On #DateFormat(header.EnteredDate,"M/D/YY")# at #TimeFormat(header.EnteredDate,"HH:MM")#
     </p>
       <table style="width:100%; padding-left:5px;font-family:Arial, Helvetica, sans-serif;">
-      <cfset inResponse = 0>
+
       <cfloop query="detail">
-        <cfif Type EQ "FORM">
-        <cfelseif Type EQ "RESPONSE">
-          <cfset inResponse = 1>
+        <cfif Type EQ "FORM" OR Type EQ "REQUEST" OR Type EQ "RESPONSE">
         <cfelseif Type EQ "NODE">
-          <cfset inResponse = 0>
           <cfif ItemValue EQ "on">
             <tr><td colspan="2" style="text-align:center;"><b>Access requested for: <span style="color:orange;">#Descrip#</span></b></td></tr>          
           </cfif>
+       <cfelseif Type EQ "CHECKBOX">
+          <cfif ItemValue EQ "on">
+            <tr><td style="text-align:right; padding-right:5px;">#Descrip#</td><td><b>Checked</b></td></tr>          
+          </cfif>
         <cfelseif ItemValue NEQ "">
-          <cfif inResponse EQ 1>
+          <cfif ArrayFind(ResponseArr, ParentID) NEQ 0>  <!--- inside a response --->
             <tr>
               <td style="text-align:right; padding-right:5px;color:orange;">#Descrip#</td>
               <td style="font-size:1.2em;color:orange;"><b>#ItemValue#</b></td>
@@ -88,8 +96,50 @@
   </body>
   </html>
   </cfmail>
+
+  <!--- send Special emails --->
+  <!--- "SpecialCheck" marks hidden fields AND returns special emails --->
+  <cfstoredproc procedure="SpecialCheck" datasource="ITFormsTest">
+  <cfprocparam cfsqltype="cf_sql_integer" value="#theReqID#">
+  <cfprocresult resultset="1" name="specialemails">
+  <cfprocresult resultset="2" name="debugsql">
+  </cfstoredproc>
+  
+  <!--- 
+  <cfoutput query="debugsql">
+	#SQLString#
+  </cfoutput>
+   --->
+  
+  <cfif specialemails.RecordCount GT 0> 
+    <cfoutput query="specialemails" group="EMailAddress">
+      <cfmail to="#EMailAddress#" 
+      from = "cpisc@msj.org"
+      subject = "#emailsubject#"
+      type="html">
+        <html>
+        <head>
+           <style type="text/css">
+            td{border:1px solid ##CCC};
+           </style>
+        </head>
+        <body>
+          <div style="width:400px">
+          <h3>#emailsubject#</h3>
+          Submitted By: #header.SupvName# <br>
+          On #DateFormat(header.EnteredDate,"M/D/YY")# at #TimeFormat(header.EnteredDate,"HH:MM")#<br>
+            <table style="width:100%; padding-left:5px;font-family:Arial, Helvetica, sans-serif;">
+            <cfoutput>
+                  <tr><td style="text-align:right; padding-right:5px;">#Descrip#</td><td><b>#ItemValue#</b></td></tr>
+            </cfoutput>
+            </table>
+          </div>
+        </body>
+        </html>
+      </cfmail>     
+    </cfoutput>
+  </cfif>
 </cfif>
- 
 
 <div class="formclass">
   <h1>Computer Access Forms</h1>
@@ -100,7 +150,7 @@
       An email has been sent to the submitting supervisor with all passwords.<br>
       <span style="color:#777;">Email sent to <cfoutput>#emails.EmailAddress#</cfoutput></span><br>
     <cfelse>
-      Successfully updated.
+      Successfully updated. Not completed.
     </cfif>
     </p>  
   </div>

@@ -1,12 +1,13 @@
 <cfcontent type="application/json" reset="yes">
 
-<cfstoredproc procedure="GetForm" datasource="ITForms">
+<cfstoredproc procedure="GetForm" datasource="ITFormsTest">
   <cfprocparam cfsqltype="cf_sql_integer" value="#url.FormID#">
   <cfif IsDefined("url.reqID")>
     <cfprocparam cfsqltype="cf_sql_integer" value="#url.reqID#">
   <cfelse>
     <cfprocparam cfsqltype="cf_sql_integer" null=yes>
   </cfif>
+  <cfprocparam cfsqltype="cf_sql_varchar" value="#url.view#">
   <cfprocresult resultset="1" name="header">
   <cfprocresult resultset="2" name="body">
 </cfstoredproc>
@@ -47,6 +48,7 @@
   , "Type": "#body.Type#"
   , "Descrip": "#body.Descrip#"
   , "Required": #body.Required# 
+  , "ReqResp": #body.ReqResp# 
   , "HeaderRecord": #body.HeaderRecord#    
   , "ParentID": #body.ParentID#
   , "ItemValue": "#body.ItemValue#"

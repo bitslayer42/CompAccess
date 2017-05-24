@@ -1,8 +1,8 @@
 import React from 'react';
 import axios from 'axios'; //ajax library
 import { LibPath } from './LibPath';
-import { Link } from 'react-router'
-import { browserHistory } from 'react-router';
+import { Link, Redirect } from 'react-router-dom'
+//import { BrowserRouter } from 'react-router-dom';
 import { HomePath } from './LibPath';
 
 export default class Supv extends React.Component {
@@ -21,7 +21,7 @@ export default class Supv extends React.Component {
     axios.get(LibPath + 'DBGet.cfm', {
       params: {
         Proc: "ListForms",
-        //cachebuster: Math.random()
+        cachebuster: Math.random()
       }
     })
     .then(res => {
@@ -47,7 +47,9 @@ export default class Supv extends React.Component {
 
   renderNextStep() {
     if(this.state.FormList.length===1){
-      browserHistory.replace(`${HomePath}SUPV/${this.state.FormList[0].FormID}`);
+		return (
+			<Redirect to={`${HomePath}SUPV/${this.state.FormList[0].FormID}`} />
+		)
     }else{
       const listItems = this.state.FormList.map(function(form){
         return (

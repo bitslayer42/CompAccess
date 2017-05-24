@@ -1,22 +1,21 @@
 {
-  "name": "CompAccess",
+  "name": "compaccess",
   "version": "0.1.0",
   "private": true,
-  "devDependencies": {
-    "react-scripts": "0.8.5"
-  },
-  "homepage": "https://ccp1.msj.org/login/login/CompAccess/",
   "dependencies": {
     "axios": "^0.16.1",
-    "babel-polyfill": "^6.23.0",
-    "connect-history-api-fallback": "^1.3.0",
     "moment": "^2.18.1",
-    "react": "^15.4.2",
-    "react-addons-css-transition-group": "^15.4.2",
-    "react-autosuggest": "^9.0.0",
-    "react-datepicker": "^0.41.1",
-    "react-dom": "^15.4.2",
-    "react-router": "^3.0.2"
+    "prop-types": "^15.5.10",
+    "react": "^15.5.4",
+    "react-addons-css-transition-group": "^15.5.2",
+    "react-autosuggest": "^9.0.1",
+    "react-datepicker": "^0.46.0",
+    "react-dom": "^15.5.4",
+    "react-router": "^4.1.1",
+    "react-router-dom": "^4.1.1"
+  },
+  "devDependencies": {
+    "react-scripts": "1.0.4"
   },
   "scripts": {
     "start": "react-scripts start",

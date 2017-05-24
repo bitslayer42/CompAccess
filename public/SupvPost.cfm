@@ -8,7 +8,7 @@
     <cfelse>
       <cfset UserID = "1027126">  <!--- CAUTION DEBUGGING ONLY!!! SUPV: '1027143'    ADMIN: "1027126"--->
     </cfif>  
-  <cfstoredproc procedure="GetEmailForSupv" datasource="ITForms">
+  <cfstoredproc procedure="GetEmailForSupv" datasource="ITFormsTest">
     <cfprocparam cfsqltype="cf_sql_varchar" value="#UserID#">
     <cfprocresult name="emails">
   </cfstoredproc>  
@@ -25,7 +25,7 @@
   <cfset LoggedInID = form.LoggedInID>
   <cfset LoggedInName = form.LoggedInName & " - Signature:" & form.SupvSig>
 
-  <cfstoredproc procedure="UpsertRequest" datasource="ITForms">
+  <cfstoredproc procedure="UpsertRequest" datasource="ITFormsTest">
     <cfprocparam cfsqltype="cf_sql_varchar" value="#LoggedInID#">
     <cfprocparam cfsqltype="cf_sql_varchar" value="#LoggedInName#">
     <cfprocparam cfsqltype="cf_sql_varchar" value="#ItemStr#">
@@ -34,16 +34,17 @@
   </cfstoredproc>
   <cfset theReqID = ret.RequestID>
 
-  <cfstoredproc procedure="GetEmailsForRequest" datasource="ITForms">
+  <cfstoredproc procedure="GetEmailsForRequest" datasource="ITFormsTest">
   <cfprocparam cfsqltype="cf_sql_integer" value="#theReqID#">
   <cfprocresult name="emails">
   </cfstoredproc>
-
+  
 </cfif>
 <!--- ---------------------- --->
-<cfstoredproc procedure="getForm" datasource="ITForms">
+<cfstoredproc procedure="getForm" datasource="ITFormsTest">
   <cfprocparam cfsqltype="cf_sql_integer" value="0">
   <cfprocparam cfsqltype="cf_sql_integer" value="#theReqID#">
+  <cfprocparam cfsqltype="cf_sql_varchar" null=yes>	
   <cfprocresult resultset="1" name="header">
   <cfprocresult resultset="2" name="detail">
 </cfstoredproc>
@@ -59,7 +60,7 @@
 <div class="formclass">
   <h1>Computer Access Forms</h1>
   <div class="sectionclass">
-    <cfif IsDefined("url.reqID")>
+    <cfif IsDefined("url.reqID")> <!--- supv sends email to self --->
       <div style="color:red;font-size:1.6em;">E-MAIL SENT</div>
       <div>to: <cfoutput>#emails.EmailAddress#</cfoutput></div>
     <cfelse>
@@ -91,6 +92,7 @@
   </div>
 </div>
 
+<!--- send emails to IT dept --->
 <cfif emails.RecordCount GT 0>
   <cfset EmailList = "">
   <cfoutput query="emails">
@@ -134,7 +136,48 @@
   </cfmail>
 </cfif>
  
-
+<!--- send Special emails --->
+<cfif NOT IsDefined("url.reqID")>
+  <!--- "SpecialCheck" marks hidden fields AND returns special emails --->
+  <cfstoredproc procedure="SpecialCheck" datasource="ITFormsTest">
+  <cfprocparam cfsqltype="cf_sql_integer" value="#theReqID#">
+  <cfprocresult resultset="1" name="specialemails">
+  <cfprocresult resultset="2" name="debugsql">
+  </cfstoredproc>
+  <!---    
+  <cfoutput query="debugsql">
+	#SQLString#
+  </cfoutput>
+--->
+  <cfif specialemails.RecordCount GT 0> 
+    <cfoutput query="specialemails" group="SpecialID">
+      <cfmail to="#EMailAddress#" 
+      from = "cpisc@msj.org"
+      subject = "#emailsubject#"
+      type="html">
+        <html>
+        <head>
+           <style type="text/css">
+            td{border:1px solid ##CCC};
+           </style>
+        </head>
+        <body>
+          <div style="width:400px">
+          <h3>#emailsubject#</h3>
+          Submitted By: #header.SupvName# <br>
+          On #DateFormat(header.EnteredDate,"M/D/YY")# at #TimeFormat(header.EnteredDate,"HH:MM")#<br>
+            <table style="width:100%; padding-left:5px;font-family:Arial, Helvetica, sans-serif;">
+            <cfoutput>
+                  <tr><td style="text-align:right; padding-right:5px;">#Descrip#</td><td><b>#ItemValue#</b></td></tr>
+            </cfoutput>
+            </table>
+          </div>
+        </body>
+        </html>
+      </cfmail>     
+    </cfoutput>
+  </cfif>
+</cfif>
  
 <style>
 body {

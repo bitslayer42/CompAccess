@@ -86,6 +86,10 @@ div.editclass {
   font-size:0.6em;
   border:1px solid grey;
   width:90px;
+  cursor:pointer;
+}
+div.pubclass:hover{
+  background-color:#DDD;
 
 }
 .queueheaders {
@@ -149,6 +153,7 @@ table.addelementtable{
 	opacity:0.7;
   cursor: pointer;
 }
+/* buttons at top of form editing screens */
 .btn-class{
  display: inline-block;
  border:1px solid #7D99CA;
@@ -160,7 +165,7 @@ table.addelementtable{
  width: auto;
  height: auto;
  font-size: 16px;
- padding: 10px 25px;
+ padding: 10px 21px;
  background-image: linear-gradient(to top, #A8BBDE, #7089B3);
  background-color: #A5B8DA;
  margin:4px;

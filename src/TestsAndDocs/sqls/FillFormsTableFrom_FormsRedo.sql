@@ -8,7 +8,8 @@ INSERT INTO [dbo].[_FormsRedo]
            ,[Created]
            ,[Deleted]
            ,[HeaderRecord]
-           ,[Required])
+           ,[Required]
+		   ,ReqResp)
 SELECT [Type]
       ,[Descrip]
       ,[lft]
@@ -17,6 +18,7 @@ SELECT [Type]
            ,[Deleted]
       ,[HeaderRecord]
       ,[Required]
+	  ,ReqResp
   FROM [dbo].[Forms]
   order by lft
 */
@@ -32,6 +34,7 @@ CREATE TABLE [dbo].[Forms](
 	[Deleted] [datetime] NULL,
 	[HeaderRecord] [bit] NULL CONSTRAINT [DF_Forms_HeaderRecord]  DEFAULT ((0)),
 	[Required] [bit] NULL CONSTRAINT [DF_Forms_Required]  DEFAULT ((0)),
+	ReqResp bit NULL CONSTRAINT [DF_Forms_ReqResp]  DEFAULT ((0)), 
  CONSTRAINT [PK_nested_category] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
@@ -46,7 +49,8 @@ INSERT INTO [dbo].[Forms]
            ,[Created]
            ,[Deleted]
            ,[HeaderRecord]
-           ,[Required])
+           ,[Required]
+		   ,ReqResp)
 SELECT [Type]
       ,[Descrip]
       ,[lft]
@@ -55,6 +59,7 @@ SELECT [Type]
            ,[Deleted]
       ,[HeaderRecord]
       ,[Required]
+	  ,ReqResp
   FROM [dbo].[_FormsRedo]
   order by lft
 GO

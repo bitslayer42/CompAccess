@@ -2,12 +2,16 @@ import React from 'react';
 import moment from 'moment'; //date library
 import DatePicker  from 'react-datepicker'; //datepicker  library
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+//npm WARN deprecated react-addons-css-transition-group@15.5.2: This package is de             
+//precated and will no longer work with React 16+. We recommend you use CSSTransitionGroup 
+//from 'react-transition-group' instead.
+
 import { LibPath, HomePath } from './LibPath';
 import AddElements from './AddElements';
 import SendHREmail from './SendHREmail';
 import Edit from './Edit';
 import './css/react-datepicker.css';
-import { Link } from 'react-router';
+import { NavLink } from 'react-router-dom'  //NavLink is just like Link with styling options
 
 export default class Element extends React.Component {   
   //An element can be any row returned from stored proc
@@ -30,13 +34,20 @@ export default class Element extends React.Component {
           }else if(curr.Type==="RESPONSE"){
             return <ElementResponse   curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw}/>
           }else if(curr.Type==="INPUT"){
-            return <ElementInput ix={ix}  curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw} handleChangeResponse={this.props.handleChangeResponse}/> 
+            return <ElementInput ix={ix}  curr={curr} key={curr.FormID} view={this.props.view} inResponse={this.props.inResponse}
+				handleRedraw={this.props.handleRedraw} handleChangeResponse={this.props.handleChangeResponse}/> 
           }else if(curr.Type==="DATE"){
-            return <ElementDate ix={ix}   curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw} handleChangeResponse={this.props.handleChangeResponse}/> 
+            return <ElementDate ix={ix}   curr={curr} key={curr.FormID} view={this.props.view} inResponse={this.props.inResponse} 
+				handleRedraw={this.props.handleRedraw} handleChangeResponse={this.props.handleChangeResponse}/> 
           }else if(curr.Type==="RADIO"){
-            return <ElementRadio ix={ix}  curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw} handleChangeResponse={this.props.handleChangeResponse}/> 
+            return <ElementRadio ix={ix}  curr={curr} key={curr.FormID} view={this.props.view} inResponse={this.props.inResponse} 
+				handleRedraw={this.props.handleRedraw} handleChangeResponse={this.props.handleChangeResponse}/> 
+          }else if(curr.Type==="CHECKBOX"){
+            return <ElementCheckbox ix={ix}  curr={curr} key={curr.FormID} view={this.props.view} inResponse={this.props.inResponse} 
+				handleRedraw={this.props.handleRedraw} handleChangeResponse={this.props.handleChangeResponse}/> 
           }else if(curr.Type==="SELECT"){
-            return <ElementSelect ix={ix} curr={curr} key={curr.FormID} view={this.props.view} handleRedraw={this.props.handleRedraw} handleChangeResponse={this.props.handleChangeResponse}/>
+            return <ElementSelect ix={ix} curr={curr} key={curr.FormID} view={this.props.view} inResponse={this.props.inResponse} 
+				handleRedraw={this.props.handleRedraw} handleChangeResponse={this.props.handleChangeResponse}/>
 
           }else{
             return <div key={curr.FormID}>Unknown Element {curr.Type}</div>
@@ -56,9 +67,11 @@ function ElementFormHeader(props) {
           : props.view==="PREVIEW"
           ? <h1 style={{color:"black"}}>Preview Form</h1>
           : props.view==="HEADER"
-          ? <h1 style={{color:"black"}}>Fields in Unresolved Queue on Admin menu</h1>
+          ? <h1 style={{color:"black"}}>Fields in Unresolved Queue</h1>
           : props.view==="REQUIRED"
           ? <h1 style={{color:"black"}}>Set which fields are Required</h1>
+          : props.view==="REQRESP"
+          ? <h1 style={{color:"black"}}>Fields required to <span style={{color:"red"}}>complete</span> response</h1>
           : <h1>Computer Access Authorization E-Form</h1>
         }
           
@@ -98,6 +111,8 @@ function ElementForm(props) {
             <input type="hidden" name="LoggedInID"      defaultValue={props.header.LoggedInID} />    
             <input type="hidden" name="LoggedInName"      defaultValue={props.header.LoggedInName} />    
             <input type="hidden" name="ReqID"   defaultValue={props.header.RequestID} />
+			  {<div style={{color:"black"}} >* Required to Submit</div>}
+			  {<div style={{color:"red"}} >* Required to Complete</div>}
             {props.header.Completed===1
             ? <div>Completed</div>
             : <button className="submit" >Submit</button>
@@ -108,6 +123,8 @@ function ElementForm(props) {
           <div>
           <AddElements view={props.view} type="FORM" curr={props.curr} handleRedraw={props.handleRedraw} /> 
           <Element tree={props.curr.children} view={props.view} handleRedraw={props.handleRedraw} />
+		  {<div style={{color:"black"}} >* Required to Submit</div>}
+		  {<div style={{color:"red"}} >* Required to Complete</div>}
           </div>
         )
         }
@@ -271,6 +288,7 @@ class ElementInput extends React.Component {
       <div key={curr.FormID}>
         <div>
           <label>
+          {this.props.view!=="SUPV" && curr.ReqResp ? <span style={{color:"red",fontSize:"2em"}} >*</span> : null}
           {curr.Required ? <span >*</span> : null}
           {curr.Descrip}:
           <Edit className="delclass" view={this.props.view} curr={curr} handleRedraw={this.props.handleRedraw} />            
@@ -306,6 +324,7 @@ class ElementDate extends React.Component {
         <div key={curr.FormID}>
           <div>
             <label>
+			{this.props.view!=="SUPV" && curr.ReqResp ? <span style={{color:"red",fontSize:"2em"}} >*</span> : null}
             {curr.Required ? <span >*</span> : null}
             {curr.Descrip}:
             <Edit className="delclass" view={this.props.view} curr={curr} handleRedraw={this.props.handleRedraw} />            
@@ -342,6 +361,7 @@ class ElementRadio extends React.Component {
         curr.children.map((chld,ix) => { //children of RADIO can be OPTION or SUBFORM
           const firstlabel = ix===0  //Only put the label for the radio on the first line
           ?(<label>
+			{this.props.view!=="SUPV" && curr.ReqResp ? <span style={{color:"red",fontSize:"2em"}} >*</span> : null}
             {curr.Required ? <span >*</span> : null}
             {curr.Descrip+":"}
             <Edit className="delclass" view={this.props.view} curr={this.props.curr} handleRedraw={this.props.handleRedraw} /> 
@@ -349,7 +369,7 @@ class ElementRadio extends React.Component {
           )
           :<label/>;
           return( 
-            <div key={chld.FormID}> {/*An "Add Opts>>" will appear above first line in EDIT view*/}
+            <div key={chld.FormID} > {/*An "Add Opts>>" will appear above first line in EDIT view*/}  
                 {(this.props.view==="EDIT" && ix===0) && (
                   <span>
                     <label></label>
@@ -365,7 +385,9 @@ class ElementRadio extends React.Component {
                                 checked={this.state.selectedOption === chld.Descrip} 
                                 onChange={this.handleOptionChange} />}                
                 <Edit className="delclass" view={this.props.view} curr={chld} handleRedraw={this.props.handleRedraw} /> 
+					{/*<div style={{display:"inline-block",width:"280px"}}></div>*/}
                 {chld.Descrip} 
+				
                   <ReactCSSTransitionGroup
                     transitionName="SubForm"
                     transitionEnterTimeout={300}
@@ -405,11 +427,37 @@ class ElementRadio extends React.Component {
   }
 }  
 
-ElementRadio.propTypes = {
-    curr: React.PropTypes.object,
-    view: React.PropTypes.string,
-    handleRedraw: React.PropTypes.func
-}; 
+// ElementRadio.propTypes = {
+    // curr: React.PropTypes.object,
+    // view: React.PropTypes.string,
+    // handleRedraw: React.PropTypes.func
+// }; 
+
+class ElementCheckbox extends React.Component { 
+  handleChange=(event)=>{ 
+    this.props.handleChangeResponse(this.props.ix,event.target.value !== "");
+  }
+  render() { 
+    const curr = this.props.curr;
+    return (
+      <div key={curr.FormID}>
+        <div>
+          <label>
+			{this.props.view!=="SUPV" && curr.ReqResp ? <span style={{color:"red",fontSize:"2em"}} >*</span> : null}
+			{curr.Required ? <span >*</span> : null}		  
+			<Edit className="delclass" view={this.props.view} curr={curr} handleRedraw={this.props.handleRedraw} />            
+          </label>
+          <div style={{display:"inline-block",width:"360px"}}>
+		  <input type="checkbox"  name={curr.FormID} value="on"
+			defaultChecked={this.props.curr.ItemValue==="on"} onChange={this.handleChange} />
+		  {curr.Descrip}
+		  </div>
+        </div>
+        <AddElements view={this.props.view} type="AFTER" curr={curr} handleRedraw={this.props.handleRedraw} /> 
+      </div>
+    ) 
+  }
+}
 
 class ElementSelect extends React.Component { 
   handleOptionChange=(changeEvent)=>{
@@ -421,7 +469,8 @@ class ElementSelect extends React.Component {
       <div key={curr.FormID}>
 
         <label>
-        {curr.Required ? <span >*</span> : null}
+        {this.props.view!=="SUPV" && curr.ReqResp ? <span style={{color:"red",fontSize:"2em"}} >*</span> : null}
+		{curr.Required ? <span >*</span> : null}
         {curr.Descrip}:
         <Edit className="delclass" view={this.props.view} curr={this.props.curr} handleRedraw={this.props.handleRedraw} /> 
         </label>
@@ -465,7 +514,7 @@ class ElementSelect extends React.Component {
     )
   }
 }
-
+		
 class Signature extends React.Component {  
 
   render() {
@@ -500,16 +549,17 @@ function ElementMenu(props) {
     <div>
       {props.view==="SUPV" 
       ? <a href="https://ccp1.msj.org/login/login/home.cfm"> &larr; Intranet Login Menu </a>
-      : <Link to={HomePath}>&larr; Return to Admin menu</Link> }    
+      : <NavLink to={HomePath}>&larr; Return to Admin menu</NavLink> }    
       {props.view==="ADMIN" &&(
         <SendHREmail reqID={props.header.RequestID} />
       )}    
       {props.view!=="SUPV" && props.view!=="ADMIN" &&(
         <div>
-          <Link to={`${HomePath}PREVIEW/${props.FormID}`} activeClassName="active-btn-class"><span className="btn-class">Preview...</span></Link>
-          <Link to={`${HomePath}EDIT/${props.FormID}`} activeClassName="active-btn-class"><span className="btn-class">Add and Remove</span></Link>
-           <Link to={`${HomePath}REQUIRED/${props.FormID}`} activeClassName="active-btn-class"><span className="btn-class">REQUIRED</span></Link>
-         <Link to={`${HomePath}HEADER/${props.FormID}`} activeClassName="active-btn-class"><span className="btn-class">Unresolved Queue</span></Link>
+          <NavLink to={`${HomePath}PREVIEW/${props.FormID}`} activeClassName="active-btn-class"><span className="btn-class">Preview...</span></NavLink>
+          <NavLink to={`${HomePath}EDIT/${props.FormID}`} activeClassName="active-btn-class"><span className="btn-class">Add/Remove</span></NavLink>
+           <NavLink to={`${HomePath}REQUIRED/${props.FormID}`} activeClassName="active-btn-class"><span className="btn-class">REQUIRED</span></NavLink>
+           <NavLink to={`${HomePath}REQRESP/${props.FormID}`} activeClassName="active-btn-class"><span className="btn-class">Req Complete</span></NavLink>
+         <NavLink to={`${HomePath}HEADER/${props.FormID}`} activeClassName="active-btn-class"><span className="btn-class">Queue</span></NavLink>
         </div>
       )}
     </div>

@@ -1,11 +1,14 @@
-/****** Object:  StoredProcedure [dbo].[AddChild]    Script Date: 4/6/2017 11:14:03 AM ******/
+USE [ITForms]
+GO
+
+/****** Object:  StoredProcedure [dbo].[AddChild]    Script Date: 5/11/2017 7:57:04 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROC [dbo].[AddChild] (@IntoCategory INT, @Type VARCHAR(10), @Descrip VARCHAR(MAX)) AS
+ALTER PROC [dbo].[AddChild] (@IntoCategory INT, @Type VARCHAR(10), @Descrip VARCHAR(MAX)) AS
 -- Adds first child to category
 -- AddChild 129, 'SECTION', 'OneSizeFitsAll?'
 BEGIN
@@ -34,14 +37,14 @@ BEGIN
 END
 GO
 
-/****** Object:  StoredProcedure [dbo].[AddSister]    Script Date: 4/6/2017 11:14:03 AM ******/
+/****** Object:  StoredProcedure [dbo].[AddSister]    Script Date: 5/11/2017 7:57:04 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROC [dbo].[AddSister] (@ToRightOf INT, @Type VARCHAR(10), @Descrip VARCHAR(MAX)) AS
+ALTER PROC [dbo].[AddSister] (@ToRightOf INT, @Type VARCHAR(10), @Descrip VARCHAR(MAX)) AS
 -- Adds a sibling after @ToRightOf
 -- AddSister 13, 'INPUT', 'Email Password'
 BEGIN
@@ -69,14 +72,14 @@ BEGIN
 END
 GO
 
-/****** Object:  StoredProcedure [dbo].[AdminScreen]    Script Date: 4/6/2017 11:14:04 AM ******/
+/****** Object:  StoredProcedure [dbo].[AdminScreen]    Script Date: 5/11/2017 7:57:04 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-create PROC [dbo].[AdminScreen] AS
+ALTER PROC [dbo].[AdminScreen] AS
 	SELECT * FROM Requests
 	WHERE Completed = 0
 
@@ -94,27 +97,27 @@ create PROC [dbo].[AdminScreen] AS
 
 GO
 
-/****** Object:  StoredProcedure [dbo].[DelAdmin]    Script Date: 4/6/2017 11:14:04 AM ******/
+/****** Object:  StoredProcedure [dbo].[DelAdmin]    Script Date: 5/11/2017 7:57:04 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROC [dbo].[DelAdmin](@AdminID VARCHAR(15)) AS
+ALTER PROC [dbo].[DelAdmin](@AdminID VARCHAR(15)) AS
 DELETE FROM Admins
 WHERE AdminID = @AdminID
 
 GO
 
-/****** Object:  StoredProcedure [dbo].[DelNode]    Script Date: 4/6/2017 11:14:04 AM ******/
+/****** Object:  StoredProcedure [dbo].[DelNode]    Script Date: 5/11/2017 7:57:04 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROC [dbo].[DelNode] (@FormID INT) AS
+ALTER PROC [dbo].[DelNode] (@FormID INT) AS
 -- Checks if element has ever been used in a request. If yes, mark as Deleted 
 -- if no delete Node and all it's children 
 -- DelNode 119
@@ -142,14 +145,33 @@ END
 
 GO
 
-/****** Object:  StoredProcedure [dbo].[GetAdmin]    Script Date: 4/6/2017 11:14:04 AM ******/
+/****** Object:  StoredProcedure [dbo].[EditSpecial]    Script Date: 5/11/2017 7:57:04 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROC [dbo].[GetAdmin](@AdminID VARCHAR(15),@Name VARCHAR(200) = NULL,@EmailAddress VARCHAR(40) = NULL) AS
+
+ALTER PROCEDURE [dbo].[EditSpecial] AS
+BEGIN
+ SELECT 1
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[GetAdmin]    Script Date: 5/11/2017 7:57:04 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+ALTER PROC [dbo].[GetAdmin](@AdminID VARCHAR(15),@Name VARCHAR(200) = NULL,@EmailAddress VARCHAR(40) = NULL) AS
+--Main proc for UserAdmin screen
+-- Use: List subscribed nodes with just first param
+--      Add new Admin with three params
 -- GetAdmin '1027126'
 -- GetAdmin '1','name','nam@nom'
 BEGIN
@@ -175,16 +197,17 @@ BEGIN
 	WHERE Admins.AdminID = @AdminID
 	ORDER BY Sorter
 END
+
 GO
 
-/****** Object:  StoredProcedure [dbo].[GetEmailForSupv]    Script Date: 4/6/2017 11:14:04 AM ******/
+/****** Object:  StoredProcedure [dbo].[GetEmailForSupv]    Script Date: 5/11/2017 7:57:04 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROC [dbo].[GetEmailForSupv](@BadgeNum VARCHAR(15)) AS
+ALTER PROC [dbo].[GetEmailForSupv](@BadgeNum VARCHAR(15)) AS
 SELECT Name, EmailAddress
 FROM Staff
 WHERE BadgeNum = @BadgeNum
@@ -193,15 +216,15 @@ WHERE BadgeNum = @BadgeNum
 
 GO
 
-/****** Object:  StoredProcedure [dbo].[GetEmailsForRequest]    Script Date: 4/6/2017 11:14:04 AM ******/
+/****** Object:  StoredProcedure [dbo].[GetEmailsForRequest]    Script Date: 5/11/2017 7:57:04 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROC [dbo].[GetEmailsForRequest](@RequestID INT) AS
-	--For a given supervisor's request, return the list of email addresses that have subscribed to selected nodes.
+ALTER PROC [dbo].[GetEmailsForRequest](@RequestID INT) AS
+	--For a given supervisor's request, return the list of admin email addresses that have subscribed to selected nodes.
 	SELECT DISTINCT Admins.EMailAddress, Admins.Name
 	FROM RequestItems
 	INNER JOIN Forms
@@ -214,18 +237,18 @@ CREATE PROC [dbo].[GetEmailsForRequest](@RequestID INT) AS
 	AND Forms.Type = 'NODE'
 GO
 
-/****** Object:  StoredProcedure [dbo].[GetForm]    Script Date: 4/6/2017 11:14:04 AM ******/
+/****** Object:  StoredProcedure [dbo].[GetForm]    Script Date: 5/11/2017 7:57:04 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROC [dbo].[GetForm] (@FormID INT, @RequestID INT = NULL) AS 
+ALTER PROC [dbo].[GetForm] (@FormID INT, @RequestID INT = NULL) AS 
 --Based on Nested Set Model here: http://mikehillyer.com/articles/managing-hierarchical-data-in-mysql/
 -- If called with formid=0, the form will be looked up from requestid
 -- GetForm 112
--- GetForm 0, 47
+-- GetForm 0, 124
 DECLARE @ReqDate datetime
 
 IF @FormID = 0 --Pull the request, first figure out which form this is.
@@ -245,19 +268,23 @@ ELSE           --Pull just the form.
 	END
 
 SELECT * FROM Requests WHERE RequestID = @RequestID
-SELECT inr2.ID AS FormID, inr2.Type, inr2.Descrip, inr2.Required, inr2.HeaderRecord, ParentID, ItemValue FROM (
-	SELECT inr.ID, inr.Type, inr.Descrip, inr.Required, inr.HeaderRecord, inr.lft, (SELECT TOP 1 ID 
+SELECT inr2.ID AS FormID, inr2.Type, inr2.Descrip, inr2.Required, inr2.ReqResp, inr2.HeaderRecord, ParentID, ItemValue FROM (
+	SELECT inr.ID, inr.Type, inr.Descrip, inr.Required, inr.ReqResp, inr.HeaderRecord, inr.lft, (SELECT TOP 1 ID 
 			   FROM Forms parent 
 			   WHERE parent.lft < inr.lft AND parent.rgt > inr.rgt    
 			   ORDER BY parent.rgt-inr.rgt ASC) AS ParentID
 	FROM (
-		SELECT node.ID, node.Required, node.HeaderRecord, --(COUNT(parent.ID) - 1) AS depth, 
+		SELECT node.ID, node.Required, node.ReqResp, node.HeaderRecord, --(COUNT(parent.ID) - 1) AS depth, 
 		node.lft, node.rgt, node.Type, node.Descrip
 		FROM Forms AS node
 		INNER JOIN Forms AS parent
 		ON node.lft BETWEEN parent.lft AND parent.rgt
 		WHERE (node.Created <= @ReqDate AND (node.Deleted >= @ReqDate OR node.Deleted IS NULL))
-		GROUP BY node.ID, node.lft, node.rgt, node.Type, node.Descrip, node.Required, node.HeaderRecord
+		AND node.ID NOT IN (
+			SELECT FieldID FROM RequestHiddenFields
+			WHERE ReqID = @RequestID
+		)
+		GROUP BY node.ID, node.lft, node.rgt, node.Type, node.Descrip, node.Required, node.ReqResp, node.HeaderRecord
 	) As inr
 	INNER JOIN (
 		SELECT *
@@ -273,11 +300,27 @@ LEFT JOIN (
 ) AS req
 ON inr2.ID = req.FieldID
 ORDER BY inr2.lft
+GO
 
+/****** Object:  StoredProcedure [dbo].[GetRequest]    Script Date: 5/11/2017 7:57:04 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER PROC [dbo].[GetRequest](@RequestID INT) AS
+	--
+	--declare @RequestID INT = 75
+	SELECT Staff.EMailAddress, SupvName, EnteredDate, headerXML
+	FROM Requests
+	INNER JOIN Staff
+	ON Requests.SupvID = Staff.BadgeNum
+	WHERE Requests.RequestID = @RequestID
 
 GO
 
-/****** Object:  StoredProcedure [dbo].[GetStaffList]    Script Date: 4/6/2017 11:14:04 AM ******/
+/****** Object:  StoredProcedure [dbo].[GetStaffList]    Script Date: 5/11/2017 7:57:04 AM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -285,18 +328,21 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 ALTER PROC [dbo].[GetStaffList](@SearchString VARCHAR(20)) AS
--- GetStaffList 'C'
-SELECT TOP 20 BadgeNum, Name, EMailAddress,1 as sorter
-FROM Staff
-WHERE Name LIKE @SearchString + '%'
-UNION
-SELECT TOP 20 BadgeNum, Name, EMailAddress,2 as sorter
-FROM Staff
-WHERE Name LIKE '%' + @SearchString + '%'
+-- GetStaffList 'GUZY'
+SELECT TOP 20 BadgeNum, Name, EMailAddress, MIN(sorter) AS sorter FROM (
+	SELECT BadgeNum, Name, EMailAddress,1 as sorter
+	FROM Staff
+	WHERE Name LIKE @SearchString + '%'
+	UNION
+	SELECT BadgeNum, Name, EMailAddress,2 as sorter
+	FROM Staff
+	WHERE Name LIKE '%' + @SearchString + '%'
+) AS inr
+GROUP BY BadgeNum, Name, EMailAddress
 ORDER BY sorter,Name
 GO
 
-/****** Object:  StoredProcedure [dbo].[IsAdminOrSupv]    Script Date: 4/6/2017 11:14:04 AM ******/
+/****** Object:  StoredProcedure [dbo].[IsAdminOrSupv]    Script Date: 5/11/2017 7:57:04 AM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -305,7 +351,7 @@ GO
 
 
 -------------------------------------------------------------------
-CREATE PROC [dbo].[IsAdminOrSupv](@UserID VARCHAR(15)) AS
+ALTER PROC [dbo].[IsAdminOrSupv](@UserID VARCHAR(15)) AS
 --returns 'SUPV','ADMIN', or null
 /*
 exec IsAdminOrSupv '1027126'
@@ -340,7 +386,7 @@ SELECT @RetType AS Results
 
 GO
 
-/****** Object:  StoredProcedure [dbo].[PublishForm]    Script Date: 4/6/2017 11:14:04 AM ******/
+/****** Object:  StoredProcedure [dbo].[PublishForm]    Script Date: 5/11/2017 7:57:04 AM ******/
 SET ANSI_NULLS ON
 GO
 
@@ -348,7 +394,7 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 ---------------------------------------------------------------------------------------------------------------
-CREATE PROC [dbo].[PublishForm] (@FormID INT) AS
+ALTER PROC [dbo].[PublishForm] (@FormID INT) AS
 -- Toggles form from Type FORM to UNPUB
 -- PublishForm 4
 BEGIN
@@ -364,19 +410,19 @@ END
 
 GO
 
-/****** Object:  StoredProcedure [dbo].[SearchXML]    Script Date: 4/6/2017 11:14:04 AM ******/
+/****** Object:  StoredProcedure [dbo].[SearchXML]    Script Date: 5/11/2017 7:57:04 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROC [dbo].[SearchXML](@SearchString VARCHAR(MAX)) AS
+ALTER PROC [dbo].[SearchXML](@SearchString VARCHAR(MAX)) AS
 -- I created an XML index https://msdn.microsoft.com/en-us/library/bb934097.aspx
 -- CREATE PRIMARY XML INDEX Requests_headerXML ON Requests (headerXML)
--- SearchXML 'Henny'
+-- SearchXML 'Giz'
 SET @SearchString = UPPER(@SearchString)
-SELECT TOP 10
+SELECT TOP 50
 [RequestID]
 ,[SupvID]
 ,[SupvName]
@@ -389,14 +435,148 @@ WHERE headerXML.exist('/root/row/ItemValue/text()[contains(upper-case(.), sql:va
 
 GO
 
-/****** Object:  StoredProcedure [dbo].[ToggleEmail]    Script Date: 4/6/2017 11:14:04 AM ******/
+/****** Object:  StoredProcedure [dbo].[SpecialCheck]    Script Date: 5/11/2017 7:57:04 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROC [dbo].[ToggleEmail](@AdminID VARCHAR(15), @NodeID INT) AS
+
+--------------------------------------------
+ALTER PROCEDURE [dbo].[SpecialCheck](@RequestID INT) AS
+-- SpecialCheck 110
+--Runs when form is submitted by supv or IT
+--Fills RequestHiddenFields table and returns any special emails that should be sent.
+BEGIN
+	DECLARE @SQLString NVARCHAR(500)  
+	DECLARE @ParmDefinition NVARCHAR(500) = N'@RequestID INT,@TheCount INT OUTPUT';
+	DECLARE @Criteria VARCHAR(MAX)
+	DECLARE @Action VARCHAR(15)
+	DECLARE @FieldsToHide VARCHAR(200)
+	DECLARE @Email VARCHAR(200)
+	DECLARE @TheCount INT
+	DECLARE @CurrID INT
+	DECLARE @PrevID INT = 0
+	DECLARE @TempID INT
+	DECLARE @Junk INT
+	DECLARE @emailreturn TABLE
+	(
+	FieldID int,
+	EmailAddress varchar(200),
+	Descrip varchar(max),
+	ItemValue varchar(max) 
+	)
+
+	--Get hidden field criteria
+	DECLARE HideCur CURSOR
+	FOR
+	SELECT SpecialID, Criteria FROM SpecialCriteria 
+	ORDER BY SpecialID
+	OPEN HideCur
+		FETCH HideCur
+		INTO @CurrID, @Criteria
+
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		IF @CurrID <> @PrevID  --first time for this SpecialFormID
+		BEGIN
+			-- Build the @SQLString 
+			SET @SQLString = N'SELECT @TheCount = COUNT(*) WHERE 1=1 '
+		END
+		SET @SQLString = @SQLString + ' AND EXISTS(SELECT * FROM RequestItems WHERE RequestID = ' + CONVERT(VARCHAR(4),@RequestID)  + ' AND ' + @Criteria + ')'
+
+		SET @TempID = @CurrID
+
+		FETCH HideCur
+		INTO @CurrID, @Criteria
+
+		IF @CurrID <> @TempID OR @@FETCH_STATUS <> 0  -- last time for SpecialFormID
+		BEGIN
+			EXEC sp_executesql @SQLString, @ParmDefinition, @RequestID, @TheCount OUTPUT
+			--print @TheCount
+			IF @TheCount > 0  --special criteria matched. either mark the field as hidden or send an email
+			BEGIN
+				SELECT @Action = Action FROM Special WHERE ID = @TempID
+				--print '..' + @Action + '..'
+				IF @Action = 'HIDERESPONSE'
+				BEGIN
+					--Hide the fields
+					INSERT INTO RequestHiddenFields (ReqID, FieldID)
+					SELECT @RequestID,FieldsToHide 
+					FROM SpecialFieldsToHide 
+					WHERE SpecialID = @TempID 
+					AND NOT EXISTS (
+						SELECT * FROM RequestHiddenFields
+						WHERE ReqID = @RequestID AND FieldID = FieldsToHide)
+				END
+				IF @Action = 'SENDEMAIL'
+				BEGIN
+					SELECT @Junk = SpecialID 
+					FROM RequestSpecialEMailSent
+					WHERE RequestID = @RequestID
+					AND SpecialID = @TempID
+					IF @@ROWCOUNT = 0  --we haven't already sent that one
+					BEGIN
+
+						INSERT INTO @emailreturn
+						SELECT sfef.ID, sfe.Email AS EmailAddress,  
+						Forms.Descrip, req.ItemValue 
+						FROM SpecialEmail sfe --returns email list
+						INNER JOIN
+						SpecialEmailFields sfef
+						ON sfe.SpecialID = sfef.SpecialID
+						INNER JOIN Forms
+						ON sfef.FieldID = Forms.ID
+						LEFT JOIN (
+							SELECT *
+							FROM RequestItems 
+							WHERE RequestID = @RequestID
+						)req
+						ON sfef.FieldID = req.FieldID
+						WHERE sfe.SpecialID = @TempID
+
+						INSERT INTO RequestSpecialEMailSent(RequestID,SpecialID)
+						VALUES(@RequestID,@TempID)
+					END
+				END
+			END
+		END
+		SET @PrevID = @TempID
+	END
+	CLOSE HideCur
+	DEALLOCATE HideCur
+
+	SELECT * FROM @emailreturn 
+	ORDER BY EmailAddress,FieldID
+END
+
+/*
+------------------------------------------------------
+-- How the @SQLString is constructed
+SELECT COUNT(*) AS flag
+WHERE 1=1
+
+AND EXISTS(SELECT * FROM RequestItems WHERE 
+	RequestID = 97 AND FieldID=386 AND NOT(ItemValue = '')
+) 
+
+AND EXISTS(SELECT * FROM RequestItems WHERE 
+	RequestID = 97 AND FieldID=393 AND (ItemValue = 'on')
+) 
+
+*/
+
+GO
+
+/****** Object:  StoredProcedure [dbo].[ToggleEmail]    Script Date: 5/11/2017 7:57:04 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER PROC [dbo].[ToggleEmail](@AdminID VARCHAR(15), @NodeID INT) AS
 IF EXISTS(
 	SELECT 1 FROM AdminEmails
 	WHERE AdminID = @AdminID
@@ -410,14 +590,14 @@ ELSE
 	VALUES (@AdminID, @NodeID)
 GO
 
-/****** Object:  StoredProcedure [dbo].[ToggleHeaderRecord]    Script Date: 4/6/2017 11:14:04 AM ******/
+/****** Object:  StoredProcedure [dbo].[ToggleHeaderRecord]    Script Date: 5/11/2017 7:57:04 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROC [dbo].[ToggleHeaderRecord] (@FormID INT) AS
+ALTER PROC [dbo].[ToggleHeaderRecord] (@FormID INT) AS
 -- Toggles form HeaderRecord true/false
 -- ToggleHeaderRecord 4
 BEGIN
@@ -433,14 +613,36 @@ END
 
 GO
 
-/****** Object:  StoredProcedure [dbo].[ToggleRequired]    Script Date: 4/6/2017 11:14:04 AM ******/
+/****** Object:  StoredProcedure [dbo].[ToggleReqResp]    Script Date: 5/11/2017 7:57:04 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROC [dbo].[ToggleRequired] (@FormID INT) AS
+ALTER PROC [dbo].[ToggleReqResp] (@FormID INT) AS
+-- Toggles form ReqResp  true/false
+-- ToggleReqResp 4
+BEGIN
+	UPDATE f
+	SET ReqResp = opt 
+	FROM Forms f
+	CROSS JOIN (
+		SELECT 1 AS opt UNION SELECT 0
+	) AS opts
+	WHERE opt <> ReqResp
+	AND ID = @FormID
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[ToggleRequired]    Script Date: 5/11/2017 7:57:04 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER PROC [dbo].[ToggleRequired] (@FormID INT) AS
 -- Toggles form Required  true/false
 -- ToggleRequired 4
 BEGIN
@@ -455,14 +657,14 @@ BEGIN
 END
 GO
 
-/****** Object:  StoredProcedure [dbo].[UpsertRequest]    Script Date: 4/6/2017 11:14:04 AM ******/
+/****** Object:  StoredProcedure [dbo].[UpsertRequest]    Script Date: 5/11/2017 7:57:04 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROC [dbo].[UpsertRequest](@LoggedInID VARCHAR(15), @LoggedInName VARCHAR(100), @Items XML, @ReqID INT = NULL) AS
+ALTER PROC [dbo].[UpsertRequest](@LoggedInID VARCHAR(15), @LoggedInName VARCHAR(100), @Items XML, @ReqID INT = NULL) AS
 -- If @ReqID param is null, adds new Request and RequestItems (Supervisor creating original)
 -- Otherwise just updates RequestItems (Admins updating)
 BEGIN
@@ -501,7 +703,8 @@ BEGIN
     FROM @Items.nodes('reqrows/row') tab(col)
 
 	--Check if completed
-	SELECT @Completed = CASE WHEN NOT EXISTS (
+	--Finding counter examples: Uncompleted response sections
+	SELECT @Completed =  CASE WHEN NOT EXISTS (
 		SELECT RequestItems.ItemValue
 		FROM RequestItems 
 		INNER JOIN Forms 
@@ -510,7 +713,32 @@ BEGIN
 		GROUP BY RequestItems.ItemValue
 		HAVING RequestItems.ItemValue <> 'true'
 	)
-	THEN 1 ELSE 0 END 
+	--Finding counter examples: ReqResp fields not filled in
+	AND NOT EXISTS (
+		SELECT Forms.*, ri.*
+		FROM Forms 
+		LEFT JOIN (
+			SELECT *
+			FROM Forms 
+			INNER JOIN  RequestItems
+			ON RequestItems.FieldID = Forms.ID
+			WHERE RequestItems.RequestID = @RequestID
+		) AS ri
+		ON ri.FieldID = Forms.ID
+		INNER JOIN (
+			-- get form for this request
+			SELECT Forms.lft AS Formlft, Forms.rgt AS Formrgt
+			FROM RequestItems 
+			INNER JOIN Forms 
+			ON RequestItems.FieldID = Forms.ID
+			WHERE RequestItems.RequestID = @RequestID
+			AND (Forms.Type IN ('FORM', 'UNPUB'))
+		) theform
+		ON Forms.lft > theform.Formlft AND Forms.rgt < theform.Formrgt
+		WHERE Forms.ReqResp = 1  
+		AND (ri.ItemValue IS NULL OR ri.ItemValue = '')
+	)
+	THEN 1 ELSE 0 END
 
 	-- Update the HeaderRecord XML field in Requests table
 	DECLARE @xml xml
@@ -538,17 +766,5 @@ END
 
 
 GO
-/****** Object:  StoredProcedure [dbo].[GetEmailsForRequest]    Script Date: 4/7/2017 9:10:48 AM ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-ALTER PROC GetRequest(@RequestID INT) AS
---GetRequest  75
-SELECT Staff.EMailAddress, SupvName, EnteredDate, headerXML
-FROM Requests
-INNER JOIN Staff
-ON Requests.SupvID = Staff.BadgeNum
-WHERE Requests.RequestID = @RequestID
 
 

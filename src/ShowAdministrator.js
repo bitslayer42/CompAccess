@@ -1,7 +1,8 @@
 import React from 'react';
-//import { browserHistory } from 'react-router'
+//import { BrowserRouter } from 'react-router-dom'
 import axios from 'axios'; //ajax library
-import { LibPath } from './LibPath';
+import { LibPath, HomePath } from './LibPath';
+import { Link } from 'react-router-dom'
 
 export default class ShowAdministrator extends React.Component {
   constructor(props) { 
@@ -16,10 +17,8 @@ export default class ShowAdministrator extends React.Component {
     axios.get(LibPath + 'Administrator.cfm', {
       params: {
         Proc: "GetAdmin",
-        AdminID: this.props.AdminRecord.AdminID,
-        Name: this.props.AdminRecord.Name,
-        EmailAddress: this.props.AdminRecord.EmailAddress,
-        //cachebuster: Math.random()
+        AdminID: this.props.match.params.AdminID,
+        cachebuster: Math.random()
       }
     })
     .then(res => {
@@ -73,19 +72,24 @@ export default class ShowAdministrator extends React.Component {
       )
     });
 
-    return (    
-    <div>
-      <label>Name:</label>{userData.Name}<br/>
-      <label>ID:</label>{userData.AdminID}<br/>
-      <label>Email:</label>{userData.EmailAddress}<br/>
-      <div style={{margin:"0 auto",width:"700px"}}>
-        <h3 style={{textAlign:"center"}}> Subscribe to emails for these systems</h3>
-        <div><i>An email will be sent to you when a supervisor requests access to any checked system.</i></div>
-        <div style={{textAlign:"center",fontSize:"1.6em"}}>
-          {listScrips}
+    return (  
+      <div className="outerdiv">
+        <Link to={HomePath}>&larr; Return to Admin menu</Link>
+        <div className="formclass">	
+			<div className="sectionclass" >	
+			  <label>Name:</label>{userData.Name}<br/>
+			  <label>ID:</label>{userData.AdminID}<br/>
+			  <label>Email:</label>{userData.EmailAddress}<br/>
+			  <div style={{margin:"0 auto",width:"700px"}}>
+				<h3 style={{textAlign:"center"}}> Subscribe to emails for these systems</h3>
+				<div><i>An email will be sent to you when a supervisor requests access to any checked system.</i></div>
+				<div style={{textAlign:"center",fontSize:"1.6em"}}>
+				  {listScrips}
+				</div>
+			  </div>
+			</div>
         </div>
-      </div>
-    </div>
+      </div> 			
     )
   }
   
@@ -124,7 +128,7 @@ class AdminNodeCheckbox extends React.Component {
         Proc: "ToggleEmail",
         AdminID: this.props.AdminID,
         NodeID: this.props.node.ID,
-        //cachebuster: Math.random()
+        cachebuster: Math.random()
       }
     })
     .then(() => {  

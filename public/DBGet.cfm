@@ -6,7 +6,7 @@
     <cfelse>
       <cfset UserID = "1027126">  <!--- CAUTION DEBUGGING ONLY!!! SUPV: '1027143'    ADMIN: "1027126"--->
     </cfif>
-    <cfstoredproc procedure="IsAdminOrSupv" datasource="ITForms">
+    <cfstoredproc procedure="IsAdminOrSupv" datasource="ITFormsTest">
       <cfprocparam cfsqltype="cf_sql_varchar" value="#UserID#">
       <cfprocresult name="list">
     </cfstoredproc>
@@ -16,8 +16,8 @@
 <cfelseif url.Proc EQ "ListForms">
     <!---ListForms - --->   
     <cfcontent type="application/json" reset="yes">
-    <cfquery name="list" datasource="ITForms">
-      SELECT ID, Descrip FROM Forms WHERE Type = 'FORM'
+    <cfquery name="list" datasource="ITFormsTest">
+      SELECT ID, Descrip FROM Forms WHERE Type = 'FORM' AND Deleted IS NULL
     </cfquery>
     <cfset loopctr = 1>
     [

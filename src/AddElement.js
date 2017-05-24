@@ -22,13 +22,13 @@ export default class AddElement extends React.Component {
   setUpClosedList(){
     if(this.props.typeToAdd===">>"){
       this.setState({
-        listToAdd: ["INPUT","DATE","SELECT","RADIO","MESSAGE"],
+        listToAdd: ["INPUT","DATE","SELECT","RADIO","CHECKBOX","MESSAGE"],
         showClosedList: true
       });   
     }   
     if(this.props.typeToAdd===">>>"){
       this.setState({
-        listToAdd: ["NODE","INPUT","DATE","SELECT","RADIO","MESSAGE"],
+        listToAdd: ["NODE","INPUT","DATE","SELECT","RADIO","CHECKBOX","MESSAGE"],
         showClosedList: true
       });   
     } 
@@ -73,11 +73,11 @@ export default class AddElement extends React.Component {
 
     axios.get(LibPath + 'DBUpdate.cfm', {
       params: {
-        Proc: this.props.procToCall,
+        Proc: this.props.procToCall,   // AddChild or AddSister
         FormID: this.props.parNodeID,
         Type: this.props.typeToAdd,
         Descrip: this.state.promptBoxText,
-        //cachebuster: Math.random()
+        cachebuster: Math.random()
       }
     })
     .then(res => {   //debugger;

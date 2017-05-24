@@ -3,14 +3,18 @@ import axios from 'axios'; //ajax library
 import { LibPath } from './LibPath';
 
 export default class TogglePublish extends React.Component { 
+  constructor(props) { 
+    super(props); 
+	this.handleOnChange = this.handleOnChange.bind(this);
+  }
  
-  onChange=()=>{
+  handleOnChange=(event)=>{
     event && event.preventDefault();    
     axios.get(LibPath + 'DBUpdate.cfm', {
       params: {
         Proc: "PublishForm",
         FormID: this.props.FormID,
-        //cachebuster: Math.random()
+        cachebuster: Math.random()
       }
     })
     .then(() => {  
@@ -26,8 +30,8 @@ export default class TogglePublish extends React.Component {
 
   render()  {
     return (
-        <div className="pubclass">
-          <input type="checkbox" onChange={() => this.onChange()} checked={this.props.published} /> 
+        <div className="pubclass" onClick={this.handleOnChange}>
+          <input type="checkbox" onChange={this.handleOnChange} checked={this.props.published} /> 
           {this.props.published ? " Published " : "Unpublished"}
         </div>
     )

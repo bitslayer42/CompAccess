@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios'; //ajax library
 import { LibPath, HomePath } from './LibPath';
-import { browserHistory } from 'react-router';
+import { Redirect } from 'react-router-dom'
 import moment from 'moment'; //date library
 
 export default class Search extends React.Component {
@@ -11,6 +11,7 @@ export default class Search extends React.Component {
 
     this.state = {
       searchString: "",
+	  clickedQue: null,
       returnData: null
     };
     this.getFromServer = this.getFromServer.bind(this);
@@ -23,7 +24,7 @@ export default class Search extends React.Component {
     axios.get(LibPath + 'SearchJSON.cfm', {
       params: {
         searchString: searchString,
-        //cachebuster: Math.random()
+        cachebuster: Math.random()
       }
     })  
     .then(res => {
@@ -80,31 +81,38 @@ export default class Search extends React.Component {
   }
   
   handleFormRowClick(ReqID){
-    browserHistory.push(`${HomePath}ADMIN/0/${ReqID}`); 
+      this.setState({
+        clickedQue: ReqID
+      }); 	   
   }
   
   render()  {
-    const self = this; //so nested funcs can see the parent object
-      
-    return (
-      <div >
-        <input value={this.state.searchString} onChange={this.handleOnChange} placeholder="search" />
-        <table><tbody>
-        {this.state.returnData  
-         ? this.state.returnData.requests[0] 
-          ? this.state.returnData.requests.map(function(req){
-              return (
-                <tr key={req.RequestID}  className="reqsrow" onClick={() => self.handleFormRowClick(req.RequestID)}>
-                  {self.unpackXML(req.headerXML,req.EditedXML)}
-                </tr>
-              )
-            })
-          : <tr ><td>No matching records.</td></tr>
-         : null
-        }
-        </tbody></table>
-      </div>
-    );
+    const self = this; //so nested funcs can see the parent object   
+	if(this.state.clickedQue){
+		return(
+			<Redirect push to={`${HomePath}ADMIN/0/${this.state.clickedQue}`} />
+		)
+	}else{      
+		return (
+		  <div >
+			<input value={this.state.searchString} onChange={this.handleOnChange} placeholder="search" />
+			<table><tbody>
+			{this.state.returnData  
+			 ? this.state.returnData.requests[0] 
+			  ? this.state.returnData.requests.map(function(req){
+				  return (
+					<tr key={req.RequestID}  className="reqsrow" onClick={() => self.handleFormRowClick(req.RequestID)}>
+					  {self.unpackXML(req.headerXML,req.EditedXML)}
+					</tr>
+				  )
+				})
+			  : <tr ><td>No matching records.</td></tr>
+			 : null
+			}
+			</tbody></table>
+		  </div>
+		);
+	}
   }
 }
 

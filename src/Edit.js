@@ -4,13 +4,14 @@ import { LibPath } from './LibPath';
 import DeleteElement from './DeleteElement';
 import './css/checkbox.css';
 
-//There are three views that edit the forms: 
+//There are four views that edit the forms: 
 //    /EDIT/:formid       Add and remove form elements
 //    /HEADER/:formid     Set form elements as header records to appear in Unresolved Queue
 //    /REQUIRED/:formid   Set form elements as Requred
+//    /REQRESP/:formid    Set form elements as Requred Response (element required to complete)
 export default class Edit extends React.Component {
-
-  render()  {
+  //Edit renders the little checkboxes in various edit modes
+  render()  { 
     return (
     <span className="linkmouseover">
     {
@@ -20,6 +21,8 @@ export default class Edit extends React.Component {
       ? <ToggleHeader curr={this.props.curr} handleRedraw={this.props.handleRedraw}  />
       :this.props.view === "REQUIRED"
       ? <ToggleRequired curr={this.props.curr} handleRedraw={this.props.handleRedraw}  />
+      :this.props.view === "REQRESP"
+      ? <ToggleReqResp curr={this.props.curr} handleRedraw={this.props.handleRedraw}  />
       : null
 
     }
@@ -27,11 +30,11 @@ export default class Edit extends React.Component {
     )
   }
 };
-Edit.propTypes = {
-    curr: React.PropTypes.object,
-    view: React.PropTypes.string,
-    handleRedraw: React.PropTypes.func
-};
+// Edit.propTypes = {
+    // curr: React.PropTypes.object,
+    // view: React.PropTypes.string,
+    // handleRedraw: React.PropTypes.func
+// };
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 class ToggleHeader extends React.Component {
@@ -51,7 +54,7 @@ class ToggleHeader extends React.Component {
       params: {
         Proc: "ToggleHeaderRecord",
         FormID: this.props.curr.FormID,
-        //cachebuster: Math.random()
+        cachebuster: Math.random()
       }
     })
     .then(() => {  
@@ -64,7 +67,8 @@ class ToggleHeader extends React.Component {
   }  
 
   render()  {   
-    if(this.props.curr.Type === "INPUT"||this.props.curr.Type === "RADIO"||this.props.curr.Type === "SELECT"||this.props.curr.Type === "DATE"){
+    if(this.props.curr.Type === "INPUT"||this.props.curr.Type === "RADIO"||this.props.curr.Type === "SELECT"
+		||this.props.curr.Type === "DATE"||this.props.curr.Type === "CHECKBOX"){
       return (
       <span className="addelement">
         <input type="checkbox" id={this.props.curr.FormID} className="css-checkbox" checked={this.state.value} onChange={this.onChange} />
@@ -75,10 +79,10 @@ class ToggleHeader extends React.Component {
   }
 };
 
-ToggleHeader.propTypes = {
-    curr: React.PropTypes.object,
-    handleRedraw: React.PropTypes.func
-};
+// ToggleHeader.propTypes = {
+    // curr: React.PropTypes.object,
+    // handleRedraw: React.PropTypes.func
+// };
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////
@@ -99,7 +103,7 @@ class ToggleRequired extends React.Component {
       params: {
         Proc: "ToggleRequired",
         FormID: this.props.curr.FormID,
-        //cachebuster: Math.random()
+        cachebuster: Math.random()
       }
     })
     .then(() => {  
@@ -112,7 +116,8 @@ class ToggleRequired extends React.Component {
   }  
 
   render()  {   
-    if(this.props.curr.Type === "INPUT"||this.props.curr.Type === "RADIO"||this.props.curr.Type === "SELECT"||this.props.curr.Type === "DATE"){
+    if(this.props.curr.Type === "INPUT"||this.props.curr.Type === "RADIO"||this.props.curr.Type === "SELECT"
+		||this.props.curr.Type === "DATE"){
       return (
       <span className="addelement">
         <input type="checkbox" id={this.props.curr.FormID} className="css-checkbox" checked={this.state.value} onChange={this.onChange} />
@@ -123,9 +128,57 @@ class ToggleRequired extends React.Component {
   }
 };
 
-ToggleRequired.propTypes = {
-    curr: React.PropTypes.object,
-    handleRedraw: React.PropTypes.func
+// ToggleRequired.propTypes = {
+    // curr: React.PropTypes.object,
+    // handleRedraw: React.PropTypes.func
+// };
+ 
+////////////////////////////////////////////////////////////////////////////////////////////
+class ToggleReqResp extends React.Component {
+ constructor(props) { 
+    super(props);
+    this.state = {
+      value: this.props.curr.ReqResp
+    };
+
+    this.onChange = this.onChange.bind(this);
+  }
+  
+  onChange=(event)=>{ 
+    event && event.preventDefault();   
+    this.setState({value: !this.state.value});    
+    axios.get(LibPath + 'DBUpdate.cfm', {
+      params: {
+        Proc: "ToggleReqResp",
+        FormID: this.props.curr.FormID,
+        cachebuster: Math.random()
+      }
+    })
+    .then(() => {  
+      
+      this.props.handleRedraw();
+    })
+    .catch(err => {
+      console.log(err);
+    });
+  }  
+
+  render()  {   
+    if(this.props.curr.Type === "INPUT"||this.props.curr.Type === "RADIO"||this.props.curr.Type === "SELECT"
+		||this.props.curr.Type === "DATE"||this.props.curr.Type === "CHECKBOX"){
+      return (
+      <span className="addelement">
+        <input type="checkbox" id={this.props.curr.FormID} className="css-checkbox" checked={this.state.value} onChange={this.onChange} />
+        <label htmlFor={this.props.curr.FormID} className="css-label  respckbox" />
+      </span>
+      )
+    }else return null
+  }
 };
+
+// ToggleReqResp.propTypes = {
+    // curr: React.PropTypes.object,
+    // handleRedraw: React.PropTypes.func
+// };
  
 

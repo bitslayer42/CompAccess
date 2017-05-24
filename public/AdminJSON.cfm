@@ -1,10 +1,11 @@
 <cfcontent type="application/json" reset="yes">
 
-<cfstoredproc procedure="AdminScreen" datasource="ITForms">
+<cfstoredproc procedure="AdminScreen" datasource="ITFormsTest">
   <cfprocresult resultset="1" name="requests">
   <cfprocresult resultset="2" name="forms">
   <cfprocresult resultset="3" name="root">
-  <cfprocresult resultset="4" name="admins">
+  <cfprocresult resultset="4" name="specials">
+  <cfprocresult resultset="5" name="admins">
 </cfstoredproc>
 
 <cfset loopctr = 1>
@@ -22,6 +23,7 @@
   <cfset loopctr = loopctr + 1>
   </cfoutput>
   ],
+  
   <cfset loopctr = 1>
   "forms": [ 
   <cfoutput query="forms">
@@ -32,8 +34,22 @@
   <cfif loopctr NEQ forms.RecordCount>,</cfif>
   <cfset loopctr = loopctr + 1>
   </cfoutput>
-  ], 
+  ],
+  
   "root": <cfoutput>#root.FormID#,</cfoutput>
+  
+  <cfset loopctr = 1>
+  "specials": [ 
+  <cfoutput query="specials">
+  { "ID": #ID#
+  , "Action": "#Action#"
+  , "Description": "#Description#"
+  }
+  <cfif loopctr NEQ specials.RecordCount>,</cfif>
+  <cfset loopctr = loopctr + 1>
+  </cfoutput>
+  ],
+
   <cfset loopctr = 1>
   "admins": [ 
   <cfoutput query="admins">

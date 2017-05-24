@@ -10,6 +10,7 @@ input[type=checkbox].css-checkbox {
     border:0;
 }
 
+.respckbox{background-image:url(../images/checkbox.png);background-color:#B3AFA1;border-radius:4px}
 .reqckbox{background-image:url(../images/req.png);}
 .queckbox{background-image:url(../images/que.png);}
 
@@ -22,7 +23,7 @@ input[type=checkbox].css-checkbox + label.css-label {
   user-select: none;
   text-decoration:underline;
   font-size:0.8em;
-	padding-left:22px;
+  padding-left:20px;
   height:18px; 
 	display:inline-block;
 	line-height:20px;

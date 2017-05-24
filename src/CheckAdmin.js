@@ -1,5 +1,5 @@
 import React from 'react';
-import { browserHistory } from 'react-router'
+//import { Redirect } from 'react-router-dom'
 import axios from 'axios'; //ajax library
 import { LibPath } from './LibPath';
 import Supv from './Supv';
@@ -18,18 +18,24 @@ export default class CheckAdmin extends React.Component {
   }
 
   componentDidMount() {
+	const self = this;
     axios.get(LibPath + 'DBGet.cfm', {
       params: {
         Proc: "IsAdminOrSupv",
-        //cachebuster: Math.random()
+        cachebuster: Math.random()
       }
     })
-    .then(res => {
+    .then(res => {  
+		const match =  self.props.match;
       const userType = res.data[0]; 
-      if(this.props.location.query.reqid && userType==="ADMIN"){
+      if(match.reqid && userType==="ADMIN"){
         //To call from email when user might not be logged in, hash (#) not passed to server, use query (?)
         // call: https://ccp1.msj.org/login/login/CompAccess/index.cfm?reqid=33
-        browserHistory.push(`${HomePath}ADMIN/0/${this.props.location.query.reqid}`); 
+		//{`${HomePath}ADMIN/0/${match.reqid}`}
+		
+		
+        self.props.history.push(`${HomePath}ADMIN/0/${match.reqid}`);
+		
       }else{
         this.setState({
           userType,

@@ -4,12 +4,12 @@ import { LibPath } from './LibPath';
 import Element from './Element';
 
 export default class GetForm extends React.Component {
-  constructor(props) { //console.log("getform constructor props",props.params.view); 
+  constructor(props) { //console.log("getform constructor props",props.match.params.view); 
     super(props);
     this.state = {
-      view: props.params.view, //params comes from router :view . Can be "SUPV", "ADMIN", "EDIT", "HEADER", "REQUIRED"
-      formID: props.params.formID,
-      reqID: props.params.reqID,
+      view: props.match.params.view, //params comes from router :view . Can be "SUPV", "ADMIN", "EDIT", "HEADER", "REQUIRED", "REQRESP"
+      formID: props.match.params.formID,
+      reqID: props.match.params.reqID,
       nodes: [], //the tree 'flat'
       header: {},
       loading: true,
@@ -25,7 +25,7 @@ export default class GetForm extends React.Component {
   componentWillReceiveProps(nextProps) {
     if(this.props!==nextProps){
       this.setState({
-        view: nextProps.params.view
+        view: nextProps.match.params.view
       })
     }
   }
@@ -34,7 +34,8 @@ export default class GetForm extends React.Component {
       params: {
         FormID: this.state.formID,
         reqID: this.state.reqID,
-        //cachebuster: Math.random()
+		view: this.state.view,
+        cachebuster: Math.random()
       }
     })
     .then(res => {
@@ -48,7 +49,7 @@ export default class GetForm extends React.Component {
       header.EnteredDate = res.data.EnteredDate;
       
       this.setState({ 
-        view: this.props.params.view,
+        view: this.props.match.params.view,
         nodes,
         header,
         loading: false,
@@ -63,7 +64,7 @@ export default class GetForm extends React.Component {
     }); 
   }
 
-  handleRedraw() { //debugger; 
+  handleRedraw() {  
   // CallBack after adding or deleting node, or toggling header/required fields. 
   // Element is already changed in db, now repull tree. 
     this.getFromServer();
@@ -81,7 +82,7 @@ export default class GetForm extends React.Component {
     );
   }
   
-  makeTree() {     
+  makeTree() { 
     const nodes = JSON.parse(JSON.stringify(this.state.nodes));
     const rootID = nodes[0].FormID;
     const amap = {};

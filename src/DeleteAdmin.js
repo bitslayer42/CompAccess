@@ -8,13 +8,13 @@ export default class DeleteAdmin extends React.Component {
  
   onClick=(event)=>{
     event && event.preventDefault();    
-    const r = confirm("Are you sure you want to delete?");
-    if(r){
+    //const r = confirm("Are you sure you want to delete?");
+    //if(r){
       axios.get(LibPath + 'Administrator.cfm', {
         params: {
           Proc: "DelAdmin",
           AdminID: this.props.AdminID,
-          //cachebuster: Math.random()
+          cachebuster: Math.random()
         }
       })
       .then(() => {  
@@ -23,7 +23,7 @@ export default class DeleteAdmin extends React.Component {
       .catch(err => {
         console.log(err);
       });
-    }
+    //}
   }  
 
   render()  {  

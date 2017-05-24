@@ -1,9 +1,9 @@
 import React from 'react';
 import axios from 'axios'; //ajax library
-import { LibPath } from './LibPath';
-import Autosuggest from 'react-autosuggest';
+import { LibPath, HomePath } from './LibPath';
+import { Link } from 'react-router-dom'
+import Autosuggest from 'react-autosuggest'; //https://github.com/moroshko/react-autosuggest
 import './css/StaffList.css';
-//https://github.com/moroshko/react-autosuggest
 
 export default class StaffList extends React.Component {
   constructor() {
@@ -33,9 +33,10 @@ export default class StaffList extends React.Component {
     });
   };
 
-  //Pass selected employee back up
+  //Employee is selected, go to ShowAdministrator
   onSuggestionSelected=(event, { suggestion, suggestionValue, suggestionIndex, sectionIndex, method })=>{
-    this.props.handleAdminID(suggestion);
+	this.props.history.push(`${HomePath}useradmin/${suggestion.BadgeNum}`);
+    //this.props.handleAdminID(suggestion);
   }
  
   ///////////////////////////////////////////////////////////////////////
@@ -49,7 +50,7 @@ export default class StaffList extends React.Component {
         params: {
           Proc: "GetStaffList",
           SearchString: value,
-          //cachebuster: Math.random()
+          cachebuster: Math.random()
         }
       })
       .then(res => {
@@ -86,15 +87,23 @@ export default class StaffList extends React.Component {
 
     return (
       <div className="outerdiv">
-        <h3> Add New Administrator </h3>
-          <Autosuggest 
-            suggestions={suggestions}
-            onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
-            onSuggestionsClearRequested={this.onSuggestionsClearRequested}
-            onSuggestionSelected={this.onSuggestionSelected}
-            getSuggestionValue={this.getSuggestionValue}
-            renderSuggestion={this.renderSuggestion}
-            inputProps={inputProps} />
+        <Link to={HomePath}>&larr; Return to Admin menu</Link>
+        <div className="formclass">
+          <h1> Computer Access Forms </h1>
+          <div className="sectionclass" >	
+			  <div className="outerdiv">
+				<h3> Add New Administrator </h3>
+				  <Autosuggest 
+					suggestions={suggestions}
+					onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
+					onSuggestionsClearRequested={this.onSuggestionsClearRequested}
+					onSuggestionSelected={this.onSuggestionSelected}
+					getSuggestionValue={this.getSuggestionValue}
+					renderSuggestion={this.renderSuggestion}
+					inputProps={inputProps} />
+			  </div>
+          </div>
+        </div>
       </div>
     );
   }
