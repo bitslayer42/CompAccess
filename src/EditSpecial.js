@@ -6,8 +6,12 @@ import { LibPath } from './LibPath';
 import './css/special.css';
 import AddCriteria from './AddCriteria';
 import AddHiddenFields from './AddHiddenFields';
-import AddSpecialEMail from './AddSpecialEMail'; 
+import AddSpecialEmail from './AddSpecialEmail';
+import AddSpecialEmailFields from './AddSpecialEmailFields';  
 import DeleteCriteria from './DeleteCriteria';
+import DeleteHiddenFields from './DeleteHiddenFields';
+import DeleteEmail from './DeleteEmail';
+import DeleteEmailFields from './DeleteEmailFields'; 
 
 export default class Special extends React.Component {
   constructor(props) { 
@@ -55,7 +59,8 @@ export default class Special extends React.Component {
     const data = this.state.SpecialData;
 	const action = (data.special.Action==="HIDERESPONSE" ? "Hidden Fields"  : 
 					data.special.Action==="SENDEMAIL"    ? "Special Emails" : "");	
-	const listCriteria = data.criteria.map(function(criteria,ix){
+
+ 	const listCriteria = data.criteria.map(function(criteria,ix){
 	  return (
 		<div key={ix}>
 			<div className="criteria">
@@ -70,9 +75,40 @@ export default class Special extends React.Component {
 			</div>			
 		</div>
 	  )
+	});		
+	const listHiddenFields = data.hide.map(function(hide,ix){
+	  return (
+		<div key={ix} style={{marginBottom:"5px"}}>
+			<div className="criteria">
+				{hide.Descrip}
+				<DeleteHiddenFields ID={hide.ID} handleRedraw={self.handleRedraw} />
+			</div>			
+		</div>
+	  )
 	});
-		
-    return (    
+	const listEmails = data.email.map(function(email,ix){
+	  return (
+		<div key={ix} style={{marginBottom:"5px"}}>
+			<div className="criteria">
+				{email.Email}
+				<DeleteEmail ID={email.ID} handleRedraw={self.handleRedraw} />
+			</div>			
+		</div>
+	  )
+	});
+	const listEmailFields = data.emailfields.map(function(emailfields,ix){
+	  return (
+		<div key={ix} style={{marginBottom:"5px"}}>
+			<div className="criteria">
+				{emailfields.Descrip}
+				<DeleteEmailFields ID={emailfields.ID} handleRedraw={self.handleRedraw} />
+			</div>			
+		</div>
+	  ) 
+	});
+ 
+
+ return (    
     <div>
 		<h3><i>{action}: </i> {data.special.Description}</h3>
 		<div className="sectionclass"  style={{textAlign:"center"}}>
@@ -82,16 +118,20 @@ export default class Special extends React.Component {
 		</div>
 		{action==="Hidden Fields" &&
 		<div className="sectionclass"  style={{textAlign:"center"}}>
-			<h3>Hidden Fields</h3>
-			
+			<h3>If Criteria is True Hide These Fields</h3>
+			{listHiddenFields}
 			<AddHiddenFields SpecialID={this.state.SpecialID} fieldList={data.fieldlist} handleRedraw={this.handleRedraw} />
 		</div>
 		}
 		{action==="Special Emails" &&
 		<div className="sectionclass"  style={{textAlign:"center"}}>
-			<h3>Special Emails</h3>
-			
-			<AddSpecialEMail SpecialID={this.state.SpecialID} fieldList={data.fieldlist} handleRedraw={this.handleRedraw} />
+			<h3>Send Special Emails To:</h3>
+			{listEmails}
+			<AddSpecialEmail SpecialID={this.state.SpecialID} handleRedraw={this.handleRedraw} />
+
+			<h3>Fields to Display in Special Email</h3>
+			{listEmailFields}
+			<AddSpecialEmailFields SpecialID={this.state.SpecialID} fieldList={data.fieldlist} handleRedraw={this.handleRedraw} />
 		</div>
 		}
 	</div>

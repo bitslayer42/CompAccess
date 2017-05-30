@@ -18,7 +18,7 @@ export default class AddHiddenFields extends React.Component {
 		this.setState({value: 0});
 		axios.get(LibPath + 'Special.cfm', {
 		  params: {
-			Proc: "AddSpecialHiddenFields",
+			Proc: "AddSpecialEmailFields",
 			SpecialID:     this.state.SpecialID,
 			Field:   event.target.value,
 			cachebuster: Math.random()
@@ -36,7 +36,7 @@ export default class AddHiddenFields extends React.Component {
 		return (
 			<div className="flx">
 				<select onChange={this.handleSelectField} value={this.state.value}>
-				  <option key={0} value="0">(Add Hidden Field)</option>
+				  <option key={0} value="0">(Add Field)</option>
 				  {this.state.fieldList.map((field) => { 
 					return( 
 					  <option key={field.ID} value={field.ID}>{field.Descrip}</option>
