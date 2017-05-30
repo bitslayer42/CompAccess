@@ -1,5 +1,5 @@
 
-<cfstoredproc procedure="GetRequest" datasource="ITFormsTest">
+<cfstoredproc procedure="GetRequest" datasource="ITForms">
   <cfprocparam cfsqltype="cf_sql_varchar" value="#url.reqID#">
   <cfprocresult name="req">
 </cfstoredproc>  

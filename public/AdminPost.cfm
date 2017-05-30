@@ -11,7 +11,7 @@
 <cfset LoggedInID = form.LoggedInID>
 <cfset LoggedInName = form.LoggedInName>
 
-<cfstoredproc procedure="UpsertRequest" datasource="ITFormsTest">
+<cfstoredproc procedure="UpsertRequest" datasource="ITForms">
   <cfprocparam cfsqltype="cf_sql_varchar" value="#LoggedInID#">
   <cfprocparam cfsqltype="cf_sql_varchar" value="#LoggedInName#">
   <cfprocparam cfsqltype="cf_sql_varchar" value="#ItemStr#">
@@ -21,18 +21,18 @@
 
 <cfif ret.Completed EQ 1> <!--- form complete: send emails --->
   <cfset theReqID = ret.RequestID>
-  <cfstoredproc procedure="GetEmailsForRequest" datasource="ITFormsTest">
+  <cfstoredproc procedure="GetEmailsForRequest" datasource="ITForms">
     <cfprocparam cfsqltype="cf_sql_integer" value="#theReqID#">
     <cfprocresult name="emails">
   </cfstoredproc>
-  <cfstoredproc procedure="getForm" datasource="ITFormsTest">
+  <cfstoredproc procedure="getForm" datasource="ITForms">
     <cfprocparam cfsqltype="cf_sql_integer" value="0">
     <cfprocparam cfsqltype="cf_sql_integer" value="#theReqID#">
 	<cfprocparam cfsqltype="cf_sql_varchar" null=yes>	
     <cfprocresult resultset="1" name="header">
     <cfprocresult resultset="2" name="detail">
   </cfstoredproc>
-  <cfstoredproc procedure="GetEmailForSupv" datasource="ITFormsTest">
+  <cfstoredproc procedure="GetEmailForSupv" datasource="ITForms">
     <cfprocparam cfsqltype="cf_sql_varchar" value="#header.SupvID#">
     <cfprocresult name="emails">
   </cfstoredproc>  
@@ -99,7 +99,7 @@
 
   <!--- send Special emails --->
   <!--- "SpecialCheck" marks hidden fields AND returns special emails --->
-  <cfstoredproc procedure="SpecialCheck" datasource="ITFormsTest">
+  <cfstoredproc procedure="SpecialCheck" datasource="ITForms">
   <cfprocparam cfsqltype="cf_sql_integer" value="#theReqID#">
   <cfprocresult resultset="1" name="specialemails">
   <cfprocresult resultset="2" name="debugsql">

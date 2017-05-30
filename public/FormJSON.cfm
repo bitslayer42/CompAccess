@@ -1,6 +1,6 @@
 <cfcontent type="application/json" reset="yes">
 
-<cfstoredproc procedure="GetForm" datasource="ITFormsTest">
+<cfstoredproc procedure="GetForm" datasource="ITForms">
   <cfprocparam cfsqltype="cf_sql_integer" value="#url.FormID#">
   <cfif IsDefined("url.reqID")>
     <cfprocparam cfsqltype="cf_sql_integer" value="#url.reqID#">

@@ -26,7 +26,7 @@ ReactDOM.render(
       <Route path={`${HomePath}useradmin/:AdminID`} component={ShowAdministrator} />   
 
 	  <Route exact path={`${HomePath}special`} component={AddSpecial} /> 
-      <Route path={`${HomePath}special/:AdminID`} component={EditSpecial} /> 
+      <Route path={`${HomePath}special/:SpecialID`} component={EditSpecial} /> 
 
 	  <Route exact path={`${HomePath}:view/:formID`} component={GetForm} /> 
       <Route path={`${HomePath}:view/:formID/:reqID`} component={GetForm} /> 

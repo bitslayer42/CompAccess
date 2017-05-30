@@ -7,12 +7,12 @@
 --->
 <cfif url.Proc EQ "DelSpecial">
   <!---DelSpecial - --->
-  <cfstoredproc procedure="DelSpecial" datasource="ITFormsTest">
+  <cfstoredproc procedure="DelSpecial" datasource="ITForms">
     <cfprocparam cfsqltype="cf_sql_integer" value="#url.SpecialID#">   
   </cfstoredproc>
 <cfelseif url.Proc EQ "AddSpecial">
   <!---AddSpecial - --->
-  <cfstoredproc procedure="AddSpecial" datasource="ITFormsTest">
+  <cfstoredproc procedure="AddSpecial" datasource="ITForms">
     <cfprocparam cfsqltype="cf_sql_varchar" value="#url.Action#">
     <cfprocparam cfsqltype="cf_sql_varchar" value="#url.Description#">
     <cfprocresult name="ret">    

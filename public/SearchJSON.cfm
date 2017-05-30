@@ -1,6 +1,6 @@
 <cfcontent type="application/json" reset="yes">
 
-<cfstoredproc procedure="SearchXML" datasource="ITFormsTest">
+<cfstoredproc procedure="SearchXML" datasource="ITForms">
   <cfprocparam cfsqltype="cf_sql_varchar" value="#url.searchString#">
   <cfprocresult name="results">
 </cfstoredproc>

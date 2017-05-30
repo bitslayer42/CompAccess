@@ -6,7 +6,7 @@
 </cfif>
 <cfif url.Proc EQ "AddSister">
   <!---AddSister - Inserts new node (url,section,field,etc) to right of (after) given--->
-	<cfstoredproc procedure="AddSister" datasource="ITFormsTest">
+	<cfstoredproc procedure="AddSister" datasource="ITForms">
     <cfprocparam cfsqltype="cf_sql_integer" value="#url.FormID#">
     <cfprocparam cfsqltype="cf_sql_varchar" value="#url.Type#">
     <cfprocparam cfsqltype="cf_sql_varchar" value='#quotedDescrip#'>
@@ -18,7 +18,7 @@
   </cfoutput>
 <cfelseif url.Proc EQ "AddChild">
   <!---AddChild - Inserts new node (url,section,field,etc) as first child of given--->
-	<cfstoredproc procedure="AddChild" datasource="ITFormsTest">
+	<cfstoredproc procedure="AddChild" datasource="ITForms">
     <cfprocparam cfsqltype="cf_sql_integer" value="#url.FormID#">
     <cfprocparam cfsqltype="cf_sql_varchar" value="#url.Type#">
     <cfprocparam cfsqltype="cf_sql_varchar" value='#quotedDescrip#'>
@@ -30,27 +30,27 @@
   </cfoutput>
 <cfelseif url.Proc EQ "DelNode">
   <!---DelNode - Mark as Deleted Node and all it's children --->
-	<cfstoredproc procedure="DelNode" datasource="ITFormsTest">
+	<cfstoredproc procedure="DelNode" datasource="ITForms">
     <cfprocparam cfsqltype="cf_sql_integer" value="#url.FormID#">
   </cfstoredproc>
 <cfelseif url.Proc EQ "PublishForm">
   <!---Publishurl - Toggles url from Type url to UNPUB--->
-	<cfstoredproc procedure="PublishForm" datasource="ITFormsTest">
+	<cfstoredproc procedure="PublishForm" datasource="ITForms">
     <cfprocparam cfsqltype="cf_sql_integer" value="#url.FormID#">
   </cfstoredproc>  
 <cfelseif url.Proc EQ "ToggleHeaderRecord">
   <!--- Toggles HeaderRecord field true/false--->
-	<cfstoredproc procedure="ToggleHeaderRecord" datasource="ITFormsTest">
+	<cfstoredproc procedure="ToggleHeaderRecord" datasource="ITForms">
     <cfprocparam cfsqltype="cf_sql_integer" value="#url.FormID#">
   </cfstoredproc> 
 <cfelseif url.Proc EQ "ToggleRequired">
   <!--- Toggles Required field true/false--->
-	<cfstoredproc procedure="ToggleRequired" datasource="ITFormsTest">
+	<cfstoredproc procedure="ToggleRequired" datasource="ITForms">
     <cfprocparam cfsqltype="cf_sql_integer" value="#url.FormID#">
   </cfstoredproc>
 <cfelseif url.Proc EQ "ToggleReqResp">
   <!--- Toggles ReqResp field true/false--->
-	<cfstoredproc procedure="ToggleReqResp" datasource="ITFormsTest">
+	<cfstoredproc procedure="ToggleReqResp" datasource="ITForms">
     <cfprocparam cfsqltype="cf_sql_integer" value="#url.FormID#">
   </cfstoredproc>
 </cfif>

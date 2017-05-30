@@ -1,19 +1,19 @@
 <!---This is called using ajax for updating database while in Administrators screen--->
 <cfif url.Proc EQ "DelAdmin">
   <!---DelAdmin --->
-	<cfstoredproc procedure="DelAdmin" datasource="ITFormsTest">
+	<cfstoredproc procedure="DelAdmin" datasource="ITForms">
     <cfprocparam cfsqltype="cf_sql_varchar" value="#url.AdminID#">
   </cfstoredproc>
 <cfelseif url.Proc EQ "ToggleEmail">
   <!---ToggleEmail --->
-	<cfstoredproc procedure="ToggleEmail" datasource="ITFormsTest">
+	<cfstoredproc procedure="ToggleEmail" datasource="ITForms">
     <cfprocparam cfsqltype="cf_sql_varchar" value="#url.AdminID#">
     <cfprocparam cfsqltype="cf_sql_integer" value="#url.NodeID#">
   </cfstoredproc>
 <cfelseif url.Proc EQ "GetAdmin">
   <!---GetAdmin --->
   <cfcontent type="application/json" reset="yes">
-  <cfstoredproc procedure="GetAdmin" datasource="ITFormsTest">
+  <cfstoredproc procedure="GetAdmin" datasource="ITForms">
     <cfprocparam cfsqltype="cf_sql_varchar" value="#url.AdminID#">
     <cfprocresult resultset="1" name="header">
     <cfprocresult resultset="2" name="subscrips">    
@@ -43,7 +43,7 @@
 <cfelseif url.Proc EQ "GetStaffList">
   <!---GetStaffList --->
   <cfcontent type="application/json" reset="yes">
-  <cfstoredproc procedure="GetStaffList" datasource="ITFormsTest">
+  <cfstoredproc procedure="GetStaffList" datasource="ITForms">
     <cfprocparam cfsqltype="cf_sql_varchar" value="#url.SearchString#">
     <cfprocresult name="results">
   </cfstoredproc>

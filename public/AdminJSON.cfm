@@ -1,6 +1,6 @@
 <cfcontent type="application/json" reset="yes">
 
-<cfstoredproc procedure="AdminScreen" datasource="ITFormsTest">
+<cfstoredproc procedure="AdminScreen" datasource="ITForms">
   <cfprocresult resultset="1" name="requests">
   <cfprocresult resultset="2" name="forms">
   <cfprocresult resultset="3" name="root">

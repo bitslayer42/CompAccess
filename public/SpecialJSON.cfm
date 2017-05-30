@@ -1,6 +1,6 @@
 <cfcontent type="application/json" reset="yes">
 
-<cfstoredproc procedure="GetSpecial" datasource="ITFormsTest">
+<cfstoredproc procedure="GetSpecial" datasource="ITForms">
   <cfprocparam cfsqltype="cf_sql_integer" value="#url.SpecialID#">
   <cfprocresult resultset="1" name="special">
   <cfprocresult resultset="2" name="criteria">

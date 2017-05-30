@@ -1,5 +1,20 @@
 .flx {
-		display: flex;
- 	justify-content: center; 
+	border:1px solid grey;
+	display: flex;
+ 	justify-content: space-around; 
 	align-items: center;
+	padding: 5px;
+}
+div.flx div {
+	padding: 5px;
+}
+h2 {
+	line-height: 2;
+}
+.criteria {
+	border:1px solid grey;
+	padding: 5px;
+}
+.criteria i{
+	color:orange;
 }
