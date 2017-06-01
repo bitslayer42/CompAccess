@@ -1,11 +1,11 @@
 import React from 'react';
 import AddElement from './AddElement';
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+import { CSSTransitionGroup } from 'react-transition-group';
 
 export default class AddElements extends React.Component {  
   render() { 
     return (
-      <ReactCSSTransitionGroup
+      <CSSTransitionGroup
         transitionName="AddElements"
         transitionEnterTimeout={500}
         transitionLeaveTimeout={500}>
@@ -48,7 +48,7 @@ export default class AddElements extends React.Component {
               }   
             </div>
       }
-      </ReactCSSTransitionGroup> 
+      </CSSTransitionGroup> 
     )    
   }
 }

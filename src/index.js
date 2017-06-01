@@ -1,3 +1,4 @@
+import "babel-polyfill";  //this has to be the first line. I needed it to use Array.prototype.find in IE11
 import React from 'react';
 import {
   BrowserRouter as Router,

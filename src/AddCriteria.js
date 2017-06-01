@@ -21,7 +21,7 @@ export default class AddCriteria extends React.Component {
 		this.handleSelectOption = this.handleSelectOption.bind(this);	
 	} 
 	
-	handleSelectField=(event)=>{
+	handleSelectField=(event)=>{ 
 	  const selEl = this.state.fieldList.find(
 		function(el){return el.ID.toString()===event.target.value;}
 	  );

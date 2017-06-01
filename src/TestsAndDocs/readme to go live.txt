@@ -1,8 +1,8 @@
 To go live:
 
 Toggle the path variable in LibPath.js
-Copy all the cfm files in \\ccp1.msj.org\wwwroot\CompAccess to local \public folder (don't delete web.config or *.png)
-Change  datasource="ITForms"  to  datasource="ITForms"  in all cfm files
+Copy all the cfm files in \\ccp1.msj.org\wwwroot\CompAccess to local \public folder (don't delete other files like web.config, etc.)
+Change  datasource="ITFormsTest"  to  datasource="ITForms"  in all cfm files
 
 Run: npm run build
 

@@ -1,11 +1,7 @@
 import React from 'react';
 import moment from 'moment'; //date library
 import DatePicker  from 'react-datepicker'; //datepicker  library
-import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-//npm WARN deprecated react-addons-css-transition-group@15.5.2: This package is de             
-//precated and will no longer work with React 16+. We recommend you use CSSTransitionGroup 
-//from 'react-transition-group' instead.
-
+import { CSSTransitionGroup } from 'react-transition-group';
 import { LibPath, HomePath } from './LibPath';
 import AddElements from './AddElements';
 import SendHREmail from './SendHREmail';
@@ -111,8 +107,8 @@ function ElementForm(props) {
             <input type="hidden" name="LoggedInID"      defaultValue={props.header.LoggedInID} />    
             <input type="hidden" name="LoggedInName"      defaultValue={props.header.LoggedInName} />    
             <input type="hidden" name="ReqID"   defaultValue={props.header.RequestID} />
-			  {<div style={{color:"black"}} >* Required to Submit</div>}
-			  {<div style={{color:"red"}} >* Required to Complete</div>}
+			  {<div style={{color:"black"}} >&#10033; Required to Submit</div>}
+			  {<div style={{color:"red"}} >&#10033; Required to Complete</div>}
             {props.header.Completed===1
             ? <div>Completed</div>
             : <button className="submit" >Submit</button>
@@ -123,8 +119,8 @@ function ElementForm(props) {
           <div>
           <AddElements view={props.view} type="FORM" curr={props.curr} handleRedraw={props.handleRedraw} /> 
           <Element tree={props.curr.children} view={props.view} handleRedraw={props.handleRedraw} />
-		  {<div style={{color:"black"}} >* Required to Submit</div>}
-		  {<div style={{color:"red"}} >* Required to Complete</div>}
+		  {<div style={{color:"black"}} >&#10033; Required to Submit</div>}
+		  {<div style={{color:"red"}} >&#10033; Required to Complete</div>}
           </div>
         )
         }
@@ -279,8 +275,17 @@ class ElementResponse extends React.Component {
 }
 
 class ElementInput extends React.Component { 
+  constructor(props) { 
+    super(props);
+	this.state = {
+	  isFilled: !(this.props.curr.ItemValue === "")
+	}
+	this.handleChange = this.handleChange.bind(this);	
+  }
+  
   handleChange=(event)=>{ 
-    this.props.handleChangeResponse(this.props.ix,event.target.value !== "");
+	this.setState({ isFilled: event.target.value !== "" });
+    this.props.handleChangeResponse(this.props.ix,this.state.isFilled);
   }
   render() { 
     const curr = this.props.curr;
@@ -288,8 +293,8 @@ class ElementInput extends React.Component {
       <div key={curr.FormID}>
         <div>
           <label>
-          {this.props.view!=="SUPV" && curr.ReqResp ? <span style={{color:"red",fontSize:"2em"}} >*</span> : null}
-          {curr.Required ? <span >*</span> : null}
+          {this.props.view!=="SUPV" && !this.state.isFilled && curr.ReqResp ? <span className="redasterisk">&#10033;</span> : null}
+          {curr.Required ? <span >&#10033;</span> : null}
           {curr.Descrip}:
           <Edit className="delclass" view={this.props.view} curr={curr} handleRedraw={this.props.handleRedraw} />            
           </label>
@@ -309,14 +314,16 @@ class ElementDate extends React.Component {
     super(props);
     const thedate = props.curr.ItemValue?moment(props.curr.ItemValue):null
     this.state = {
-      adate: thedate
+      adate: thedate,
+	  isFilled: !(props.curr.ItemValue === "")
     };
   }
   handleChange=(date)=>{ //debugger;
     this.setState({
-      adate:date
+      adate:date,
+	  isFilled:date !== ""
     });
-    this.props.handleChangeResponse(this.props.ix, date !== null);
+    this.props.handleChangeResponse(this.props.ix, this.state.isFilled);
   }
   render() { 
     const curr = this.props.curr;
@@ -324,8 +331,8 @@ class ElementDate extends React.Component {
         <div key={curr.FormID}>
           <div>
             <label>
-			{this.props.view!=="SUPV" && curr.ReqResp ? <span style={{color:"red",fontSize:"2em"}} >*</span> : null}
-            {curr.Required ? <span >*</span> : null}
+			{this.props.view!=="SUPV"  && !this.state.isFilled && curr.ReqResp ? <span className="redasterisk">&#10033;</span> : null}
+            {curr.Required ? <span >&#10033;</span> : null}
             {curr.Descrip}:
             <Edit className="delclass" view={this.props.view} curr={curr} handleRedraw={this.props.handleRedraw} />            
             </label>
@@ -341,14 +348,16 @@ class ElementDate extends React.Component {
 
 class ElementRadio extends React.Component {    
   constructor(props) { 
-    super(props);                    //
+    super(props);
     this.state = {
-      selectedOption: this.props.curr.ItemValue
+      selectedOption: this.props.curr.ItemValue,
+	  isSelected: this.props.curr.ItemValue !== ""
     };
   }
   handleOptionChange=(changeEvent)=>{
     this.setState({
-      selectedOption: changeEvent.target.value
+      selectedOption: changeEvent.target.value,
+	  isSelected: changeEvent.target.value !== ""
     }); 
     this.props.handleChangeResponse(this.props.ix,changeEvent.target.value !== "");
   }
@@ -361,8 +370,8 @@ class ElementRadio extends React.Component {
         curr.children.map((chld,ix) => { //children of RADIO can be OPTION or SUBFORM
           const firstlabel = ix===0  //Only put the label for the radio on the first line
           ?(<label>
-			{this.props.view!=="SUPV" && curr.ReqResp ? <span style={{color:"red",fontSize:"2em"}} >*</span> : null}
-            {curr.Required ? <span >*</span> : null}
+			{this.props.view!=="SUPV" && !this.state.isSelected && curr.ReqResp ? <span className="redasterisk">&#10033;</span> : null}
+            {curr.Required ? <span >&#10033;</span> : null}
             {curr.Descrip+":"}
             <Edit className="delclass" view={this.props.view} curr={this.props.curr} handleRedraw={this.props.handleRedraw} /> 
             </label>
@@ -388,7 +397,7 @@ class ElementRadio extends React.Component {
 					{/*<div style={{display:"inline-block",width:"280px"}}></div>*/}
                 {chld.Descrip} 
 				
-                  <ReactCSSTransitionGroup
+                  <CSSTransitionGroup
                     transitionName="SubForm"
                     transitionEnterTimeout={300}
                     transitionLeaveTimeout={300}>
@@ -402,7 +411,7 @@ class ElementRadio extends React.Component {
                               )
                             : null
                           }
-                  </ReactCSSTransitionGroup> 
+                  </CSSTransitionGroup> 
                 <AddElements view={this.props.view} type="OPTIONAFTER" curr={chld} handleRedraw={this.props.handleRedraw} /> 
               </div>
               
@@ -434,7 +443,16 @@ class ElementRadio extends React.Component {
 // }; 
 
 class ElementCheckbox extends React.Component { 
+  constructor(props) { 
+    super(props);
+    this.state = {
+	  isSelected: this.props.curr.ItemValue !== ""
+    };
+  }
   handleChange=(event)=>{ 
+    this.setState({
+	  isSelected: event.target.value !== ""
+    });  
     this.props.handleChangeResponse(this.props.ix,event.target.value !== "");
   }
   render() { 
@@ -443,8 +461,8 @@ class ElementCheckbox extends React.Component {
       <div key={curr.FormID}>
         <div>
           <label>
-			{this.props.view!=="SUPV" && curr.ReqResp ? <span style={{color:"red",fontSize:"2em"}} >*</span> : null}
-			{curr.Required ? <span >*</span> : null}		  
+			{this.props.view!=="SUPV" && !this.state.isSelected && curr.ReqResp ? <span className="redasterisk">&#10033;</span> : null}
+			{curr.Required ? <span >&#10033;</span> : null}		  
 			<Edit className="delclass" view={this.props.view} curr={curr} handleRedraw={this.props.handleRedraw} />            
           </label>
           <div style={{display:"inline-block",width:"360px"}}>
@@ -460,7 +478,16 @@ class ElementCheckbox extends React.Component {
 }
 
 class ElementSelect extends React.Component { 
+  constructor(props) { 
+    super(props);
+    this.state = {
+	  isSelected: this.props.curr.ItemValue !== ""
+    };
+  }
   handleOptionChange=(changeEvent)=>{
+    this.setState({
+	  isSelected: changeEvent.target.value !== ""
+    }); 	  
     this.props.handleChangeResponse(this.props.ix,changeEvent.target.value !== "");
   }
   render() { 
@@ -469,8 +496,8 @@ class ElementSelect extends React.Component {
       <div key={curr.FormID}>
 
         <label>
-        {this.props.view!=="SUPV" && curr.ReqResp ? <span style={{color:"red",fontSize:"2em"}} >*</span> : null}
-		{curr.Required ? <span >*</span> : null}
+        {this.props.view!=="SUPV" && !this.state.isSelected && curr.ReqResp ? <span className="redasterisk">&#10033;</span> : null}
+		{curr.Required ? <span >&#10033;</span> : null}
         {curr.Descrip}:
         <Edit className="delclass" view={this.props.view} curr={this.props.curr} handleRedraw={this.props.handleRedraw} /> 
         </label>
@@ -522,7 +549,7 @@ class Signature extends React.Component {
       <div className="sectionclass" key="Sig">
         <h2>AUTHORIZATION INFORMATION</h2>
         <label>
-        *Supervisor Authorization Signature:
+        &#10033; Supervisor Authorization Signature:
         </label>
        
         <input type="text" name="SupvSig" className="inputclass" required />
@@ -537,7 +564,7 @@ class Signature extends React.Component {
         <button className="submit" >Submit</button>
         </p>
         <p style={{fontSize:"0.7em"}}>
-        * Required Field
+        &#10033; Required Field
         </p>
       </div>
     )

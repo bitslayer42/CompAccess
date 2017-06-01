@@ -20,6 +20,7 @@ export default class AddHiddenFields extends React.Component {
 		});
 	} 	
 	handleSubmit=(event)=>{
+		event.preventDefault();
 		axios.get(LibPath + 'Special.cfm', {
 		  params: {
 			Proc: "AddSpecialEmail",
