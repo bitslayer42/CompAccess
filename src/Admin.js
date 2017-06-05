@@ -95,7 +95,7 @@ export default class Admin extends React.Component {
     this.getFromServer();
   } 
   
-  renderNextStep() {   //console.log("adminData",this.state.adminData);
+  renderNextStep() {   console.log("adminData",this.state.adminData);
 	if(this.state.clickedQue){
 		return(
 			<Redirect push to={`${HomePath}ADMIN/0/${this.state.clickedQue}`} />
@@ -103,7 +103,7 @@ export default class Admin extends React.Component {
 	}else{
 		let self = this; //so nested funcs can see the parent object
 		let listRequests = <tr ><td>No unresolved requests.</td></tr>
-		if(this.state.adminData.requests[0]) { 
+		if(typeof this.state.adminData.requests[0] !== 'undefined') { 
 		  listRequests = this.state.adminData.requests.map(function(req){
 			return (
 			  <tr key={req.RequestID}  className="reqsrow" onClick={() => self.handleFormRowClick(req.RequestID)}>

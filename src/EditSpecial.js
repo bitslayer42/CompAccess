@@ -54,12 +54,13 @@ export default class Special extends React.Component {
 	  this.getSpecial();
   }
   
-  renderNextStep() { 
+  renderNextStep() { //debugger;
 	const self=this;
     const data = this.state.SpecialData;
 	const action = (data.special.Action==="HIDERESPONSE" ? "Hidden Fields"  : 
 					data.special.Action==="SENDEMAIL"    ? "Special Emails" : "");	
-
+	
+		
  	const listCriteria = data.criteria.map(function(criteria,ix){
 	  return (
 		<div key={ix}>

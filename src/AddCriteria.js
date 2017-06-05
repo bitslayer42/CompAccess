@@ -12,7 +12,7 @@ export default class AddCriteria extends React.Component {
 			stateToShow: "field", //can be "field" (select which field), or these 3: "option","filled in","checked","selected"
 			chosenFieldID: 0,     		//will be SpecialCriteria.Field
 			chosenObject: null,         //Field selected data: ID,Type,Descrip,FormName
-			IsValue: null,              //will be SpecialCriteria.IsValue
+			IsValue: '',              //will be SpecialCriteria.IsValue
 			ItExists: null,
 			notCkbox: false,
 			HumanCriteria: null,
@@ -50,7 +50,7 @@ export default class AddCriteria extends React.Component {
 		  chosenObject: selEl
 	  });
 	  
-	}
+	} 
 	
 	handleSelectOption=(optionDescrip)=>{  	
 		const HumanCriteria =   '<i>'            //"<span class='criteria'>"
@@ -86,7 +86,7 @@ export default class AddCriteria extends React.Component {
 			stateToShow: "field",
 			chosenFieldID: 0,     		
 			chosenObject: null,         
-			IsValue: null,              
+			IsValue: '',              
 			ItExists: null,
 			notCkbox: false,
 			HumanCriteria: null,			  

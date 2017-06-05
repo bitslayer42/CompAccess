@@ -8,8 +8,8 @@ export default class TogglePublish extends React.Component {
 	this.handleOnChange = this.handleOnChange.bind(this);
   }
  
-  handleOnChange=(event)=>{
-    event && event.preventDefault();    
+  handleOnChange=(event)=>{ //debugger;
+    event.preventDefault();   
     axios.get(LibPath + 'DBUpdate.cfm', {
       params: {
         Proc: "PublishForm",
@@ -30,10 +30,12 @@ export default class TogglePublish extends React.Component {
 
   render()  {
     return (
-        <div className="pubclass" onClick={this.handleOnChange}>
+		<label>
+        <div className="pubclass">
           <input type="checkbox" onChange={this.handleOnChange} checked={this.props.published} /> 
           {this.props.published ? " Published " : "Unpublished"}
         </div>
+		</label>
     )
   }
 };
