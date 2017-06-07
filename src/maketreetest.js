@@ -1,4 +1,4 @@
-let data = { "fieldlist": [ 
+let fieldlist = [ 
   
 			  { "ID": 496
 			  , "Type": "INPUT"
@@ -25,26 +25,21 @@ let data = { "fieldlist": [
 			  }
 			  
 			  ] 
-};
+;
 
-    //Create a tree for optgroup 
-	//const nodes = data.fieldlist.map( obj => obj.FormName );
+    //Create a tree for optgroup  [ { form1: [ {obj1},{obj2} ] },{ form2 : [] } ]
+	var finalObj = [];
+	fieldlist.map( obj => obj.FormName )                         //get list of FormNames
+	   .filter((value, index, self) => self.indexOf(value) === index) //make unique
+	   .forEach((form)=>{                                             //for each FormName build an array of its objects
+			var o = {formname: form};	
+			o.fields = fieldlist.filter((item)=>{return item.FormName===form}) ;
+			finalObj.push(o);
+		})
 
-	var unique = data.fieldlist.map( obj => obj.FormName )
-							   .filter((value, index, self) => self.indexOf(value) === index); 
-							   
-							   
 	
-	console.log(unique);
-	// let formObj = {};
-    // let fieldNode;
-	// let prevFormName = '';
-    // const atree = [];
-    // for (let i = 0; i < nodes.length; i += 1) {
-        // fieldNode = nodes[i];
-		// if (prevFormName!==fieldNode.FormName){
-			// formObj[fieldNode.FormName].push(fieldNode);
-		// }
+	console.log(finalObj);
+	console.log(finalObj[0]);
 			
 			
 		

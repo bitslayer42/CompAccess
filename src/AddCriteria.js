@@ -4,12 +4,24 @@ import { LibPath } from './LibPath';
 import './css/special.css';
 
 export default class AddCriteria extends React.Component {
-	constructor(props) { 
+	constructor(props) {  //console.log(props);
 		super(props); 
+		
+		//Create a tree for optgroup  [ { form1: [ {obj1},{obj2} ] },{ form2 : [] } ]
+		var fieldTree = [];
+		props.fieldList.map( obj => obj.FormName )                         //get list of FormNames
+		   .filter((value, index, self) => self.indexOf(value) === index) //make unique
+		   .forEach((form)=>{                                             //for each FormName build an array of its objects
+				var o = {formname: form};	
+				o.fields = props.fieldList.filter((item)=>{return item.FormName===form}) ;
+				fieldTree.push(o);
+			})	
+		//console.log(fieldTree);
 		this.state = {
 			fieldList: props.fieldList,
+			fieldTree,
 			SpecialID: props.SpecialID,
-			stateToShow: "field", //can be "field" (select which field), or these 3: "option","filled in","checked","selected"
+			stateToShow: "field", //can be "field" (select which field), or these 4: "option","filled in","checked","selected"
 			chosenFieldID: 0,     		//will be SpecialCriteria.Field
 			chosenObject: null,         //Field selected data: ID,Type,Descrip,FormName
 			IsValue: '',              //will be SpecialCriteria.IsValue
@@ -68,7 +80,7 @@ export default class AddCriteria extends React.Component {
 		
     }
 //https://ccp1.msj.org/CompAccess/Special.cfm?Proc=AddSpecialCriteria&SpecialID=5&Field=4&IsNot=false&ItExists=0&cachebuster=0.018909803314135054	
-	sendAdd=()=>{                                         console.log(this.state);
+	sendAdd=()=>{                                         //console.log(this.state);
 		axios.get(LibPath + 'Special.cfm', {
 		  params: {
 			Proc: "AddSpecialCriteria",
@@ -109,11 +121,12 @@ export default class AddCriteria extends React.Component {
 								+ this.state.chosenObject.Descrip 
 								+ '</i>'
 								+ ' is' 
-								+ (event.currentTarget.value==="0"?' not ':' ')
+								+ (event.currentTarget.value==="1"?' not ':' ')
 								+ this.state.stateToShow;		
 		this.setState({
 			HumanCriteria: HumanCriteria,
-			ItExists: event.currentTarget.value
+			ItExists: 1,   //testing for existence
+			notCkbox: event.currentTarget.value,
 		},this.sendAdd);
 			
 	}
@@ -124,10 +137,21 @@ export default class AddCriteria extends React.Component {
 			? <div className="flx">
 				<select onChange={this.handleSelectField} value={this.state.value}>
 				  <option key={0} value="0">(Choose Field)</option>
-				  {this.state.fieldList.map((field) => { 
+				  {/*this.state.fieldList.map((field) => { 
 					return( 
 					  <option key={field.ID} value={field.ID}>{field.Descrip}</option>
 					)
+				  })*/}
+				  {this.state.fieldTree.map((formObj,ix) => {
+					  return(
+						<optgroup key={ix} label={formObj.formname}>
+							{formObj.fields.map((field)=>{
+								return(
+									<option key={field.ID} value={field.ID}>{field.Descrip}</option>
+								)
+							})}
+						</optgroup>
+					  )
 				  })}
 				</select>
 			  </div>	
@@ -146,13 +170,13 @@ export default class AddCriteria extends React.Component {
 					<GetOptions FieldID={this.state.chosenFieldID} handleSelectOption={this.handleSelectOption}/>
 				</div>
 			  </div>
-			: <div className="flx"> {/*stateToShow is filled or checked*/}
+			: <div className="flx"> {/* stateToShow is "filled in","checked", or "selected" */}
 				<div>
 				{this.state.chosenObject.Descrip}
 				</div>
 				<div>
-					<input type="radio" name="rad" onChange={this.handleRadioClick} value="1" />is
-					<input type="radio" name="rad" onChange={this.handleRadioClick} value="0" />is not
+					<input type="radio" name="rad" onChange={this.handleRadioClick} value="0" />is
+					<input type="radio" name="rad" onChange={this.handleRadioClick} value="1" />is not
 				</div>
 				<div>
 					{this.state.stateToShow}
