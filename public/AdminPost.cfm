@@ -65,7 +65,7 @@
     <div style="width:400px">
     <p>This request has been COMPLETED </p>
     <p>
-    Submitted By: #header.SupvName# <br>
+    Submitted By: #quoteTheString(header.SupvName)# <br>
     On #DateFormat(header.EnteredDate,"M/D/YY")# at #TimeFormat(header.EnteredDate,"HH:MM")#
     </p>
       <table style="width:100%; padding-left:5px;font-family:Arial, Helvetica, sans-serif;">
@@ -108,8 +108,8 @@
   <!--- 
   <cfoutput query="debugsql">
 	#SQLString#
-  </cfoutput>
-   --->
+  </cfoutput>   --->
+
   
   <cfif specialemails.RecordCount GT 0> 
     <cfoutput query="specialemails" group="EMailAddress">
@@ -126,7 +126,7 @@
         <body>
           <div style="width:400px">
           <h3>#emailsubject#</h3>
-          Submitted By: #header.SupvName# <br>
+          Submitted By: #quoteTheString(header.SupvName)# <br>
           On #DateFormat(header.EnteredDate,"M/D/YY")# at #TimeFormat(header.EnteredDate,"HH:MM")#<br>
             <table style="width:100%; padding-left:5px;font-family:Arial, Helvetica, sans-serif;">
             <cfoutput>
@@ -146,7 +146,7 @@
   <div class="sectionclass">
     <p>
     <cfif ret.Completed EQ 1>
-      You have <span style="color:red">COMPLETED</span> this <b>Computer Access Authorization E-Form.<br>
+      You have <span style="color:green">COMPLETED</span> this <b>Computer Access Authorization E-Form.<br>
       An email has been sent to the submitting supervisor with all passwords.<br>
       <span style="color:#777;">Email sent to <cfoutput>#emails.EmailAddress#</cfoutput></span><br>
     <cfelse>
@@ -159,6 +159,15 @@
     &larr; <a href="https://ccp1.msj.org/login/login/home.cfm">Intranet login menu</a><br> 
     </p>  
 </div>
+ 
+<cffunction name="quoteTheString" output="false" access="public" returnType="string">
+    <cfargument name="aString" type="string" required="false" default="" />
+
+	<cfset var quotedString = Replace(arguments.aString,"\","\\","all")>
+	<cfset quotedString = Replace(quotedString,'"','\"',"all")>
+
+    <cfreturn quotedString />
+</cffunction>
  
 <style>
 body {

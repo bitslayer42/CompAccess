@@ -1,8 +1,7 @@
 <!---This is called using ajax for updating database while editing urls--->
 <!--- Use POST to call this page (NOTE I changed it to GET so I wouldn't have to deal with CORS issues in devel. Slack.)--->
 <cfif IsDefined("url.Descrip")>
-	<cfset quotedDescrip = Replace(url.Descrip,"\","\\","all")>
-	<cfset quotedDescrip = Replace(quotedDescrip,'"','\"',"all")>
+	<cfset quotedDescrip = quoteTheString(url.Descrip)>
 </cfif>
 <cfif url.Proc EQ "AddSister">
   <!---AddSister - Inserts new node (url,section,field,etc) to right of (after) given--->
@@ -54,3 +53,12 @@
     <cfprocparam cfsqltype="cf_sql_integer" value="#url.FormID#">
   </cfstoredproc>
 </cfif>
+
+<cffunction name="quoteTheString" output="false" access="public" returnType="string">
+    <cfargument name="aString" type="string" required="false" default="" />
+
+	<cfset var quotedString = Replace(arguments.aString,"\","\\","all")>
+	<cfset quotedString = Replace(quotedString,'"','\"',"all")>
+
+    <cfreturn quotedString />
+</cffunction>

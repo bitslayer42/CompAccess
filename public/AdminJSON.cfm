@@ -13,11 +13,11 @@
   "requests": [ 
   <cfoutput query="requests">
   { "RequestID": #RequestID#
-  , "SupvName": "#SupvName#"
+  , "SupvName": "#quoteTheString(SupvName)#"
   , "EnteredDate": "#EnteredDate#"
   , "Completed": #Completed#
-  , "headerXML": "#headerXML#"
-  , "EditedXML": "#EditedXML#"  
+  , "headerXML": "#quoteTheString(headerXML)#"
+  , "EditedXML": "#quoteTheString(EditedXML)#"  
   }
   <cfif loopctr NEQ requests.RecordCount>,</cfif>
   <cfset loopctr = loopctr + 1>
@@ -62,7 +62,14 @@
   ]  
 }
 
+<cffunction name="quoteTheString" output="false" access="public" returnType="string">
+    <cfargument name="aString" type="string" required="false" default="" />
 
+	<cfset var quotedString = Replace(arguments.aString,"\","\\","all")>
+	<cfset quotedString = Replace(quotedString,'"','\"',"all")>
+
+    <cfreturn quotedString />
+</cffunction>
 <!---
 
 https://ccp1.msj.org/CompAccess/AdminJSON.cfm

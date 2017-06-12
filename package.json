@@ -4,17 +4,18 @@
   "private": true,
   "dependencies": {
     "axios": "^0.16.1",
+    "babel-polyfill": "^6.23.0",
     "moment": "^2.18.1",
     "prop-types": "^15.5.10",
     "react": "^15.5.4",
-    "react-addons-css-transition-group": "^15.5.2",
     "react-autosuggest": "^9.0.1",
     "react-datepicker": "^0.46.0",
     "react-dom": "^15.5.4",
     "react-router": "^4.1.1",
-    "react-router-dom": "^4.1.1"
+    "react-router-dom": "^4.1.1",
+    "react-transition-group": "^1.1.3"
   },
-  "homepage" : "https://ccp1.msj.org/login/login/CompAccess/",
+  "homepage": "https://ccp1.msj.org/login/login/CompAccess/",
   "devDependencies": {
     "react-scripts": "1.0.4"
   },

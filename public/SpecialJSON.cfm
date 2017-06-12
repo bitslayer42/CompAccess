@@ -6,7 +6,8 @@
   <cfprocresult resultset="2" name="criteria">
   <cfprocresult resultset="3" name="hide">
   <cfprocresult resultset="4" name="email">
-  <cfprocresult resultset="5" name="fieldlist">
+  <cfprocresult resultset="5" name="emailfields">
+  <cfprocresult resultset="6" name="fieldlist">
 </cfstoredproc>
 
 <cfset loopctr = 1>
@@ -21,7 +22,8 @@
   ,
   "criteria": [ 
   <cfoutput query="criteria">
-  { "Field": "#Field#"
+  { "ID": "#ID#"
+  , "Field": "#Field#"
   , "IsNot": "#IsNot#"
   , "ItExists": "#ItExists#"  
   , "IsValue": "#IsValue#"  
@@ -47,12 +49,23 @@
   <cfset loopctr = 1>
   "email": [ 
   <cfoutput query="email">
-  { "Email": #Email#
-  , "FieldID": "#FieldID#"
+  { "ID": #ID#
+  , "Email": "#Email#"
+  }
+  <cfif loopctr NEQ email.RecordCount>,</cfif>
+  <cfset loopctr = loopctr + 1>
+  </cfoutput>
+  ],
+
+  <cfset loopctr = 1>
+  "emailfields": [ 
+  <cfoutput query="emailfields">
+  { "ID": #ID#
+  ,"FieldID": "#FieldID#"
   , "Type": "#Type#"
   , "Descrip": "#Descrip#"
   }
-  <cfif loopctr NEQ email.RecordCount>,</cfif>
+  <cfif loopctr NEQ emailfields.RecordCount>,</cfif>
   <cfset loopctr = loopctr + 1>
   </cfoutput>
   ],
@@ -61,6 +74,7 @@
   "fieldlist": [ 
   <cfoutput query="fieldlist">
   { "ID": #ID#
+  , "Type": "#Type#"
   , "Descrip": "#Descrip#"
   , "FormName": "#FormName#"
   }

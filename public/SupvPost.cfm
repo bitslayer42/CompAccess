@@ -116,7 +116,7 @@
       <a href="https://ccp1.msj.org/login/login/CompAccess/index.cfm?reqid=<cfoutput>#header.RequestID#</cfoutput>">
         EDIT THIS COMPUTER ACCESS AUTHORIZATION E-FORM.</a><br>
     </cfif>
-    Submitted By: #header.SupvName# <br>
+    Submitted By: #quoteTheString(header.SupvName)# <br>
     On #DateFormat(header.EnteredDate,"M/D/YY")# at #TimeFormat(header.EnteredDate,"HH:MM")#<br>
       <table style="width:100%; padding-left:5px;font-family:Arial, Helvetica, sans-serif;">
       <cfloop query="detail">
@@ -144,13 +144,14 @@
   <cfprocresult resultset="1" name="specialemails">
   <cfprocresult resultset="2" name="debugsql">
   </cfstoredproc>
-  <!---    
+  <!---   
   <cfoutput query="debugsql">
 	#SQLString#
-  </cfoutput>
---->
+  </cfoutput> --->
+
   <cfif specialemails.RecordCount GT 0> 
     <cfoutput query="specialemails" group="SpecialID">
+	 <cfoutput group="EmailAddress">
       <cfmail to="#EMailAddress#" 
       from = "cpisc@msj.org"
       subject = "#emailsubject#"
@@ -164,7 +165,7 @@
         <body>
           <div style="width:400px">
           <h3>#emailsubject#</h3>
-          Submitted By: #header.SupvName# <br>
+          Submitted By: #quoteTheString(header.SupvName)# <br>
           On #DateFormat(header.EnteredDate,"M/D/YY")# at #TimeFormat(header.EnteredDate,"HH:MM")#<br>
             <table style="width:100%; padding-left:5px;font-family:Arial, Helvetica, sans-serif;">
             <cfoutput>
@@ -174,10 +175,20 @@
           </div>
         </body>
         </html>
-      </cfmail>     
+      </cfmail>  
+	 </cfoutput>	  
     </cfoutput>
   </cfif>
 </cfif>
+
+<cffunction name="quoteTheString" output="false" access="public" returnType="string">
+    <cfargument name="aString" type="string" required="false" default="" />
+
+	<cfset var quotedString = Replace(arguments.aString,"\","\\","all")>
+	<cfset quotedString = Replace(quotedString,'"','\"',"all")>
+
+    <cfreturn quotedString />
+</cffunction>
  
 <style>
 body {

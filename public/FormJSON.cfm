@@ -21,7 +21,7 @@
 </cfif>
 <cfif IsDefined("url.reqID")> <!--- previously entered --->
       <cfset EnteredDate = header.EnteredDate>
-      <cfset SupvName = header.SupvName>
+      <cfset SupvName = quoteTheString(header.SupvName)>
 <cfelse>
       <cfset EnteredDate = DateFormat(Now(),"YYYY-MM-DD") & "T" & TimeFormat(Now(),"HH:MM")>
       <cfset SupvName = LoggedInName>
@@ -36,7 +36,7 @@
   </cfif>
   "LoggedInID": "#LoggedInID#",  
   "LoggedInName": "#LoggedInName#",  
-  "SupvName": "#SupvName#",
+  "SupvName": "#quoteTheString(SupvName)#",
   "EnteredDate": "#EnteredDate#",
   </cfoutput>
   "body": [ 
@@ -46,12 +46,12 @@
   </cfif>
   { "FormID": #body.FormID#
   , "Type": "#body.Type#"
-  , "Descrip": "#body.Descrip#"
+  , "Descrip": "#(body.Descrip)#" <!--- this doesnt need quoting for some reason - go figure--->
   , "Required": #body.Required# 
   , "ReqResp": #body.ReqResp# 
   , "HeaderRecord": #body.HeaderRecord#    
   , "ParentID": #body.ParentID#
-  , "ItemValue": "#body.ItemValue#"
+  , "ItemValue": "#quoteTheString(body.ItemValue)#"
   }
   <cfif loopctr NEQ body.RecordCount>,</cfif>
   <cfset loopctr = loopctr + 1>
@@ -60,6 +60,14 @@
 }
 
 
+<cffunction name="quoteTheString" output="false" access="public" returnType="string">
+    <cfargument name="aString" type="string" required="false" default="" />
+
+	<cfset var quotedString = Replace(arguments.aString,"\","\\","all")>
+	<cfset quotedString = Replace(quotedString,'"','\"',"all")>
+
+    <cfreturn quotedString />
+</cffunction>
 <!---
 , "depth": #body.depth#
 https://ccp1.msj.org/CompAccess/FormJSON.cfm?FormID=2
