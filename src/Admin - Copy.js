@@ -59,29 +59,13 @@ export default class Admin extends React.Component {
     let xmlDoc;
     const returnArr = [];
     const parser = new DOMParser();
-    let duedatecolor = "black";
     
     xmlDoc = parser.parseFromString(headerXML,"text/xml");
     const cols = xmlDoc.getElementsByTagName("Col");
     const values = xmlDoc.getElementsByTagName("ItemValue");
     for (let i = 0; i < values.length; i++) {
-      if(values[i].childNodes[0] && cols[i].childNodes[0]){
-        if(cols[i].childNodes[0].nodeValue==="Date Access is Needed"){  //sadly hard coded: Turning past dates red in Queue
-          let duedate = moment(values[i].childNodes[0].nodeValue);
-          let nowdate = moment();
-          let threedays = moment().add(3, 'day');
-          if(duedate<threedays){
-              duedatecolor = "orange";  
-         if(duedate<nowdate){
-            duedatecolor = "red";
-          }
-          else{
-            }
-          }
-        }
-        returnArr.push(<td key={i} style={{color:duedatecolor}}><div className="queueheaders">{cols[i].childNodes[0].nodeValue}:</div>{values[i].childNodes[0].nodeValue}</td>);
-        duedatecolor = "black";
-      }
+      values[i].childNodes[0] && cols[i].childNodes[0] 
+      && returnArr.push(<td key={i}><div className="queueheaders">{cols[i].childNodes[0].nodeValue}:</div>{values[i].childNodes[0].nodeValue}</td>);  
     }
 
     xmlDoc = parser.parseFromString(EditedXML,"text/xml");

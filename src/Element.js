@@ -32,6 +32,9 @@ export default class Element extends React.Component {
           }else if(curr.Type==="INPUT"){
             return <ElementInput ix={ix}  curr={curr} key={curr.FormID} view={this.props.view} inResponse={this.props.inResponse}
 				handleRedraw={this.props.handleRedraw} handleChangeResponse={this.props.handleChangeResponse}/> 
+          }else if(curr.Type==="TEXTAREA"){
+            return <ElementTextArea ix={ix}  curr={curr} key={curr.FormID} view={this.props.view} inResponse={this.props.inResponse}
+				handleRedraw={this.props.handleRedraw} handleChangeResponse={this.props.handleChangeResponse}/> 
           }else if(curr.Type==="DATE"){
             return <ElementDate ix={ix}   curr={curr} key={curr.FormID} view={this.props.view} inResponse={this.props.inResponse} 
 				handleRedraw={this.props.handleRedraw} handleChangeResponse={this.props.handleChangeResponse}/> 
@@ -284,8 +287,9 @@ class ElementInput extends React.Component {
   }
   
   handleChange=(event)=>{ 
-	this.setState({ isFilled: event.target.value !== "" });
-    this.props.handleChangeResponse(this.props.ix,this.state.isFilled);
+	this.setState({ isFilled: event.target.value !== "" },()=>{
+		this.props.handleChangeResponse(this.props.ix,this.state.isFilled);
+	});
   }
   render() { 
     const curr = this.props.curr;
@@ -308,6 +312,41 @@ class ElementInput extends React.Component {
   }
 }
 
+class ElementTextArea extends React.Component { 
+  constructor(props) { 
+    super(props);
+	this.state = {
+	  isFilled: !(this.props.curr.ItemValue === "")
+	}
+	this.handleChange = this.handleChange.bind(this);	
+  }
+  
+  handleChange=(event)=>{ 
+	this.setState({ isFilled: event.target.value !== "" },()=>{
+		this.props.handleChangeResponse(this.props.ix,this.state.isFilled);
+	});
+  }
+  render() { 
+    const curr = this.props.curr;
+    return (
+      <div key={curr.FormID}>
+        <div>
+          <label>
+          {this.props.view!=="SUPV" && !this.state.isFilled && curr.ReqResp ? <span className="redasterisk">&#10033;</span> : null}
+          {curr.Required ? <span >&#10033;</span> : null}
+          {curr.Descrip}:
+          <Edit className="delclass" view={this.props.view} curr={curr} handleRedraw={this.props.handleRedraw} />            
+          </label>
+          {curr.Required
+          ?<textarea className="inputclass" name={curr.FormID} defaultValue={curr.ItemValue} onChange={this.handleChange} required />
+          :<textarea className="inputclass" name={curr.FormID} defaultValue={curr.ItemValue} onChange={this.handleChange} />}
+        </div>
+        <AddElements view={this.props.view} type="AFTER" curr={curr} handleRedraw={this.props.handleRedraw} /> 
+      </div>
+    ) 
+  }
+}
+
 class ElementDate extends React.Component { 
 
   constructor(props) {  //
@@ -319,11 +358,12 @@ class ElementDate extends React.Component {
     };
   }
   handleChange=(date)=>{ //debugger;
-    this.setState({
-      adate:date,
-	  isFilled:date !== ""
-    });
-    this.props.handleChangeResponse(this.props.ix, this.state.isFilled);
+	this.setState({ 
+		adate:date,
+		isFilled: !(date === null)
+	},()=>{
+		this.props.handleChangeResponse(this.props.ix,this.state.isFilled);
+	});	
   }
   render() { 
     const curr = this.props.curr;
@@ -355,11 +395,13 @@ class ElementRadio extends React.Component {
     };
   }
   handleOptionChange=(changeEvent)=>{
+	let self=this;  
     this.setState({
       selectedOption: changeEvent.target.value,
 	  isSelected: changeEvent.target.value !== ""
-    }); 
-    this.props.handleChangeResponse(this.props.ix,changeEvent.target.value !== "");
+    },()=>{ 
+		self.props.handleChangeResponse(self.props.ix, self.state.isSelected)
+	});
   }
   render() { 
     const curr = this.props.curr;
@@ -450,10 +492,12 @@ class ElementCheckbox extends React.Component {
     };
   }
   handleChange=(event)=>{ 
+    let self=this;
     this.setState({
-	  isSelected: event.target.value !== ""
-    });  
-    this.props.handleChangeResponse(this.props.ix,event.target.value !== "");
+	  isSelected: event.target.checked
+    },()=>{
+		self.props.handleChangeResponse(self.props.ix, self.state.isSelected);
+	});
   }
   render() { 
     const curr = this.props.curr;
@@ -485,10 +529,12 @@ class ElementSelect extends React.Component {
     };
   }
   handleOptionChange=(changeEvent)=>{
+	let self=this;
     this.setState({
 	  isSelected: changeEvent.target.value !== ""
-    }); 	  
-    this.props.handleChangeResponse(this.props.ix,changeEvent.target.value !== "");
+    },()=>{  
+		self.props.handleChangeResponse(self.props.ix, self.state.isSelected);
+	});
   }
   render() { 
     const curr = this.props.curr;

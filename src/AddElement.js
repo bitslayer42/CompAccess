@@ -22,13 +22,13 @@ export default class AddElement extends React.Component {
   setUpClosedList(){
     if(this.props.typeToAdd===">>"){
       this.setState({
-        listToAdd: ["INPUT","DATE","SELECT","RADIO","CHECKBOX","MESSAGE"],
+        listToAdd: ["INPUT","TEXTAREA","DATE","SELECT","RADIO","CHECKBOX","MESSAGE"],
         showClosedList: true
       });   
     }   
     if(this.props.typeToAdd===">>>"){
       this.setState({
-        listToAdd: ["NODE","INPUT","DATE","SELECT","RADIO","CHECKBOX","MESSAGE"],
+        listToAdd: ["NODE","INPUT","TEXTAREA","DATE","SELECT","RADIO","CHECKBOX","MESSAGE"],
         showClosedList: true
       });   
     } 

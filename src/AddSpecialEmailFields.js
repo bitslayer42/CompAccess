@@ -3,7 +3,7 @@ import axios from 'axios'; //ajax library
 import { LibPath } from './LibPath';
 import './css/special.css';
 
-export default class AddHiddenFields extends React.Component {
+export default class AddSpecialEmailFields extends React.Component {
 	constructor(props) { 
 		super(props); 
 		this.state = {

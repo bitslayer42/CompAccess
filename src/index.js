@@ -14,7 +14,7 @@ import AddSpecial from './AddSpecial';
 import EditSpecial from './EditSpecial';
 import { HomePath } from './LibPath';
 import './css/index.css';
-import registerServiceWorker from './registerServiceWorker';
+//import registerServiceWorker from './registerServiceWorker';
 
 ReactDOM.render(
   <Router>
@@ -38,7 +38,7 @@ ReactDOM.render(
   </Router>,
   document.getElementById('root') 
 );
-registerServiceWorker();
+//registerServiceWorker();
 
 // GetForm :view options
 //    /SUPV/:formid,      Supv is filling out a form

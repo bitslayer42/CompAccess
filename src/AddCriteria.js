@@ -43,6 +43,7 @@ export default class AddCriteria extends React.Component {
 		  case "RADIO":
 			nextState = "option"; //these have multiple options so we need another select
 			break;
+		  case "TEXTAREA":
 		  case "INPUT":
 		  case "DATE":
 			nextState = "filled in"; //these can be either filled in or not

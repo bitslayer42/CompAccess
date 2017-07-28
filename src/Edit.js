@@ -68,7 +68,7 @@ class ToggleHeader extends React.Component {
 
   render()  {   
     if(this.props.curr.Type === "INPUT"||this.props.curr.Type === "RADIO"||this.props.curr.Type === "SELECT"
-		||this.props.curr.Type === "DATE"||this.props.curr.Type === "CHECKBOX"){
+		||this.props.curr.Type === "DATE"||this.props.curr.Type === "CHECKBOX"||this.props.curr.Type === "TEXTAREA"){
       return (
       <span className="addelement">
         <input type="checkbox" id={this.props.curr.FormID} className="css-checkbox" checked={this.state.value} onChange={this.onChange} />
@@ -117,7 +117,7 @@ class ToggleRequired extends React.Component {
 
   render()  {   
     if(this.props.curr.Type === "INPUT"||this.props.curr.Type === "RADIO"||this.props.curr.Type === "SELECT"
-		||this.props.curr.Type === "DATE"){
+		||this.props.curr.Type === "DATE"||this.props.curr.Type === "TEXTAREA"){
       return (
       <span className="addelement">
         <input type="checkbox" id={this.props.curr.FormID} className="css-checkbox" checked={this.state.value} onChange={this.onChange} />
@@ -165,7 +165,7 @@ class ToggleReqResp extends React.Component {
 
   render()  {   
     if(this.props.curr.Type === "INPUT"||this.props.curr.Type === "RADIO"||this.props.curr.Type === "SELECT"
-		||this.props.curr.Type === "DATE"||this.props.curr.Type === "CHECKBOX"){
+		||this.props.curr.Type === "DATE"||this.props.curr.Type === "CHECKBOX"||this.props.curr.Type === "TEXTAREA"){
       return (
       <span className="addelement">
         <input type="checkbox" id={this.props.curr.FormID} className="css-checkbox" checked={this.state.value} onChange={this.onChange} />

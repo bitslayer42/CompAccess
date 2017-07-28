@@ -1,4 +1,6 @@
-
+<!--- 
+<cfdump var="#form#"><cfabort>
+ --->
 <cfset ItemStr = "<reqrows>">
 <cfloop collection="#form#" item="theField">
   <cfif theField NEQ "fieldNames" AND theField NEQ "DateEntered" AND theField NEQ "LoggedInID" 

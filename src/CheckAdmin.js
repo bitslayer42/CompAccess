@@ -25,16 +25,17 @@ export default class CheckAdmin extends React.Component {
         cachebuster: Math.random()
       }
     })
-    .then(res => {  
-		const match =  self.props.match;
+    .then(res => {
+	  const reqidFromQueryString = window.location.search.substring(7); //this gets reqid from query string in url: /index.cfm?reqid=131
+	  //const match =  self.props.match;
       const userType = res.data[0]; 
-      if(match.reqid && userType==="ADMIN"){
+      if(reqidFromQueryString && userType==="ADMIN"){  //was match.reqid
         //To call from email when user might not be logged in, hash (#) not passed to server, use query (?)
         // call: https://ccp1.msj.org/login/login/CompAccess/index.cfm?reqid=33
 		//{`${HomePath}ADMIN/0/${match.reqid}`}
 		
 		
-        self.props.history.push(`${HomePath}ADMIN/0/${match.reqid}`);
+        self.props.history.push(`${HomePath}ADMIN/0/${reqidFromQueryString}`);
 		
       }else{
         this.setState({
