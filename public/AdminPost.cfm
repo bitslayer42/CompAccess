@@ -5,7 +5,7 @@
 <cfloop collection="#form#" item="theField">
   <cfif theField NEQ "fieldNames" AND theField NEQ "DateEntered" AND theField NEQ "LoggedInID" 
         AND theField NEQ "LoggedInName" AND theField NEQ "ReqID">
-  <cfset ItemStr = ItemStr & "<row><Field>#XmlFormat(theField)#</Field><Value>#XmlFormat(form[theField])#</Value></row>" >
+  <cfset ItemStr = ItemStr & "<row><Field>#XmlFormat(quoteTheString(theField))#</Field><Value>#XmlFormat(quoteTheString(form[theField]))#</Value></row>" >
   </cfif>
 </cfloop>
 <cfset ItemStr = ItemStr & "</reqrows>">
@@ -86,10 +86,10 @@
           <cfif ArrayFind(ResponseArr, ParentID) NEQ 0>  <!--- inside a response --->
             <tr>
               <td style="text-align:right; padding-right:5px;color:orange;">#Descrip#</td>
-              <td style="font-size:1.2em;color:orange;"><b>#ItemValue#</b></td>
+              <td style="font-size:1.2em;color:orange;"><b>#unquoteTheString(ItemValue)#</b></td>
             </tr>
           <cfelse>
-            <tr><td style="text-align:right; padding-right:5px;">#Descrip#</td><td><b>#ItemValue#</b></td></tr>
+            <tr><td style="text-align:right; padding-right:5px;">#Descrip#</td><td><b>#unquoteTheString(ItemValue)#</b></td></tr>
           </cfif>
         </cfif>
       </cfloop>
@@ -132,7 +132,7 @@
           On #DateFormat(header.EnteredDate,"M/D/YY")# at #TimeFormat(header.EnteredDate,"HH:MM")#<br>
             <table style="width:100%; padding-left:5px;font-family:Arial, Helvetica, sans-serif;">
             <cfoutput>
-                  <tr><td style="text-align:right; padding-right:5px;">#Descrip#</td><td><b>#ItemValue#</b></td></tr>
+                  <tr><td style="text-align:right; padding-right:5px;">#Descrip#</td><td><b>#unquoteTheString(ItemValue)#</b></td></tr>
             </cfoutput>
             </table>
           </div>
@@ -167,10 +167,18 @@
 
 	<cfset var quotedString = Replace(arguments.aString,"\","\\","all")>
 	<cfset quotedString = Replace(quotedString,'"','\"',"all")>
+  <cfset quotedString = replaceNoCase(quotedString, chr(13), '\r','All')>
+  <cfset quotedString = replaceNoCase(quotedString, chr(10), '\n','All')>  
 
     <cfreturn quotedString />
 </cffunction>
- 
+<cffunction name="unquoteTheString" output="false" access="public" returnType="string">
+    <cfargument name="aString" type="string" required="false" default="" />
+
+  <cfset unquotedString = replaceNoCase(arguments.aString, '\r', chr(13),'All')>
+  <cfset unquotedString = replaceNoCase(unquotedString, '\n', chr(10), 'All')>  
+    <cfreturn unquotedString />
+</cffunction>  
 <style>
 body {
   background-image: url(./background.png);

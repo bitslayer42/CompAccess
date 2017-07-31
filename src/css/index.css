@@ -4,10 +4,7 @@ body {
   font-family: sans-serif;
   text-align:center;
 }
-textarea {
-	rows: 3;
-	cols: 30;
-}
+
 .outerdiv {
   width: 700px;
   margin: 0 auto;

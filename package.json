@@ -13,6 +13,7 @@
     "react-dom": "^15.5.4",
     "react-router": "^4.1.1",
     "react-router-dom": "^4.1.1",
+    "react-textarea-autosize": "^5.1.0",
     "react-transition-group": "^1.1.3"
   },
   "homepage": "https://ccp1.msj.org/login/login/CompAccess/",
