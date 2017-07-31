@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment'; //date library
 import DatePicker  from 'react-datepicker'; //datepicker  library
+import Textarea from 'react-textarea-autosize'; //auto resize text area component
 import { CSSTransitionGroup } from 'react-transition-group';
 import { LibPath, HomePath } from './LibPath';
 import AddElements from './AddElements';
@@ -327,7 +328,8 @@ class ElementTextArea extends React.Component {
 	});
   }
   render() { 
-    const curr = this.props.curr;
+    const curr = this.props.curr; 
+    const itemVal = curr.ItemValue.replace(/\\r\\n/g, String.fromCharCode(13, 10));
     return (
       <div key={curr.FormID}>
         <div>
@@ -338,8 +340,8 @@ class ElementTextArea extends React.Component {
           <Edit className="delclass" view={this.props.view} curr={curr} handleRedraw={this.props.handleRedraw} />            
           </label>
           {curr.Required
-          ?<textarea className="inputclass" name={curr.FormID} defaultValue={curr.ItemValue} onChange={this.handleChange} required />
-          :<textarea className="inputclass" name={curr.FormID} defaultValue={curr.ItemValue} onChange={this.handleChange} />}
+          ?<Textarea minRows={2} className="inputclass" name={curr.FormID} defaultValue={itemVal} onChange={this.handleChange} required />
+          :<Textarea minRows={2} className="inputclass" name={curr.FormID} defaultValue={itemVal} onChange={this.handleChange} />}
         </div>
         <AddElements view={this.props.view} type="AFTER" curr={curr} handleRedraw={this.props.handleRedraw} /> 
       </div>
@@ -354,7 +356,7 @@ class ElementDate extends React.Component {
     const thedate = props.curr.ItemValue?moment(props.curr.ItemValue):null
     this.state = {
       adate: thedate,
-	  isFilled: !(props.curr.ItemValue === "")
+      isFilled: !(props.curr.ItemValue === "")
     };
   }
   handleChange=(date)=>{ //debugger;

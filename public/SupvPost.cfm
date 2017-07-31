@@ -17,7 +17,7 @@
   <cfloop collection="#form#" item="theField">
     <cfif theField NEQ "fieldNames" AND theField NEQ "DateEntered" AND theField NEQ "LoggedInName" 
           AND theField NEQ "LoggedInID" AND theField NEQ "SupvSig">
-    <cfset ItemStr = ItemStr & "<row><Field>#XmlFormat(theField)#</Field><Value>#XmlFormat(form[theField])#</Value></row>" >
+    <cfset ItemStr = ItemStr & "<row><Field>#XmlFormat(quoteTheString(theField))#</Field><Value>#XmlFormat(quoteTheString(form[theField]))#</Value></row>" >
     </cfif>
   </cfloop>
   <cfset ItemStr = ItemStr & "</reqrows>">
@@ -80,7 +80,7 @@
               <cfif Type EQ "NODE">
                 <tr><td colspan="2" style="text-align:center;"><b>Access requested for: <span style="color:orange;">#Descrip#</span></b></td></tr>
               <cfelse>
-                <tr><td>#Descrip#</td><td>#ItemValue#</td></tr>
+                <tr><td>#Descrip#</td><td>#unquoteTheString(ItemValue)#</td></tr>
               </cfif>
             </cfif>
           </cfloop>
@@ -124,7 +124,7 @@
           <cfif Type EQ "NODE">
             <tr><td colspan="2" style="text-align:center;"><b>Access requested for: <span style="color:orange;">#Descrip#</span></b></td></tr>
           <cfelse>
-            <tr><td style="text-align:right; padding-right:5px;">#Descrip#</td><td><b>#ItemValue#</b></td></tr>
+            <tr><td style="text-align:right; padding-right:5px;">#Descrip#</td><td><b>#unquoteTheString(ItemValue)#</b></td></tr>
           </cfif>
         </cfif>
       </cfloop>
@@ -169,7 +169,7 @@
           On #DateFormat(header.EnteredDate,"M/D/YY")# at #TimeFormat(header.EnteredDate,"HH:MM")#<br>
             <table style="width:100%; padding-left:5px;font-family:Arial, Helvetica, sans-serif;">
             <cfoutput>
-                  <tr><td style="text-align:right; padding-right:5px;">#Descrip#</td><td><b>#ItemValue#</b></td></tr>
+                  <tr><td style="text-align:right; padding-right:5px;">#Descrip#</td><td><b>#unquoteTheString(ItemValue)#</b></td></tr>
             </cfoutput>
             </table>
           </div>
@@ -186,10 +186,17 @@
 
 	<cfset var quotedString = Replace(arguments.aString,"\","\\","all")>
 	<cfset quotedString = Replace(quotedString,'"','\"',"all")>
-
+  <cfset quotedString = replaceNoCase(quotedString, chr(13), '\r','All')>
+  <cfset quotedString = replaceNoCase(quotedString, chr(10), '\n','All')>  
     <cfreturn quotedString />
 </cffunction>
- 
+<cffunction name="unquoteTheString" output="false" access="public" returnType="string">
+    <cfargument name="aString" type="string" required="false" default="" />
+
+  <cfset unquotedString = replaceNoCase(arguments.aString, '\r', chr(13),'All')>
+  <cfset unquotedString = replaceNoCase(unquotedString, '\n', chr(10), 'All')>  
+    <cfreturn unquotedString />
+</cffunction> 
 <style>
 body {
   background-image: url(./background.png);

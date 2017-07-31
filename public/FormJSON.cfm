@@ -65,11 +65,12 @@
 
 	<cfset var quotedString = Replace(arguments.aString,"\","\\","all")>
 	<cfset quotedString = Replace(quotedString,'"','\"',"all")>
-
+  <cfset quotedString = replaceNoCase(quotedString, chr(13), '\r','All')>
+  <cfset quotedString = replaceNoCase(quotedString, chr(10), '\n','All')>  
     <cfreturn quotedString />
 </cffunction>
 <!---
 , "depth": #body.depth#
-https://ccp1.msj.org/CompAccess/FormJSON.cfm?FormID=2
-https://ccp1.msj.org/CompAccess/FormJSON.cfm?FormID=0&reqID=38
+https://ccp1.msj.org/CompAccess/FormJSON.cfm?FormID=2&view=ADMIN
+https://ccp1.msj.org/CompAccess/FormJSON.cfm?FormID=0&reqID=38&view=ADMIN
 --->
