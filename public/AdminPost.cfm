@@ -105,16 +105,15 @@
   <cfprocparam cfsqltype="cf_sql_integer" value="#theReqID#">
   <cfprocresult resultset="1" name="specialemails">
   <cfprocresult resultset="2" name="debugsql">
-  </cfstoredproc>
-  
+  </cfstoredproc>  
   <!--- 
   <cfoutput query="debugsql">
 	#SQLString#
   </cfoutput>   --->
 
-  
   <cfif specialemails.RecordCount GT 0> 
-    <cfoutput query="specialemails" group="EMailAddress">
+    <cfoutput query="specialemails" group="SpecialID">
+	 <cfoutput group="EmailAddress">
       <cfmail to="#EMailAddress#" 
       from = "cpisc@msj.org"
       subject = "#emailsubject#"
@@ -138,7 +137,8 @@
           </div>
         </body>
         </html>
-      </cfmail>     
+      </cfmail>  
+	 </cfoutput>	  
     </cfoutput>
   </cfif>
 </cfif>

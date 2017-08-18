@@ -17,13 +17,13 @@
   <cfset LoggedInName = CLIENT.EMPNAME>
 <cfelse>
   <cfset LoggedInID = "1027126">
-  <cfset LoggedInName = "Logged, N. az Jon">  <!--- CAUTION DEBUGGING ONLY!!! --->
+  <cfset LoggedInName = "Logged, N. az Jon">  <!--- CAUTION DEBUGGING ONLY!!!  & "Z"--->
 </cfif>
 <cfif IsDefined("url.reqID")> <!--- previously entered --->
-      <cfset EnteredDate = header.EnteredDate>
+      <cfset EnteredDate = DateFormat(header.EnteredDate,"YYYY-MM-DD") & "T" & TimeFormat(header.EnteredDate,"HH:MM:SS")>
       <cfset SupvName = quoteTheString(header.SupvName)>
 <cfelse>
-      <cfset EnteredDate = DateFormat(Now(),"YYYY-MM-DD") & "T" & TimeFormat(Now(),"HH:MM")>
+      <cfset EnteredDate = DateFormat(Now(),"YYYY-MM-DD") & "T" & TimeFormat(Now(),"HH:MM:SS")>
       <cfset SupvName = LoggedInName>
 </cfif>
 
@@ -41,9 +41,11 @@
   </cfoutput>
   "body": [ 
   <cfoutput query="body">
+  <!---
   <cfif body.Type EQ "DATE">
     <cfset body.ItemValue = DateFormat(body.ItemValue,"YYYY-MM-DD") >
   </cfif>
+  --->
   { "FormID": #body.FormID#
   , "Type": "#body.Type#"
   , "Descrip": "#(body.Descrip)#" <!--- this doesnt need quoting for some reason - go figure--->

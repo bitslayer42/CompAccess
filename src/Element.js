@@ -351,9 +351,15 @@ class ElementTextArea extends React.Component {
 
 class ElementDate extends React.Component { 
 
-  constructor(props) {  //
+  constructor(props) {  //debugger;
     super(props);
-    const thedate = props.curr.ItemValue?moment(props.curr.ItemValue):null
+    const dateFormat = "MM/DD/YYYY"; //check for valid date
+    const thedate = props.curr.ItemValue
+                    ? moment(props.curr.ItemValue, dateFormat, true).isValid()
+                      ? moment(props.curr.ItemValue)
+                      : null
+                    : null;
+      
     this.state = {
       adate: thedate,
       isFilled: !(props.curr.ItemValue === "")
@@ -369,11 +375,17 @@ class ElementDate extends React.Component {
   }
   render() { 
     const curr = this.props.curr;
+    if(this.props.view==="ADMIN"){ //work around for bad dates. just use input. better solution: proper validation on input.
+      return (
+        <ElementInput ix={this.props.ix} curr={curr} key={curr.FormID} view={this.props.view} inResponse={this.props.inResponse}
+				handleRedraw={this.props.handleRedraw} handleChangeResponse={this.props.handleChangeResponse}/> 
+      )
+    }else{
       return (
         <div key={curr.FormID}>
           <div>
             <label>
-			{this.props.view!=="SUPV"  && !this.state.isFilled && curr.ReqResp ? <span className="redasterisk">&#10033;</span> : null}
+            {this.props.view!=="SUPV"  && !this.state.isFilled && curr.ReqResp ? <span className="redasterisk">&#10033;</span> : null}
             {curr.Required ? <span >&#10033;</span> : null}
             {curr.Descrip}:
             <Edit className="delclass" view={this.props.view} curr={curr} handleRedraw={this.props.handleRedraw} />            
@@ -385,6 +397,7 @@ class ElementDate extends React.Component {
           <AddElements view={this.props.view} type="AFTER" curr={curr} handleRedraw={this.props.handleRedraw} /> 
         </div>
       ) 
+    }
   }
 }
 
