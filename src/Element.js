@@ -111,12 +111,10 @@ function ElementForm(props) {
             <input type="hidden" name="LoggedInID"      defaultValue={props.header.LoggedInID} />    
             <input type="hidden" name="LoggedInName"      defaultValue={props.header.LoggedInName} />    
             <input type="hidden" name="ReqID"   defaultValue={props.header.RequestID} />
-			  {<div style={{color:"black"}} >&#10033; Required to Submit</div>}
-			  {<div style={{color:"red"}} >&#10033; Required to Complete</div>}
-            {props.header.Completed===1
-            ? <div>Completed</div>
-            : <button className="submit" >Submit</button>
-            }
+            {<div style={{color:"black"}} >&#10033; Required to Submit</div>}
+            {<div style={{color:"red"}} >&#10033; Required to Complete</div>}
+            {props.header.Completed===1 && <div>Completed</div>}
+            <button className="submit" >Submit</button>
           </form>
         )
         :(
