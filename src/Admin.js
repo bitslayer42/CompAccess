@@ -224,7 +224,22 @@ export default class Admin extends React.Component {
 			  <Link className="editclass"  to={`${HomePath}special`}>Add Special Action</Link>
 			</ul> 
 			</div> 
+		
 			
+			<div className="sectionclass" >        
+			<h3> Reports </h3>
+			<table>
+			  <tbody>
+          <tr>	
+            <td>
+            <a href={`${LibPath}Report.cfm`}>List by Staff or Node</a>
+            </td>
+          </tr>
+			  </tbody>
+			</table> 		
+			</div> 
+      
+      
 			<div className="sectionclass" >
 			<h3> Administrators </h3>
 			<table>
