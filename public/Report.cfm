@@ -53,7 +53,7 @@ div.sectionclass {
     
     <div class="formclass">
       <h1>Computer Access Form Reports</h1>
-      List by Staff or Node
+      List Requests by Staff or Node
       <div class="sectionclass">
         <p>
 
@@ -151,7 +151,7 @@ div.sectionclass {
 				</style>
 			
 				<hr size="1" color="black" style="border:1px;color:black;background-color:black;">
-				<h2>Computer Access Form Report</h2>
+				<h2>Computer Access Form Report: List Requests by Staff or Node</h2>
 				
 				<i>Run parameters</i><br>
         Employee: <cfoutput query="listStaff">#EmpName# </cfoutput><br>

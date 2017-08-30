@@ -228,15 +228,14 @@ export default class Admin extends React.Component {
 			
 			<div className="sectionclass" >        
 			<h3> Reports </h3>
-			<table>
-			  <tbody>
-          <tr>	
-            <td>
-            <a href={`${LibPath}Report.cfm`}>List by Staff or Node</a>
-            </td>
-          </tr>
-			  </tbody>
-			</table> 		
+        <ul>	
+          <li>
+            <a href={`${LibPath}Report.cfm`}>List Requests by Staff or Node</a>
+          </li>
+          <li>
+            <a href={`${LibPath}ITEmailRpt.cfm`}>IT Emails for each Node</a>
+          </li>
+        </ul> 		
 			</div> 
       
       

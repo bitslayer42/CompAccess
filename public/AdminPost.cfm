@@ -1,5 +1,6 @@
 <!--- 
-<cfdump var="#form#"><cfabort>
+<cfdump var="#form#">
+<cfdump var="#ItemStr#"><cfabort>
  --->
 <cfset ItemStr = "<reqrows>">
 <cfloop collection="#form#" item="theField">
@@ -9,7 +10,6 @@
   </cfif>
 </cfloop>
 <cfset ItemStr = ItemStr & "</reqrows>">
-
 <cfset LoggedInID = form.LoggedInID>
 <cfset LoggedInName = form.LoggedInName>
 
