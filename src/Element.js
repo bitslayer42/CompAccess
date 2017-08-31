@@ -89,45 +89,49 @@ function ElementForm(props) {
   return (
     <div>
       <ElementMenu view={props.view} FormID={props.curr.FormID} header={props.header} />
-      <div className="formclass" key={props.curr.FormID}>
-        <ElementFormHeader curr={props.curr} view={props.view} header={props.header} formatdate={formatdate}/>
-        {props.view==="SUPV" 
-        ?(
-          <form method="post" action={LibPath + 'SupvPost.cfm'}> 
-            <Element tree={props.curr.children} view={props.view} />
-            <input type="hidden" name={props.curr.FormID} defaultValue={props.curr.Descrip} /> {/*form*/}
-            <input type="hidden" name="DateEntered"   defaultValue={formatdate} />
-            <input type="hidden" name="LoggedInID"      defaultValue={props.header.LoggedInID} />    
-            <input type="hidden" name="LoggedInName"      defaultValue={props.header.LoggedInName} />  
-            <Signature LoggedInName={props.header.LoggedInName} />
-          </form>
-         )
-        :props.view==="ADMIN" 
-        ?(
-          <form method="post" action={LibPath + 'AdminPost.cfm'}>
-            <Element tree={props.curr.children} view={props.view} />
-            <input type="hidden" name={props.curr.FormID} defaultValue={props.curr.Descrip} /> {/*form*/}
-            <input type="hidden" name="DateEntered"   defaultValue={formatdate} />
-            <input type="hidden" name="LoggedInID"      defaultValue={props.header.LoggedInID} />    
-            <input type="hidden" name="LoggedInName"      defaultValue={props.header.LoggedInName} />    
-            <input type="hidden" name="ReqID"   defaultValue={props.header.RequestID} />
+      {props.view==="SUPV" 
+      ?(
+        <div className="formclass">
+          <ElementFormHeader curr={props.curr} view={props.view} header={props.header} formatdate={formatdate}/>
+            <form method="post" action={LibPath + 'SupvPost.cfm'}> 
+              <Element tree={props.curr.children} view={props.view} />
+              <input type="hidden" name={props.curr.FormID} defaultValue={props.curr.Descrip} /> {/*form*/}
+              <input type="hidden" name="DateEntered"   defaultValue={formatdate} />
+              <input type="hidden" name="LoggedInID"      defaultValue={props.header.LoggedInID} />    
+              <input type="hidden" name="LoggedInName"      defaultValue={props.header.LoggedInName} />  
+              <Signature LoggedInName={props.header.LoggedInName} />
+            </form>
+        </div>
+       )
+      :props.view==="ADMIN" 
+      ?(
+        <div className="formclass">
+          <ElementFormHeader curr={props.curr} view={props.view} header={props.header} formatdate={formatdate}/>
+            <form method="post" action={LibPath + 'AdminPost.cfm'}>
+              <Element tree={props.curr.children} view={props.view} />
+              <input type="hidden" name={props.curr.FormID} defaultValue={props.curr.Descrip} /> {/*form*/}
+              <input type="hidden" name="DateEntered"   defaultValue={formatdate} />
+              <input type="hidden" name="LoggedInID"      defaultValue={props.header.LoggedInID} />    
+              <input type="hidden" name="LoggedInName"      defaultValue={props.header.LoggedInName} />    
+              <input type="hidden" name="ReqID"   defaultValue={props.header.RequestID} />
+              {<div style={{color:"black"}} >&#10033; Required to Submit</div>}
+              {<div style={{color:"red"}} >&#10033; Required to Complete</div>}
+              {props.header.Completed===1 && <div>Completed</div>}
+              <button className="submit" >Submit</button>
+            </form>
+        </div>
+      )
+      :(
+        <div className="formclass" style={{overflowY:"scroll",height:"calc(100vh - 100px)"}}>
+          <ElementFormHeader curr={props.curr} view={props.view} header={props.header} formatdate={formatdate}/>
+            <AddElements view={props.view} type="FORM" curr={props.curr} handleRedraw={props.handleRedraw} /> 
+            <Element tree={props.curr.children} view={props.view} handleRedraw={props.handleRedraw} />
             {<div style={{color:"black"}} >&#10033; Required to Submit</div>}
             {<div style={{color:"red"}} >&#10033; Required to Complete</div>}
-            {props.header.Completed===1 && <div>Completed</div>}
-            <button className="submit" >Submit</button>
-          </form>
-        )
-        :(
-          <div>
-          <AddElements view={props.view} type="FORM" curr={props.curr} handleRedraw={props.handleRedraw} /> 
-          <Element tree={props.curr.children} view={props.view} handleRedraw={props.handleRedraw} />
-		  {<div style={{color:"black"}} >&#10033; Required to Submit</div>}
-		  {<div style={{color:"red"}} >&#10033; Required to Complete</div>}
-          </div>
-        )
-        }
-      </div>
-      <div style={{height:"100px"}}/>
+        </div>
+      )
+      }
+
     </div>
 
   )
